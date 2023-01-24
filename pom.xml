@@ -65,7 +65,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.michael.c195_software2/com.michael.c195_software2.HelloApplication
+                            <mainClass>com.michael.c195_software2/com.michael.c195_software2.Main
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
