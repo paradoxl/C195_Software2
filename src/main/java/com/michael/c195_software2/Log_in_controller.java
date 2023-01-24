@@ -18,6 +18,13 @@ public class Log_in_controller {
     @FXML
     private Button signInBTN;
     Alert exitAlert = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you want to exit?", ButtonType.YES, ButtonType.NO);
+
+    /**
+     * This method is used to confirm the user is authentic.
+     * this method will also pass the user to a default customer-view form once the user is authenticated.
+     * @param actionEvent
+     * @throws IOException
+     */
     public void signIn(ActionEvent actionEvent) throws IOException {
         // check user is legit
 

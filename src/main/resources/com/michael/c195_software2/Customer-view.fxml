@@ -19,12 +19,12 @@
                   <TableColumn prefWidth="120.0" text="Phone Number" />
               </columns>
             </TableView>
-            <Button layoutX="104.0" layoutY="309.0" mnemonicParsing="false" text="Add" />
-            <Button layoutX="257.0" layoutY="309.0" mnemonicParsing="false" text="Update" />
-            <Button layoutX="416.0" layoutY="309.0" mnemonicParsing="false" text="Delete" />
+            <Button fx:id="addButton" onAction="#addRecord" layoutX="104.0" layoutY="309.0" mnemonicParsing="false" text="Add" />
+            <Button fx:id="updateButton" onAction="#updateRecord" layoutX="257.0" layoutY="309.0" mnemonicParsing="false" text="Update" />
+            <Button fx:id="deleteButton" onAction="#deleteRecord" layoutX="416.0" layoutY="309.0" mnemonicParsing="false" text="Delete" />
          </children>
       </Pane>
-      <Button layoutX="525.0" layoutY="401.0" mnemonicParsing="false" text="Cancel" />
+      <Button fx:id="cancelButton" onAction="#cancel" layoutX="525.0" layoutY="401.0" mnemonicParsing="false" text="Exit" />
       <Button layoutX="33.0" layoutY="401.0" mnemonicParsing="false" text="Appointments" />
    </children>
 </Pane>
