@@ -1,5 +1,7 @@
 package com.michael.c195_software2;
 
+import com.michael.c195_software2.DataAccessObject.UserDAO;
+import com.michael.c195_software2.con.InitCon;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -7,9 +9,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 
 public class Log_in_controller {
@@ -17,6 +22,10 @@ public class Log_in_controller {
     private Button exitBTN;
     @FXML
     private Button signInBTN;
+    @FXML
+    private TextField UsernameTextFLD;
+    @FXML
+    private TextField PasswordTextFLD;
     Alert exitAlert = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you want to exit?", ButtonType.YES, ButtonType.NO);
 
     /**
@@ -25,10 +34,12 @@ public class Log_in_controller {
      * @param actionEvent
      * @throws IOException
      */
-    public void signIn(ActionEvent actionEvent) throws IOException {
+    public void signIn(ActionEvent actionEvent) throws IOException, SQLException {
         // check user is legit
-
-
+        String username = UsernameTextFLD.getText();
+        String password = PasswordTextFLD.getText();
+        UserDAO user = new UserDAO();
+        user.validation(username, password);
         // Move to the customer view
 
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("Customer-view.fxml"));
@@ -37,6 +48,8 @@ public class Log_in_controller {
         stage.setTitle("Customer View");
         stage.setScene(scene);
         stage.show();
+
+        InitCon.closeConnection();
     }
 
     public void signUp(ActionEvent actionEvent) {
