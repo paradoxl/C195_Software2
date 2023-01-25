@@ -40,17 +40,23 @@ public class Log_in_controller {
         String username = UsernameTextFLD.getText();
         String password = PasswordTextFLD.getText();
         UserDAO user = new UserDAO();
-        user.validation(username, password);
+        if(user.validation(username, password)){
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("Customer-view.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            stage.setTitle("Customer View");
+            stage.setScene(scene);
+            stage.show();
+        }
+        else{
+            Alert loginError = new Alert(Alert.AlertType.ERROR, "Incorrect username or password",ButtonType.OK);
+            loginError.showAndWait();
+        }
 
 
         // Move to the customer view
 
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("Customer-view.fxml"));
-        Scene scene = new Scene(loader.load());
-        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-        stage.setTitle("Customer View");
-        stage.setScene(scene);
-        stage.show();
+
 
         InitCon.closeConnection();
     }

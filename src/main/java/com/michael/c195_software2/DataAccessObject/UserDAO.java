@@ -19,7 +19,7 @@ public class UserDAO {
 //    public void updateUser(Users user);
 //    public void deleteUser(Users user);
 
-public void validation(String username, String password) throws SQLException {
+public Boolean validation(String username, String password) throws SQLException {
     String query = "SELECT * FROM users WHERE User_name = '" + username + "' AND Password = '" + password + "'";
     PreparedStatement ps = InitCon.connection.prepareStatement(query);
     ResultSet rs = ps.executeQuery();
@@ -30,10 +30,13 @@ public void validation(String username, String password) throws SQLException {
         if (rs.getString("User_name").equals(username) && rs.getString("Password").equals(password)) {
             // connection successful.
             System.out.println("Match");
+            return true;
         }
 
     }
+    return false;
     }
+
 
 
 }
