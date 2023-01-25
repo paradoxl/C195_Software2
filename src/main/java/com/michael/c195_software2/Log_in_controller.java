@@ -35,11 +35,14 @@ public class Log_in_controller {
      * @throws IOException
      */
     public void signIn(ActionEvent actionEvent) throws IOException, SQLException {
+        InitCon.openConnection();
         // check user is legit
         String username = UsernameTextFLD.getText();
         String password = PasswordTextFLD.getText();
         UserDAO user = new UserDAO();
         user.validation(username, password);
+
+
         // Move to the customer view
 
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("Customer-view.fxml"));
