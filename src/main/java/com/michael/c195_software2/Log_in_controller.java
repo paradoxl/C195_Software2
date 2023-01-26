@@ -5,28 +5,53 @@ import com.michael.c195_software2.con.InitCon;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
+import java.time.ZoneId;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 
-public class Log_in_controller {
+public class Log_in_controller implements Initializable{
     @FXML
     private Button exitBTN;
     @FXML
     private Button signInBTN;
+
     @FXML
     private TextField UsernameTextFLD;
     @FXML
     private TextField PasswordTextFLD;
+    @FXML
+    private Label country;
     Alert exitAlert = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you want to exit?", ButtonType.YES, ButtonType.NO);
+
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        //language settings
+        Locale locale = Locale.getDefault();
+        ZoneId zoneid = ZoneId.systemDefault();
+
+        //elements on page that need to be dynamic
+        resourceBundle = ResourceBundle.getBundle("lang",Locale.getDefault());
+        signInBTN.setText(resourceBundle.getString(resourceBundle.getString("signin")));
+        UsernameTextFLD.setPromptText(resourceBundle.getString("username"));
+        PasswordTextFLD.setPromptText(resourceBundle.getString("password"));
+        exitBTN.setText(resourceBundle.getString("exit"));
+//        country.setText(resourceBundle.getString("country"));
+
+
+
+
+
+    }
 
     /**
      * This method is used to confirm the user is authentic.
