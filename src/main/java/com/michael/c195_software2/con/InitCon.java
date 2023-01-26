@@ -3,7 +3,7 @@ package com.michael.c195_software2.con;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-public class InitCon {
+public abstract class InitCon {
     private static final String protocol = "jdbc";
     private static final String vendor = ":mysql:";
     private static final String location = "//localhost/";
@@ -19,22 +19,24 @@ public class InitCon {
         try {
             Class.forName(driver); // Locate Driver
             connection = DriverManager.getConnection(jdbcUrl, userName, password); // Reference Connection object
-            System.out.println("Flux Capacitor Charged");
+            System.out.println("Warp Core Seated!");
         }
         catch(Exception e)
         {
-            System.out.println("Charge Failed " + e.getMessage());
+
+            System.out.println("Warp Core Malfunction" + e.getMessage());
         }
     }
 
     public static void closeConnection() {
         try {
             connection.close();
-            System.out.println("Powering down warp core!");
+            System.out.println("Warp Core Ejected");
         }
         catch(Exception e)
         {
-            System.out.println("Warp core breach! " + e.getMessage());
+            System.out.println("Warp Core Malfunction!" + e.getMessage());
         }
     }
-}
+    }
+
