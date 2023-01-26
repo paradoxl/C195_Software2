@@ -45,7 +45,7 @@ public class Log_in_controller implements Initializable{
         UsernameTextFLD.setPromptText(resourceBundle.getString("username"));
         PasswordTextFLD.setPromptText(resourceBundle.getString("password"));
         exitBTN.setText(resourceBundle.getString("exit"));
-//        country.setText(resourceBundle.getString("country"));
+        country.setText(resourceBundle.getString("country"));
 
 
 
