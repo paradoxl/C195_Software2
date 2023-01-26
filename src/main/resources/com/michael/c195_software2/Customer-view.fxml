@@ -10,13 +10,13 @@
    <children>
       <Pane layoutX="23.0" layoutY="20.0" prefHeight="359.0" prefWidth="577.0" style="-fx-border-color: Black;">
          <children>
-            <TableView layoutX="21.0" layoutY="23.0" prefHeight="277.0" prefWidth="535.0">
+            <TableView fx:id="appointmentTABLE" layoutX="21.0" layoutY="23.0" prefHeight="277.0" prefWidth="535.0">
               <columns>
-                <TableColumn prefWidth="87.0" text="Customer ID" />
-                <TableColumn prefWidth="119.0" text="Customer Name" />
-                  <TableColumn prefWidth="88.0" text="Address" />
-                  <TableColumn prefWidth="119.0" text="Postal Code" />
-                  <TableColumn prefWidth="120.0" text="Phone Number" />
+                <TableColumn fx:id="customerIDCOL" prefWidth="87.0" text="Customer ID" />
+                <TableColumn fx:id="customerNameCOL" prefWidth="119.0" text="Customer Name" />
+                  <TableColumn fx:id="addressCOL" prefWidth="88.0" text="Address" />
+                  <TableColumn fx:id="postalCOL" prefWidth="119.0" text="Postal Code" />
+                  <TableColumn fx:id="phoneCOL" prefWidth="120.0" text="Phone Number" />
               </columns>
             </TableView>
             <Button fx:id="addButton" onAction="#addRecord" layoutX="104.0" layoutY="309.0" mnemonicParsing="false" text="Add" />

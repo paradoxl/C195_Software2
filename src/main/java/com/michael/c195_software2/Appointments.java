@@ -88,7 +88,7 @@ public class Appointments {
     public String getCreatedBy(){
         return createdBy;
     }
-    public void setCustomerID(){
+    public void setCustomerID(int customerID){
         this.customerID = customerID;
     }
 
