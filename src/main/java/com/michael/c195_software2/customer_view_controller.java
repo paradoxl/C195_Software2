@@ -31,7 +31,7 @@ public class customer_view_controller implements Initializable {
     private TableColumn<?,?> phoneCOL;
 
     Alert exitAlert = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you want to exit?", ButtonType.YES, ButtonType.NO);
-
+    Alert noSelectedCust = new Alert(Alert.AlertType.ERROR, "You have not selected a customer to update", ButtonType.OK);
     /**
      * This method is used to populate the tableview found on customer view.
      * @param url
@@ -54,6 +54,11 @@ public class customer_view_controller implements Initializable {
         }
     }
 
+    /**
+     * This method will take the user to a form to add new Customer Records
+     * @param actionEvent
+     * @throws IOException
+     */
     public void addRecord(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("add-customer-view.fxml"));
         Scene scene = new Scene(loader.load());
@@ -62,6 +67,26 @@ public class customer_view_controller implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
+
+    /**
+     * This method will take the user to a form to update existing Records.
+     * @param actionEvent
+     * @throws IOException
+     */
+    public void updateRecord(ActionEvent actionEvent)throws IOException{
+        Customers selected = customerTable.getSelectionModel().getSelectedItem();
+        if(selected == null){
+            noSelectedCust.showAndWait();
+            return;
+        }
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("update-customer-view.fxml"));
+        Scene scene = new Scene(loader.load());
+        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+        stage.setTitle("UPDATE RECORD");
+        stage.setScene(scene);
+        stage.show();
+    }
+
 
 
     public void exit(ActionEvent actionEvent) {

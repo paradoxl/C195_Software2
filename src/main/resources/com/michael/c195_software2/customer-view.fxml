@@ -17,7 +17,7 @@
       <Label layoutX="36.0" layoutY="37.0" text="CustomerRecords" />
       <Button layoutX="20.0" layoutY="354.0" mnemonicParsing="false" text="Appointments" />
       <Button onAction="#addRecord" layoutX="173.0" layoutY="314.0" mnemonicParsing="false" text="Add Record" />
-      <Button layoutX="285.0" layoutY="314.0" mnemonicParsing="false" text="Update Record" />
+      <Button onAction="#updateRecord" layoutX="285.0" layoutY="314.0" mnemonicParsing="false" text="Update Record" />
       <Button layoutX="411.0" layoutY="314.0" mnemonicParsing="false" text="Delete Record" />
       <Button onAction="#exit" layoutX="510.0" layoutY="354.0" mnemonicParsing="false" text="Exit" />
    </children>
