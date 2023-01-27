@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TableView layoutX="36.0" layoutY="62.0" prefHeight="246.0" prefWidth="515.0">
+        <columns>
+          <TableColumn prefWidth="87.0" text="Customer ID" />
+          <TableColumn prefWidth="79.0" text="Name" />
+            <TableColumn prefWidth="119.0" text="Address" />
+            <TableColumn prefWidth="83.0" text="Postal Code" />
+            <TableColumn prefWidth="146.0" text="Phone Number" />
+        </columns>
+      </TableView>
+      <Label layoutX="36.0" layoutY="37.0" text="CustomerRecords" />
+      <Button layoutX="20.0" layoutY="354.0" mnemonicParsing="false" text="Appointments" />
+      <Button layoutX="339.0" layoutY="314.0" mnemonicParsing="false" text="Add Record" />
+      <Button layoutX="444.0" layoutY="314.0" mnemonicParsing="false" text="Update Record" />
+      <Button layoutX="383.0" layoutY="347.0" mnemonicParsing="false" text="Delete Record" />
+   </children>
+</Pane>
