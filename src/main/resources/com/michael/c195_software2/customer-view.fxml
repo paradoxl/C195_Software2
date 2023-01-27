@@ -3,15 +3,15 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+<Pane fx:controller="com.michael.c195_software2.customer_view_controller" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TableView layoutX="36.0" layoutY="62.0" prefHeight="246.0" prefWidth="515.0">
+      <TableView fx:id="customerTable" layoutX="36.0" layoutY="62.0" prefHeight="246.0" prefWidth="515.0">
         <columns>
-          <TableColumn prefWidth="87.0" text="Customer ID" />
-          <TableColumn prefWidth="79.0" text="Name" />
-            <TableColumn prefWidth="119.0" text="Address" />
-            <TableColumn prefWidth="83.0" text="Postal Code" />
-            <TableColumn prefWidth="146.0" text="Phone Number" />
+          <TableColumn fx:id="idCOL" prefWidth="87.0" text="Customer ID" />
+          <TableColumn fx:id="nameCOL" prefWidth="79.0" text="Name" />
+            <TableColumn fx:id="addressCOL" prefWidth="119.0" text="Address" />
+            <TableColumn fx:id="postalCOL" prefWidth="83.0" text="Postal Code" />
+            <TableColumn fx:id="phoneCOL" prefWidth="146.0" text="Phone Number" />
         </columns>
       </TableView>
       <Label layoutX="36.0" layoutY="37.0" text="CustomerRecords" />
