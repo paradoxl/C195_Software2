@@ -48,7 +48,7 @@ public class appointment_view_controller implements Initializable {
             ObservableList<Appointments> list = AppointmentDAO.getAppointment();
             appointmentTABLE.setItems(list);
             IDCOL.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
-//            titleCOL.setCellValueFactory(new PropertyValueFactory<>("description"));
+            titleCOL.setCellValueFactory(new PropertyValueFactory<>("description"));
             descriptionCOL.setCellValueFactory(new PropertyValueFactory<>("description"));
             locationCOL.setCellValueFactory(new PropertyValueFactory<>("location"));
             contactCOL.setCellValueFactory(new PropertyValueFactory<>("contactID"));

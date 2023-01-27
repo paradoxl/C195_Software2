@@ -23,7 +23,9 @@ public class AppointmentDAO {
         while (rs.next()){
             int appointmentId = rs.getInt("Appointment_ID");
             String description = rs.getString("Description");
+            String title = rs.getString("Title");
             String location =  rs.getString("Location");
+            String type = rs.getString("Type");
             LocalDateTime start = rs.getTimestamp("Start").toLocalDateTime();
             LocalDateTime end = rs.getTimestamp("End").toLocalDateTime();
             LocalDateTime Created = rs.getTimestamp("Create_Date").toLocalDateTime();
@@ -31,7 +33,7 @@ public class AppointmentDAO {
             int userID = rs.getInt("User_ID");
             int contactID = rs.getInt("Contact_ID");
 
-       Appointments adding = new Appointments(appointmentId,description,location,start,end,Created,customerID,userID,contactID);
+       Appointments adding = new Appointments(appointmentId,title,description,location,type,start,end,Created,customerID,userID,contactID);
         appList.add(adding);
             System.out.println(appList);
         }
