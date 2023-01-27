@@ -1,6 +1,7 @@
 package com.michael.c195_software2;
 
 import com.michael.c195_software2.DataAccessObject.CustomerDAO;
+import com.michael.c195_software2.con.InitCon;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -96,11 +97,26 @@ public class customer_view_controller implements Initializable {
         }
     }
 
+    /**
+     * This method will take the user to a form to view add update and delete appointments.
+     * @param actionEvent
+     * @throws IOException
+     */
+    public void viewAppointments(ActionEvent actionEvent) throws IOException{
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("appointments-view.fxml"));
+        Scene scene = new Scene(loader.load());
+        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+        stage.setTitle("APPOINTMENTS");
+        stage.setScene(scene);
+        stage.show();
+    }
+
 
 
     public void exit(ActionEvent actionEvent) {
         exitAlert.showAndWait();
         if(exitAlert.getResult() == ButtonType.YES){
+            InitCon.closeConnection();
             System.exit(0);
         }
         else{

@@ -83,7 +83,7 @@ public class Log_in_controller implements Initializable{
 
 
 
-        InitCon.closeConnection();
+
     }
 
     public void signUp(ActionEvent actionEvent) {
