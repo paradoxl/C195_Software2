@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -30,6 +31,7 @@ public class customer_view_controller implements Initializable {
     @FXML
     private TableColumn<?,?> phoneCOL;
 
+    private Parent scene;
     Alert exitAlert = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you want to exit?", ButtonType.YES, ButtonType.NO);
     Alert noSelectedCust = new Alert(Alert.AlertType.ERROR, "You have not selected a customer to update", ButtonType.OK);
     /**
@@ -79,12 +81,19 @@ public class customer_view_controller implements Initializable {
             noSelectedCust.showAndWait();
             return;
         }
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("update-customer-view.fxml"));
-        Scene scene = new Scene(loader.load());
-        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-        stage.setTitle("UPDATE RECORD");
-        stage.setScene(scene);
-        stage.show();
+        try {
+            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("update-customer-view.fxml"));
+            scene = loader.load();
+            update_customer_view_controller helper = loader.getController();
+            helper.populate(selected);
+            stage.setTitle("UPDATE RECORD");
+            stage.setScene(new Scene(scene));
+            stage.show();
+        }
+        catch (Exception e){
+            System.out.println("Error " + e);
+        }
     }
 
 
