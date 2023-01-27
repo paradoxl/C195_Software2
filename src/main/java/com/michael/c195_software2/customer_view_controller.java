@@ -4,13 +4,14 @@ import com.michael.c195_software2.DataAccessObject.CustomerDAO;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -52,6 +53,16 @@ public class customer_view_controller implements Initializable {
             throw new RuntimeException(e);
         }
     }
+
+    public void addRecord(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("add-customer-view.fxml"));
+        Scene scene = new Scene(loader.load());
+        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+        stage.setTitle("ADD RECORD");
+        stage.setScene(scene);
+        stage.show();
+    }
+
 
     public void exit(ActionEvent actionEvent) {
         exitAlert.showAndWait();
