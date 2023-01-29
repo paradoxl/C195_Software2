@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="523.0" prefWidth="486.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+<Pane fx:controller="com.michael.c195_software2.add_customer_view_controller" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="523.0" prefWidth="486.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <GridPane layoutX="28.0" layoutY="51.0" prefHeight="267.0" prefWidth="324.0">
         <columnConstraints>
@@ -21,14 +21,14 @@
             <Label text="Address" GridPane.rowIndex="1" />
             <Label text="Postal Code" GridPane.rowIndex="2" />
             <Label text="Phone Nubmer" GridPane.rowIndex="3" />
-            <TextField GridPane.columnIndex="1" />
-            <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="nameTextFLD" GridPane.columnIndex="1" />
+            <TextField fx:id="addressTextFLD" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="postalTextFLD" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="phoneTextFLD" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
       </GridPane>
-      <Button layoutX="213.0" layoutY="324.0" mnemonicParsing="false" text="Add" />
-      <Button layoutX="205.0" layoutY="373.0" mnemonicParsing="false" text="Cancel" />
+      <Button onAction="#save" layoutX="213.0" layoutY="324.0" mnemonicParsing="false" text="Save" />
+      <Button onAction="#cancel" layoutX="205.0" layoutY="373.0" mnemonicParsing="false" text="Cancel" />
       <Label layoutX="164.0" layoutY="26.0" text="Add Customer Rercord" />
    </children>
 </Pane>
