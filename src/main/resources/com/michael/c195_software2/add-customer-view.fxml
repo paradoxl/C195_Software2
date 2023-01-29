@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane fx:controller="com.michael.c195_software2.add_customer_view_controller" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="523.0" prefWidth="486.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="523.0" prefWidth="486.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.michael.c195_software2.add_customer_view_controller">
    <children>
       <GridPane layoutX="28.0" layoutY="51.0" prefHeight="267.0" prefWidth="324.0">
         <columnConstraints>
@@ -27,8 +27,11 @@
             <TextField fx:id="phoneTextFLD" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
       </GridPane>
-      <Button onAction="#save" layoutX="213.0" layoutY="324.0" mnemonicParsing="false" text="Save" />
-      <Button onAction="#cancel" layoutX="205.0" layoutY="373.0" mnemonicParsing="false" text="Cancel" />
+      <Button layoutX="28.0" layoutY="420.0" mnemonicParsing="false" onAction="#save" text="Save" />
+      <Button layoutX="28.0" layoutY="459.0" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
       <Label layoutX="164.0" layoutY="26.0" text="Add Customer Rercord" />
+      <ChoiceBox fx:id="countryBOX" layoutX="190.0" layoutY="340.0" prefWidth="150.0" value="Country" />
+      <ChoiceBox fx:id="stateBOX" layoutX="190.0" layoutY="381.0" prefWidth="150.0" value="State" />
+
    </children>
 </Pane>
