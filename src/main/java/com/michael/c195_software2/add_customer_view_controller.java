@@ -100,6 +100,6 @@ public class add_customer_view_controller implements Initializable {
         ObservableList<String> pop = FXCollections.observableArrayList();
         pop.addAll("United States", "Canada", "United Kingdom");
         // TODO: To complete this portion we need to bring in all the FIRSTLEVELDIVISON data.
-        
+
     }
 }
