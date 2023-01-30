@@ -27,11 +27,12 @@
             <TextField fx:id="phoneTextFLD" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
       </GridPane>
-      <Button layoutX="28.0" layoutY="420.0" mnemonicParsing="false" onAction="#save" text="Save" />
-      <Button layoutX="28.0" layoutY="459.0" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
+      <Button layoutX="149.0" layoutY="468.0" mnemonicParsing="false" onAction="#save" text="Save" />
+      <Button layoutX="281.0" layoutY="468.0" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
       <Label layoutX="164.0" layoutY="26.0" text="Add Customer Rercord" />
       <ComboBox fx:id="CBOX" layoutX="190.0" layoutY="355.0" prefWidth="150.0" promptText="Country" />
-      <ComboBox fx:id="SBOX"  layoutX="190.0" layoutY="394.0" prefWidth="150.0" promptText="State" />
+      <ComboBox fx:id="SBOX" layoutX="190.0" layoutY="394.0" prefWidth="150.0" promptText="State" />
+      <Button onAction="#dynamicCombo" layoutX="363.0" layoutY="355.0" mnemonicParsing="false" text="Confrim" />
 
    </children>
 </Pane>

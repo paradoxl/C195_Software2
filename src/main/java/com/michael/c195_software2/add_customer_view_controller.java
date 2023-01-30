@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 
@@ -106,6 +107,46 @@ public class add_customer_view_controller implements Initializable {
         stage.show();
     }
 
+    public void dynamicCombo() throws SQLException {
+        ObservableList<Countries> country = CountryDAO.getCountries();
+        ObservableList<String> countryVal = FXCollections.observableArrayList();
+        ObservableList<FirstLevelDivisions> FLD = FirstLevelDivisionDAO.getFLD();
+        ObservableList<String> fldVAL = FXCollections.observableArrayList();
+        ObservableList<Integer> fldCC = FXCollections.observableArrayList();
+        ObservableList<String> finalFLDVALUS = FXCollections.observableArrayList();
+        ObservableList<String> finalFLDVALCA = FXCollections.observableArrayList();
+        ObservableList<String> finalFLDVALUK = FXCollections.observableArrayList();
+
+
+
+        FLD.forEach((firstLevelDivisions -> fldCC.add(firstLevelDivisions.getCountryID()) ));
+        FLD.forEach(firstLevelDivision -> fldVAL.add(firstLevelDivision.getDivision()));
+        if(CBOX.getSelectionModel().getSelectedIndex() == 0){
+          SBOX.setOpacity(100);
+          for(int i = 0; i < 51; i++){
+                finalFLDVALUS.add(fldVAL.get(i));
+
+            }
+            SBOX.setItems(finalFLDVALUS);
+        }
+        if(CBOX.getSelectionModel().getSelectedIndex() == 1){
+            SBOX.setOpacity(100);
+            for(int i = 64; i < 68; i++){
+                finalFLDVALUK.add(fldVAL.get(i));
+            }
+            SBOX.setItems(finalFLDVALUK);
+        }
+        if(CBOX.getSelectionModel().getSelectedIndex() == 2){
+            SBOX.setOpacity(100);
+                        for(int i = 51; i < 64; i++){
+                finalFLDVALCA.add(fldVAL.get(i));
+            }
+
+            SBOX.setItems(finalFLDVALCA);
+        }
+    }
+
+
     /**
      * This method is used to populate the drop-down menus.
      * Contains the first LAMBDA that is used to populate First Level Division dropdown data.
@@ -123,14 +164,52 @@ public class add_customer_view_controller implements Initializable {
             ObservableList<String> countryVal = FXCollections.observableArrayList();
             ObservableList<FirstLevelDivisions> FLD = FirstLevelDivisionDAO.getFLD();
             ObservableList<String> fldVAL = FXCollections.observableArrayList();
+            ObservableList<Integer> fldCC = FXCollections.observableArrayList();
+            ObservableList<String> finalFLDVALUS = FXCollections.observableArrayList();
+            ObservableList<String> finalFLDVALCA = FXCollections.observableArrayList();
+            ObservableList<String> finalFLDVALUK = FXCollections.observableArrayList();
+
 
             //cycle each country add to country box
             country.stream().map(Countries::getCountry).forEach(countryVal::add);
             CBOX.setItems(countryVal);
 
+
+            // Second LAMBDA expression will add a third as this is essentially carbon copy of below.
+            FLD.forEach((firstLevelDivisions -> fldCC.add(firstLevelDivisions.getCountryID()) ));
             //LAMBDA Expression 1 used to populate the FLD drop down menu
             FLD.forEach(firstLevelDivision -> fldVAL.add(firstLevelDivision.getDivision()));
-            SBOX.setItems(fldVAL);
+
+//
+//            //May need to pull out this logic and add to method.
+//            //seperates all states/prov based on country
+//            for(int i = 0; i < 51; i++){
+//                finalFLDVALUS.add(fldVAL.get(i));
+//            }
+//            for(int i = 51; i < 64; i++){
+//                finalFLDVALCA.add(fldVAL.get(i));
+//            }
+//            for(int i = 64; i < 68; i++){
+//                finalFLDVALUK.add(fldVAL.get(i));
+//            }
+//
+//            System.out.println("Names: " + fldVAL);
+//            System.out.println("Country Id: " + fldCC);
+//
+//            if(CBOX.getSelectionModel().getSelectedIndex() == 1) {
+//                SBOX.setItems(finalFLDVALUS);
+//            }
+//            else if (CBOX.getSelectionModel().getSelectedIndex() == 2){
+//                SBOX.setItems(finalFLDVALCA);
+//            }
+//            else if (CBOX.getSelectionModel().getSelectedIndex() == 3){
+//                SBOX.setItems(finalFLDVALUK);
+//            }
+//            else{
+//                SBOX.setItems(fldVAL);
+//            }
+
+                SBOX.setOpacity(0);
 
 
         } catch (SQLException e) {
