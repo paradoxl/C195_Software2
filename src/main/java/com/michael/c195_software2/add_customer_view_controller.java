@@ -108,8 +108,6 @@ public class add_customer_view_controller implements Initializable {
     }
 
     public void dynamicCombo() throws SQLException {
-        ObservableList<Countries> country = CountryDAO.getCountries();
-        ObservableList<String> countryVal = FXCollections.observableArrayList();
         ObservableList<FirstLevelDivisions> FLD = FirstLevelDivisionDAO.getFLD();
         ObservableList<String> fldVAL = FXCollections.observableArrayList();
         ObservableList<Integer> fldCC = FXCollections.observableArrayList();
@@ -117,8 +115,7 @@ public class add_customer_view_controller implements Initializable {
         ObservableList<String> finalFLDVALCA = FXCollections.observableArrayList();
         ObservableList<String> finalFLDVALUK = FXCollections.observableArrayList();
 
-
-
+        //First set of LAMBDA expressions used to gather data on FLD base on country id
         FLD.forEach((firstLevelDivisions -> fldCC.add(firstLevelDivisions.getCountryID()) ));
         FLD.forEach(firstLevelDivision -> fldVAL.add(firstLevelDivision.getDivision()));
         if(CBOX.getSelectionModel().getSelectedIndex() == 0){
@@ -141,7 +138,6 @@ public class add_customer_view_controller implements Initializable {
                         for(int i = 51; i < 64; i++){
                 finalFLDVALCA.add(fldVAL.get(i));
             }
-
             SBOX.setItems(finalFLDVALCA);
         }
     }
@@ -149,74 +145,25 @@ public class add_customer_view_controller implements Initializable {
 
     /**
      * This method is used to populate the drop-down menus.
-     * Contains the first LAMBDA that is used to populate First Level Division dropdown data.
      * @param url
      * @param resourceBundle
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-
-
         try {
             // lists
             ObservableList<Countries> country = CountryDAO.getCountries();
             ObservableList<String> countryVal = FXCollections.observableArrayList();
-            ObservableList<FirstLevelDivisions> FLD = FirstLevelDivisionDAO.getFLD();
-            ObservableList<String> fldVAL = FXCollections.observableArrayList();
-            ObservableList<Integer> fldCC = FXCollections.observableArrayList();
-            ObservableList<String> finalFLDVALUS = FXCollections.observableArrayList();
-            ObservableList<String> finalFLDVALCA = FXCollections.observableArrayList();
-            ObservableList<String> finalFLDVALUK = FXCollections.observableArrayList();
-
 
             //cycle each country add to country box
             country.stream().map(Countries::getCountry).forEach(countryVal::add);
             CBOX.setItems(countryVal);
-
-
-            // Second LAMBDA expression will add a third as this is essentially carbon copy of below.
-            FLD.forEach((firstLevelDivisions -> fldCC.add(firstLevelDivisions.getCountryID()) ));
-            //LAMBDA Expression 1 used to populate the FLD drop down menu
-            FLD.forEach(firstLevelDivision -> fldVAL.add(firstLevelDivision.getDivision()));
-
-//
-//            //May need to pull out this logic and add to method.
-//            //seperates all states/prov based on country
-//            for(int i = 0; i < 51; i++){
-//                finalFLDVALUS.add(fldVAL.get(i));
-//            }
-//            for(int i = 51; i < 64; i++){
-//                finalFLDVALCA.add(fldVAL.get(i));
-//            }
-//            for(int i = 64; i < 68; i++){
-//                finalFLDVALUK.add(fldVAL.get(i));
-//            }
-//
-//            System.out.println("Names: " + fldVAL);
-//            System.out.println("Country Id: " + fldCC);
-//
-//            if(CBOX.getSelectionModel().getSelectedIndex() == 1) {
-//                SBOX.setItems(finalFLDVALUS);
-//            }
-//            else if (CBOX.getSelectionModel().getSelectedIndex() == 2){
-//                SBOX.setItems(finalFLDVALCA);
-//            }
-//            else if (CBOX.getSelectionModel().getSelectedIndex() == 3){
-//                SBOX.setItems(finalFLDVALUK);
-//            }
-//            else{
-//                SBOX.setItems(fldVAL);
-//            }
-
-                SBOX.setOpacity(0);
-
+            // Hides the state/prov box until a country selection is made.
+            SBOX.setOpacity(0);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-
-
     }
 }
