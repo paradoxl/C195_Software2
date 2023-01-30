@@ -10,7 +10,15 @@ public class Countries {
     private LocalDateTime lastUpdate;
     private String lastUpdateBy;
 
-
+    /**
+     * Custom constructor
+     * @param countryID
+     * @param country
+     * @param created
+     * @param createdBy
+     * @param lastUpdate
+     * @param lastUpdateBy
+     */
     public Countries(int countryID, String country, LocalDateTime created, String createdBy, LocalDateTime lastUpdate, String lastUpdateBy){
         this.countryID = countryID;
         this.country = country;
@@ -20,6 +28,13 @@ public class Countries {
         this.lastUpdateBy = lastUpdateBy;
 
     }
+
+    /**
+     * Blank Constructor
+     */
+    public Countries(){}
+
+
 
     public void setCountry(String country) {
         this.country = country;
@@ -59,5 +74,13 @@ public class Countries {
 
     public String getLastUpdateBy() {
         return lastUpdateBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
     }
 }
