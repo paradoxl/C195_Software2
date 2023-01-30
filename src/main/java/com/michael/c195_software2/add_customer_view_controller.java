@@ -1,5 +1,7 @@
 package com.michael.c195_software2;
 
+import com.michael.c195_software2.DataAccessObject.CountryDAO;
+import com.michael.c195_software2.DataAccessObject.FirstLevelDivisionDAO;
 import com.michael.c195_software2.con.InitCon;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,7 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -30,9 +32,12 @@ public class add_customer_view_controller implements Initializable {
     @FXML
     private TextField phoneTextFLD;
     @FXML
-    private ChoiceBox<FirstLevelDivisions> countryBOX;
+    private ComboBox<String> CBOX;
     @FXML
-    private ChoiceBox<FirstLevelDivisions> stateBOX;
+    private ComboBox<String> SBOX;
+    FirstLevelDivisions FLD = new FirstLevelDivisions();
+
+
 
 
     public void save(ActionEvent actionEvent) throws SQLException, IOException {
@@ -86,6 +91,12 @@ public class add_customer_view_controller implements Initializable {
         stage.show();
 
     }
+
+    /**
+     * brings the user back to the main screen.
+     * @param actionEvent
+     * @throws IOException
+     */
     public void cancel(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("customer-view.fxml"));
         Scene scene = new Scene(loader.load());
@@ -95,11 +106,38 @@ public class add_customer_view_controller implements Initializable {
         stage.show();
     }
 
+    /**
+     * This method is used to populate the drop-down menus.
+     * Contains the first LAMBDA that is used to populate First Level Division dropdown data.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        ObservableList<String> pop = FXCollections.observableArrayList();
-        pop.addAll("United States", "Canada", "United Kingdom");
-        // TODO: To complete this portion we need to bring in all the FIRSTLEVELDIVISON data.
+
+
+
+        try {
+            // lists
+            ObservableList<Countries> country = CountryDAO.getCountries();
+            ObservableList<String> countryVal = FXCollections.observableArrayList();
+            ObservableList<FirstLevelDivisions> FLD = FirstLevelDivisionDAO.getFLD();
+            ObservableList<String> fldVAL = FXCollections.observableArrayList();
+
+            //cycle each country add to country box
+            country.stream().map(Countries::getCountry).forEach(countryVal::add);
+            CBOX.setItems(countryVal);
+
+            //LAMBDA Expression 1 used to populate the FLD drop down menu
+            FLD.forEach(firstLevelDivision -> fldVAL.add(firstLevelDivision.getDivision()));
+            SBOX.setItems(fldVAL);
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
 
     }
 }

@@ -30,8 +30,8 @@
       <Button layoutX="28.0" layoutY="420.0" mnemonicParsing="false" onAction="#save" text="Save" />
       <Button layoutX="28.0" layoutY="459.0" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
       <Label layoutX="164.0" layoutY="26.0" text="Add Customer Rercord" />
-      <ChoiceBox fx:id="countryBOX" layoutX="190.0" layoutY="340.0" prefWidth="150.0" value="Country" />
-      <ChoiceBox fx:id="stateBOX" layoutX="190.0" layoutY="381.0" prefWidth="150.0" value="State" />
+      <ComboBox fx:id="CBOX" layoutX="190.0" layoutY="355.0" prefWidth="150.0" promptText="Country" />
+      <ComboBox fx:id="SBOX"  layoutX="190.0" layoutY="394.0" prefWidth="150.0" promptText="State" />
 
    </children>
 </Pane>
