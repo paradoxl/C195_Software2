@@ -36,12 +36,15 @@ public class add_customer_view_controller implements Initializable {
     private ComboBox<String> CBOX;
     @FXML
     private ComboBox<String> SBOX;
+    @FXML
+    private TextField hiddenVar;
     FirstLevelDivisions FLD = new FirstLevelDivisions();
 
 
 
 
     public void save(ActionEvent actionEvent) throws SQLException, IOException {
+        //TODO: BUG with customer id. +2 works for the first addition but not any others.
         ObservableList<Customers> list = FXCollections.observableArrayList();
         Customers newCustomer = new Customers();
         String query = "SELECT Customer_ID FROM customers";
@@ -49,8 +52,15 @@ public class add_customer_view_controller implements Initializable {
         ResultSet rs = ps.executeQuery();
         int custID = 0;
        while (rs.next()){
-           custID = rs.getInt("Customer_ID") + 2;
+           custID = rs.getInt("Customer_ID") + 1;
        }
+
+        String queryID = "SELECT Division_ID FROM first_level_divisions WHERE Division = '" + SBOX.getSelectionModel().getSelectedItem() + "'";
+        PreparedStatement psID = InitCon.connection.prepareStatement(queryID);
+        ResultSet rsID = psID.executeQuery();
+        while (rsID.next()){
+            hiddenVar.setText(String.valueOf(rsID.getInt("Division_ID")));
+        }
 
         System.out.println(custID);
         String name = nameTextFLD.getText();
@@ -66,7 +76,7 @@ public class add_customer_view_controller implements Initializable {
         newCustomer.setPostalCode(postal);
         newCustomer.setPhone(phone);
 
-        String insertQuery = "INSERT INTO customers VALUES (?,?,?,?,?,?,?,?,?)";
+        String insertQuery = "INSERT INTO customers VALUES (?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement insertPS = InitCon.connection.prepareStatement(insertQuery);
         insertPS.setInt(1,custID);
         insertPS.setString(2,nameTextFLD.getText());
@@ -77,7 +87,7 @@ public class add_customer_view_controller implements Initializable {
         insertPS.setString(7,createdBy);
         insertPS.setTimestamp(8,Timestamp.valueOf(LocalDateTime.now()));
         insertPS.setString(9,updateBy);
-//        insertPS.setInt();
+        insertPS.setInt(10,Integer.parseInt(hiddenVar.getText()));
         // figure out division id
 
         insertPS.executeUpdate();
@@ -108,13 +118,14 @@ public class add_customer_view_controller implements Initializable {
     }
 
     public void dynamicCombo() throws SQLException {
+
+        // sets combo boxes
         ObservableList<FirstLevelDivisions> FLD = FirstLevelDivisionDAO.getFLD();
         ObservableList<String> fldVAL = FXCollections.observableArrayList();
         ObservableList<Integer> fldCC = FXCollections.observableArrayList();
         ObservableList<String> finalFLDVALUS = FXCollections.observableArrayList();
         ObservableList<String> finalFLDVALCA = FXCollections.observableArrayList();
         ObservableList<String> finalFLDVALUK = FXCollections.observableArrayList();
-
         //First set of LAMBDA expressions used to gather data on FLD base on country id
         FLD.forEach((firstLevelDivisions -> fldCC.add(firstLevelDivisions.getCountryID()) ));
         FLD.forEach(firstLevelDivision -> fldVAL.add(firstLevelDivision.getDivision()));
@@ -122,7 +133,6 @@ public class add_customer_view_controller implements Initializable {
           SBOX.setOpacity(100);
           for(int i = 0; i < 51; i++){
                 finalFLDVALUS.add(fldVAL.get(i));
-
             }
             SBOX.setItems(finalFLDVALUS);
         }
@@ -135,11 +145,17 @@ public class add_customer_view_controller implements Initializable {
         }
         if(CBOX.getSelectionModel().getSelectedIndex() == 2){
             SBOX.setOpacity(100);
-                        for(int i = 51; i < 64; i++){
+            for(int i = 51; i < 64; i++){
                 finalFLDVALCA.add(fldVAL.get(i));
             }
             SBOX.setItems(finalFLDVALCA);
         }
+
+        // gathers info on division id
+        System.out.println(SBOX.getSelectionModel().getSelectedItem());
+        // query db based off division
+
+
     }
 
 
