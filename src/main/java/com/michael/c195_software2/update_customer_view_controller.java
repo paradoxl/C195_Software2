@@ -1,5 +1,8 @@
 package com.michael.c195_software2;
 
+import com.michael.c195_software2.con.InitCon;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +14,11 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class update_customer_view_controller {
     @FXML
@@ -62,6 +70,34 @@ public class update_customer_view_controller {
         }
     }
 
-    public void save(ActionEvent actionEvent) {
+    public void save(ActionEvent actionEvent) throws SQLException {
+        ObservableList<Integer> ID = FXCollections.observableArrayList();
+        Customers newCustomer = new Customers();
+        int custID = 0;
+        //Collect ID
+        String query = "SELECT Customer_ID FROM customers WHERE Customer_Name = '" + nameTextFLD.getText() + "'";
+        PreparedStatement ps = InitCon.connection.prepareStatement(query);
+
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()) {
+            custID = rs.getInt("Customer_ID");
+
+        }
+
+        //TODO: Collect which user is logged in so we can add the changed by.
+        String insertQuery = "UPDATE customers SET Customer_ID = ?, Customer_Name = ?";
+        PreparedStatement insertPS = InitCon.connection.prepareStatement(insertQuery);
+        insertPS.setInt(1,custID);
+        insertPS.setString(2,nameTextFLD.getText());
+//        insertPS.setString(3,addressTextFLD.getText());
+//        insertPS.setString(4, postalTextFLD.getText());
+//        insertPS.setString(5,phoneTextFLD.getText());
+//        insertPS.setString(7,"i need to fix this to collect user");
+//        insertPS.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
+//        insertPS.setString(9,"I need to fix this");
+        insertPS.executeUpdate();
+
+        //error Duplicate entry '0' for key
+
     }
 }
