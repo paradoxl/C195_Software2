@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
  */
 public class Appointments {
     private int appointmentID;
+    private String title;
     private String description;
     private String location;
     private String type;
@@ -21,8 +22,9 @@ public class Appointments {
     private int contactID;
 
 
-    public Appointments(int appointmentID, String description, String location, String type, LocalDateTime start, LocalDateTime end, LocalDateTime createDate, String createdBy, int customerID, int userID, int contactID){
+    public Appointments(int appointmentID, String title, String description, String location, String type, LocalDateTime start, LocalDateTime end, LocalDateTime createDate, int customerID, int userID, int contactID){
         this.appointmentID = appointmentID;
+        this.title = title;
         this.description = description;
         this.location = location;
         this.type = type;
@@ -46,6 +48,15 @@ public class Appointments {
     public int getAppointmentID(){
         return appointmentID;
     }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
     public void setDescription(String description){
         this.description = description;
     }
@@ -88,7 +99,7 @@ public class Appointments {
     public String getCreatedBy(){
         return createdBy;
     }
-    public void setCustomerID(){
+    public void setCustomerID(int customerID){
         this.customerID = customerID;
     }
 

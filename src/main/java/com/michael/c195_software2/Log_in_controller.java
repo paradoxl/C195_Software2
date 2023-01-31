@@ -66,7 +66,7 @@ public class Log_in_controller implements Initializable{
         String password = PasswordTextFLD.getText();
         UserDAO user = new UserDAO();
         if(user.validation(username, password)){
-            FXMLLoader loader = new FXMLLoader(Main.class.getResource("Customer-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("customer-view.fxml"));
             Scene scene = new Scene(loader.load());
             Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
             stage.setTitle("Customer View");
@@ -83,7 +83,7 @@ public class Log_in_controller implements Initializable{
 
 
 
-        InitCon.closeConnection();
+
     }
 
     public void signUp(ActionEvent actionEvent) {

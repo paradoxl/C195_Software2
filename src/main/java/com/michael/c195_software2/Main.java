@@ -1,5 +1,6 @@
 package com.michael.c195_software2;
 
+import com.michael.c195_software2.DataAccessObject.AppointmentDAO;
 import com.michael.c195_software2.DataAccessObject.UserDAO;
 import com.michael.c195_software2.con.InitCon;
 import javafx.application.Application;
@@ -22,8 +23,9 @@ public class Main extends Application {
 
     public static void main(String[] args) throws SQLException {
         InitCon.openConnection();
-
+        AppointmentDAO test  = new AppointmentDAO();
 //        InitCon.closeConnection();
+        test.getAppointment();
         launch();
     }
 }

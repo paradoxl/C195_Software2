@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="561.0" prefWidth="1045.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.michael.c195_software2.appointment_view_controller">
+   <children>
+      <TableView fx:id="appointmentTABLE" layoutX="109.0" layoutY="39.0" prefHeight="332.0" prefWidth="888.0">
+        <columns>
+          <TableColumn fx:id="IDCOL" prefWidth="117.0" text="Appointment ID" />
+          <TableColumn fx:id="titleCOL" prefWidth="54.0" text="Title" />
+            <TableColumn fx:id="descriptionCOL" prefWidth="85.0" text="Description" />
+            <TableColumn fx:id="locationCOL" prefWidth="85.0" text="Location" />
+            <TableColumn fx:id="contactCOL" prefWidth="62.0" text="Contact" />
+            <TableColumn fx:id="typeCOL" prefWidth="54.0" text="Type" />
+            <TableColumn fx:id="startCOL" prefWidth="151.0" text="Start Time" />
+            <TableColumn fx:id="endCOL" prefWidth="132.0" text="End Time" />
+            <TableColumn fx:id="custIDCOL" prefWidth="86.0" text="Customer ID" />
+            <TableColumn fx:id="usrIDCOL" prefWidth="61.0" text="User ID" />
+        </columns>
+      </TableView>
+      <Button layoutX="459.0" layoutY="381.0" mnemonicParsing="false" text="Add Appointment" />
+      <Button layoutX="449.0" layoutY="427.0" mnemonicParsing="false" text="Update Appointment" />
+      <Button layoutX="452.0" layoutY="475.0" mnemonicParsing="false" text="Delete Appointment" />
+      <Button layoutX="890.0" layoutY="488.0" mnemonicParsing="false" onAction="#back" text="Back" />
+      <Label layoutX="121.0" layoutY="14.0" text="Appointments" />
+   </children>
+</Pane>
