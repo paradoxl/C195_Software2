@@ -20,6 +20,7 @@ import java.net.URL;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 
@@ -45,16 +46,20 @@ public class add_customer_view_controller implements Initializable {
 
     public void save(ActionEvent actionEvent) throws SQLException, IOException {
         //TODO: BUG with customer id. +2 works for the first addition but not any others.
-        ObservableList<Customers> list = FXCollections.observableArrayList();
+        ObservableList<Integer> list = FXCollections.observableArrayList();
         Customers newCustomer = new Customers();
         String query = "SELECT Customer_ID FROM customers";
         PreparedStatement ps = InitCon.connection.prepareStatement(query);
         ResultSet rs = ps.executeQuery();
-        int custID = 0;
+        int custID = 3;
        while (rs.next()){
-           custID = rs.getInt("Customer_ID") + 1;
+//           custID = rs.getInt("Customer_ID") + 1;
+           list.add(rs.getInt("Customer_ID"));
        }
-
+        Random ran = new Random();
+       while (list.contains(custID)) {
+           custID = ran.nextInt(100000);
+       }
         String queryID = "SELECT Division_ID FROM first_level_divisions WHERE Division = '" + SBOX.getSelectionModel().getSelectedItem() + "'";
         PreparedStatement psID = InitCon.connection.prepareStatement(queryID);
         ResultSet rsID = psID.executeQuery();
@@ -166,7 +171,7 @@ public class add_customer_view_controller implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        hiddenVar.setOpacity(0);
         try {
             // lists
             ObservableList<Countries> country = CountryDAO.getCountries();
