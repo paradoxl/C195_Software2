@@ -37,9 +37,9 @@ public class add_appointment_controller implements Initializable {
     @FXML
     public TextField typeTextFLD;
     @FXML
-    public TextField startTextFLD;
+    public DatePicker startTextFLD;
     @FXML
-    public TextField endTextFLD;
+    public DatePicker endTextFLD;
     @FXML
     public TextField customerIDTextFLD;
     @FXML
@@ -85,8 +85,8 @@ public class add_appointment_controller implements Initializable {
         newAppointment.setDescription(descriptionTextFLD.getText());
         newAppointment.setLocation(locationTextFLD.getText());
         newAppointment.setType(typeTextFLD.getText());
-        newAppointment.setEnd(LocalDateTime.parse(endTextFLD.getText()));
-        newAppointment.setStart(LocalDateTime.parse(startTextFLD.getText()));
+        newAppointment.setEnd(LocalDateTime.parse(endTextFLD.getAccessibleText()));
+        newAppointment.setStart(LocalDateTime.parse(startTextFLD.getAccessibleText()));
         newAppointment.setCreateDate(LocalDateTime.now());
         //TODO: fix all below
         newAppointment.setCreatedBy("Ned Stark");

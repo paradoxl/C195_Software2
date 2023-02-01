@@ -39,10 +39,10 @@
             <TextField fx:id="locationTextFLD" layoutX="220.0" layoutY="23.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <TextField fx:id="customerIDTextFLD" layoutX="220.0" layoutY="179.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
             <TextField fx:id="typeTextFLD" layoutX="220.0" layoutY="231.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <TextField fx:id="startTextFLD" layoutX="220.0" layoutY="282.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-            <TextField fx:id="endTextFLD" layoutX="220.0" layoutY="333.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
             <TextField fx:id="userIDTextFLD" layoutX="220.0" layoutY="435.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
             <ComboBox fx:id="contactBOX" prefWidth="150.0" promptText="Contact Name" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <DatePicker fx:id="startTextFLD" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <DatePicker fx:id="endTextFLD" layoutX="220.0" layoutY="333.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
          </children>
       </GridPane>
       <Button layoutX="655.0" layoutY="540.0" mnemonicParsing="false" onAction="#saveButton" text="Save" />
