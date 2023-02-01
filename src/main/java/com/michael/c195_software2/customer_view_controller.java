@@ -146,4 +146,13 @@ public class customer_view_controller implements Initializable {
             System.out.println(selected);
         }
         }
+
+    public void refresh(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("customer-view.fxml"));
+        Scene scene = new Scene(loader.load());
+        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+        stage.setTitle("Customer Records");
+        stage.setScene(scene);
+        stage.show();
+    }
 }
