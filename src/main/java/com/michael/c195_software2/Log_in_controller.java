@@ -67,13 +67,10 @@ public class Log_in_controller implements Initializable{
         String username = UsernameTextFLD.getText();
         String password = PasswordTextFLD.getText();
         FileWriter input  = new FileWriter("login_activity.txt",true);
-        FileWriter activeUser = new FileWriter("activeUser.txt", true);
         UserDAO user = new UserDAO();
         if(user.validation(username, password)){
             try {
                 input.write("Username: " + username + " Status: Successful" + " Time: " + LocalDateTime.now() + "\n");
-                activeUser.write(username+"\n");
-                activeUser.flush();
                 System.out.println("writing succesful login");
                 input.flush();
             }catch (IOException e){

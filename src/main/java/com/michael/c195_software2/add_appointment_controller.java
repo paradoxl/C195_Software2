@@ -1,5 +1,7 @@
 package com.michael.c195_software2;
 
+import com.michael.c195_software2.DataAccessObject.ContactDAO;
+import com.michael.c195_software2.DataAccessObject.CustomerDAO;
 import com.michael.c195_software2.con.InitCon;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -16,6 +19,7 @@ import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -37,11 +41,15 @@ public class add_appointment_controller implements Initializable {
     @FXML
     public TextField endTextFLD;
     @FXML
-    public TextField custIDTextFLD;
+    public TextField customerIDTextFLD;
     @FXML
     public TextField userIDTextFLD;
     @FXML
     public ComboBox contactBOX;
+    public TableView customerTABLE;
+    public TableColumn idCELL;
+    public TableColumn nameCELL;
+    public TableColumn phoneCELL;
 
     Alert exit = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to exit?", ButtonType.YES, ButtonType.NO);
 
@@ -81,10 +89,22 @@ public class add_appointment_controller implements Initializable {
         newAppointment.setStart(LocalDateTime.parse(startTextFLD.getText()));
         newAppointment.setCreateDate(LocalDateTime.now());
         //TODO: fix all below
-        newAppointment.setCreatedBy("Needs to be fixed");
-        newAppointment.setCustomerID(1);
-        newAppointment.setUserID(1);
-        newAppointment.setContactID(1);
+        newAppointment.setCreatedBy("Ned Stark");
+        newAppointment.setCustomerID(Integer.parseInt(customerIDTextFLD.getText()));
+        newAppointment.setUserID(Integer.parseInt(customerIDTextFLD.getText()));
+//        newAppointment.setContactID(Integer.parseInt(contactBOX.getSelectionModel().getSelectedItem()));
+        // TODO: selecting contact id
+
+        String insertQuery = "INSERT INTO appointments VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        PreparedStatement insertPS = InitCon.connection.prepareStatement(insertQuery);
+        insertPS.setInt(1,newAppointment.getAppointmentID());
+        insertPS.setString(2,newAppointment.getTitle());
+        insertPS.setString(3,newAppointment.getDescription());
+        insertPS.setString(4,newAppointment.getLocation());
+        insertPS.setString(5,newAppointment.getType());
+        insertPS.setTimestamp(6, Timestamp.valueOf(newAppointment.getStart()));
+        insertPS.setTimestamp(7, Timestamp.valueOf(newAppointment.getEnd()));
+        insertPS.executeUpdate();
 
 
     }
@@ -107,5 +127,23 @@ public class add_appointment_controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
     //implement the choice box
+        try {
+            //Customer Table
+            ObservableList<Customers> customers = CustomerDAO.getCustomers();
+            customerTABLE.setItems(customers);
+            idCELL.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+            nameCELL.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+            phoneCELL.setCellValueFactory(new PropertyValueFactory<>("phone"));
+
+            //contact Combobox
+            ObservableList<Contacts> contacts = ContactDAO.getContacts();
+            ObservableList<String> contactVALS = FXCollections.observableArrayList();
+
+            contacts.stream().map(Contacts::getContactName).forEach(contactVALS::add);
+            contactBOX.setItems(contactVALS);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

@@ -54,7 +54,7 @@ public class add_customer_view_controller implements Initializable {
         ResultSet rs = ps.executeQuery();
         int custID = 3;
 
-    
+
        while (rs.next()){
 //           custID = rs.getInt("Customer_ID") + 1;
            list.add(rs.getInt("Customer_ID"));
