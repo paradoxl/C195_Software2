@@ -19,7 +19,7 @@
             <TableColumn fx:id="usrIDCOL" prefWidth="61.0" text="User ID" />
         </columns>
       </TableView>
-      <Button layoutX="459.0" layoutY="381.0" mnemonicParsing="false" text="Add Appointment" />
+      <Button onAction="#addAppointment" layoutX="459.0" layoutY="381.0" mnemonicParsing="false" text="Add Appointment" />
       <Button layoutX="449.0" layoutY="427.0" mnemonicParsing="false" text="Update Appointment" />
       <Button layoutX="452.0" layoutY="475.0" mnemonicParsing="false" text="Delete Appointment" />
       <Button layoutX="890.0" layoutY="488.0" mnemonicParsing="false" onAction="#back" text="Back" />

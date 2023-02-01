@@ -15,6 +15,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
@@ -52,6 +53,8 @@ public class add_customer_view_controller implements Initializable {
         PreparedStatement ps = InitCon.connection.prepareStatement(query);
         ResultSet rs = ps.executeQuery();
         int custID = 3;
+
+    
        while (rs.next()){
 //           custID = rs.getInt("Customer_ID") + 1;
            list.add(rs.getInt("Customer_ID"));
