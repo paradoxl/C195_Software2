@@ -25,7 +25,7 @@ public class Main extends Application {
         InitCon.openConnection();
         AppointmentDAO test  = new AppointmentDAO();
 //        InitCon.closeConnection();
-        test.getAppointment();
+//        test.getAppointment();
         launch();
     }
 }

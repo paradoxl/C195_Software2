@@ -16,10 +16,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Random;
@@ -70,23 +68,72 @@ public class add_appointment_controller implements Initializable {
      * @param actionEvent
      * @throws SQLException
      */
-    public void saveButton(ActionEvent actionEvent) throws SQLException {
-        //This will pull in the appointment ids and generate a new one randomly. This will only be done if the random is not already listed.
-        ObservableList<Integer> list = FXCollections.observableArrayList();
-        Appointments newAppointment = new Appointments();
-        String query = "SELECT Appointment_ID FROM appointments";
-        PreparedStatement ps = InitCon.connection.prepareStatement(query);
-        ResultSet rs = ps.executeQuery();
-        int appID = 1;
-        while (rs.next()){
-            list.add(rs.getInt("Appointment_ID"));
-            Random ran = new Random();
-            while (list.contains(appID)){
-                appID = ran.nextInt(10000);
+    public void saveButton(ActionEvent actionEvent) throws SQLException, IOException {
+            //This will pull in the appointment ids and generate a new one randomly. This will only be done if the random is not already listed.
+            ObservableList<Integer> list = FXCollections.observableArrayList();
+            Appointments newAppointment = new Appointments();
+            String query = "SELECT Appointment_ID FROM appointments";
+            PreparedStatement ps = InitCon.connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            int appID = 1;
+            while (rs.next()) {
+                list.add(rs.getInt("Appointment_ID"));
+                Random ran = new Random();
+                while (list.contains(appID)) {
+                    appID = ran.nextInt(10000);
+                }
             }
-        }
+            //gather times
+            LocalTime startTime = (LocalTime) startTimeBox.getSelectionModel().getSelectedItem();
+            LocalTime endTime = (LocalTime) endTimeBOX.getSelectionModel().getSelectedItem();
+            LocalDate startDate = startTextFLD.getValue();
+            LocalDate endDate = endTextFLD.getValue();
 
-        // populate combo box
+            LocalDateTime start = LocalDateTime.of(startDate, startTime);
+            LocalDateTime end = LocalDateTime.of(endDate, endTime);
+
+            //gather customer ID
+            int customerID = (int) CustomerIDBOX.getSelectionModel().getSelectedItem();
+
+            //gather Contact ID
+            int contactID = 0;
+            String contactQuery = "SELECT Contact_ID FROM contacts WHERE Contact_Name = '" + contactBOX.getSelectionModel().getSelectedItem() + "'";
+            PreparedStatement contactPS = InitCon.connection.prepareStatement(contactQuery);
+            ResultSet contactRS = contactPS.executeQuery();
+            while (contactRS.next()){
+                contactID = contactRS.getInt("Contact_ID");
+            }
+
+            //insert times
+            String insertQuery = "INSERT INTO appointments (Appointment_ID,Customer_ID,User_ID,Contact_ID,Location,Title,Description,Type,Create_Date,Created_By,Last_Update,Last_Updated_By,Start,End) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            PreparedStatement insertPS = InitCon.connection.prepareStatement(insertQuery);
+            insertPS.setInt(1, appID);
+            insertPS.setInt(2, customerID);
+            insertPS.setInt(3, contactID);
+            insertPS.setInt(4, Integer.parseInt(userIDTextFLD.getText()));
+            insertPS.setString(5, locationTextFLD.getText());
+            insertPS.setString(6, titleTextFLD.getText());
+            insertPS.setString(7, descriptionTextFLD.getText());
+            insertPS.setString(8, typeTextFLD.getText());
+            insertPS.setTimestamp(9, Timestamp.valueOf(LocalDateTime.now()));
+            insertPS.setString(10, "Help im trapped");
+            insertPS.setTimestamp(11, Timestamp.valueOf(LocalDateTime.now()));
+            insertPS.setString(12, "Call john connor!");
+            insertPS.setTimestamp(13, Timestamp.valueOf(start));
+            insertPS.setTimestamp(14, Timestamp.valueOf(end));
+            //TODO: customer id user id contact id
+            //TODO: check that times do not conflict
+
+            insertPS.executeUpdate();
+
+
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("appointments-view.fxml"));
+        Scene scene = new Scene(loader.load());
+        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+        stage.setTitle("Appointments");
+        stage.setScene(scene);
+        stage.show();
+
 
 
 
