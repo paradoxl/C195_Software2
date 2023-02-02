@@ -38,6 +38,7 @@ public class customer_view_controller implements Initializable {
     private Parent scene;
     Alert exitAlert = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you want to exit?", ButtonType.YES, ButtonType.NO);
     Alert noSelectedCust = new Alert(Alert.AlertType.ERROR, "You have not selected a customer", ButtonType.OK);
+    Alert hasAppointments = new Alert(Alert.AlertType.ERROR, "You cannot remove a patient that has appointments", ButtonType.OK);
     /**
      * This method is used to populate the tableview found on customer view.
      * @param url
@@ -115,7 +116,10 @@ public class customer_view_controller implements Initializable {
     }
 
 
-
+    /**
+     * This method provides logic for the exit button.
+     * @param actionEvent
+     */
     public void exit(ActionEvent actionEvent) {
         exitAlert.showAndWait();
         if(exitAlert.getResult() == ButtonType.YES){
@@ -127,26 +131,50 @@ public class customer_view_controller implements Initializable {
         }
     }
 
+    /**
+     * This method provides logic for deletion of records.
+     * error checking has been implemented to prevent patients from being deleted if they have pending appointments.
+     * @param actionEvent
+     * @throws SQLException
+     */
     public void deleteRecord(ActionEvent actionEvent) throws SQLException {
+
 
         if(customerTable.getSelectionModel().getSelectedItem() == null){
             noSelectedCust.showAndWait();
         }
         else {
             int selected = customerTable.getSelectionModel().getSelectedItem().getCustomerID();
-            String query = "DELETE FROM customers WHERE Customer_ID = '" + selected + "'";
-//        PreparedStatement ps = InitCon.connection.prepareStatement(query);
-//        ps.executeQuery();
-            Statement statement = InitCon.connection.createStatement();
-            statement.executeUpdate(query);
-            System.out.println("Begone Demon!");
-            ObservableList<Customers> list = CustomerDAO.getCustomers();
-            customerTable.setItems(list);
 
-            System.out.println(selected);
+            String checkAppointment = "Select Customer_ID FROM appointments";
+            PreparedStatement checkPS = InitCon.connection.prepareStatement(checkAppointment);
+            ResultSet checkRS = checkPS.executeQuery();
+            System.out.println("Gathering appointment data");
+
+            while (checkRS.next()){
+                if(customerTable.getSelectionModel().getSelectedItem().getCustomerID() == checkRS.getInt("Customer_ID")){
+                    hasAppointments.showAndWait();
+                }
+                else{
+                    String query = "DELETE FROM customers WHERE Customer_ID = '" + selected + "'";
+                    Statement statement = InitCon.connection.createStatement();
+                    statement.executeUpdate(query);
+                    System.out.println("Begone Demon!");
+                    ObservableList<Customers> list = CustomerDAO.getCustomers();
+                    customerTable.setItems(list);
+                }
+            }
+
+
         }
         }
 
+    /**
+     * This method is used to refresh the Table.
+     * Its possible this will be deprecated.
+     * @param actionEvent
+     * @throws IOException
+     */
     public void refresh(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("customer-view.fxml"));
         Scene scene = new Scene(loader.load());

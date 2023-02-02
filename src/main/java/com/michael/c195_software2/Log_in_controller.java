@@ -11,9 +11,11 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.w3c.dom.Text;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -64,8 +66,16 @@ public class Log_in_controller implements Initializable{
         // check user is legit
         String username = UsernameTextFLD.getText();
         String password = PasswordTextFLD.getText();
+        FileWriter input  = new FileWriter("login_activity.txt",true);
         UserDAO user = new UserDAO();
         if(user.validation(username, password)){
+            try {
+                input.write("Username: " + username + " Status: Successful" + " Time: " + LocalDateTime.now() + "\n");
+                System.out.println("writing succesful login");
+                input.flush();
+            }catch (IOException e){
+                System.out.println("no soup for you");
+            }
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("customer-view.fxml"));
             Scene scene = new Scene(loader.load());
             Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
@@ -74,6 +84,15 @@ public class Log_in_controller implements Initializable{
             stage.show();
         }
         else{
+            try {
+                //10 char to un
+                input.write("Username: " + username + " Status: Failed " + " Time: " + LocalDateTime.now() + "\n");
+                System.out.println("writing failed login");
+                input.flush();
+            }catch (IOException e){
+                System.out.println("no soup for you");
+            }
+
             Alert loginError = new Alert(Alert.AlertType.ERROR, "Incorrect username or password",ButtonType.OK);
             loginError.showAndWait();
         }

@@ -19,7 +19,7 @@ public class AppointmentDAO {
         String query = "SELECT * FROM appointments";
         PreparedStatement ps = InitCon.connection.prepareStatement(query);
         ResultSet rs = ps.executeQuery();
-        System.out.println("Executed");
+        System.out.println("Gathering appointments");
         while (rs.next()){
             int appointmentId = rs.getInt("Appointment_ID");
             String description = rs.getString("Description");
