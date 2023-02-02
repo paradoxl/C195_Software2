@@ -102,4 +102,19 @@ public class appointment_view_controller implements Initializable {
             }
         }
     }
+
+    public void updateAppointment(ActionEvent actionEvent) throws IOException {
+        Appointments selected = appointmentTABLE.getSelectionModel().getSelectedItem();
+        if(selected == null){
+            noSelectedApp.showAndWait();
+        }
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("update-appointment-view.fxml"));
+        Scene scene = new Scene(loader.load());
+        update_appointment_controller helper = loader.getController();
+        helper.populate(selected);
+        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+        stage.setTitle("Customer Records");
+        stage.setScene(scene);
+        stage.show();
+    }
 }

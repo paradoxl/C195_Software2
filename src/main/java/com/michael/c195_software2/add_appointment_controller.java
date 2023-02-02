@@ -139,6 +139,11 @@ public class add_appointment_controller implements Initializable {
 
     }
 
+    /**
+     * This method returns the user to the default appointments page.
+     * @param actionEvent
+     * @throws IOException
+     */
     public void exitButton(ActionEvent actionEvent) throws IOException {
         exit.showAndWait();
         if(exit.getResult() == ButtonType.YES) {
@@ -154,6 +159,11 @@ public class add_appointment_controller implements Initializable {
         }
     }
 
+    /**
+     * This method is used to initialize all populated fields.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
     //implement the choice box
