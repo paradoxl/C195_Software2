@@ -21,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -44,12 +45,7 @@ public class add_appointment_controller implements Initializable {
     public DatePicker startTextFLD;
     @FXML
     public DatePicker endTextFLD;
-    @FXML
-    public Spinner startTimeRoller;
-    @FXML
-    public Spinner endTimeRoller;
-    @FXML
-    public Spinner customerRoller;
+
     @FXML
     public TableView customerTABLE;
     @FXML
@@ -58,6 +54,12 @@ public class add_appointment_controller implements Initializable {
     public TableColumn nameCELL;
     @FXML
     public TableColumn phoneCELL;
+    @FXML
+    public ComboBox startTimeBox;
+    @FXML
+    public ComboBox endTimeBOX;
+    @FXML
+    public ComboBox CustomerIDBOX;
 
     Alert exit = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to exit?", ButtonType.YES, ButtonType.NO);
 
@@ -122,8 +124,23 @@ public class add_appointment_controller implements Initializable {
             contacts.stream().map(Contacts::getContactName).forEach(contactVALS::add);
             contactBOX.setItems(contactVALS);
 
-            //time Rollers
-            
+            //Customer ID box
+            ObservableList<Customers> customerID = CustomerDAO.getCustomers();
+            ObservableList<Integer> customerIDVALS = FXCollections.observableArrayList();
+            customerID.stream().map(Customers::getCustomerID).forEach(customerIDVALS::add);
+            CustomerIDBOX.setItems(customerIDVALS);
+
+            //Time Boxes
+            LocalTime start = LocalTime.MIN.plusHours(8);
+            LocalTime end = LocalTime.MIN.plusHours(23);
+
+            ObservableList<LocalTime> timeIsntReal = FXCollections.observableArrayList();
+            while(start.isBefore(end)){
+                timeIsntReal.add(start);
+                start = start.plusHours(1);
+            }
+            startTimeBox.setItems(timeIsntReal);
+            endTimeBOX.setItems(timeIsntReal);
 
 
 

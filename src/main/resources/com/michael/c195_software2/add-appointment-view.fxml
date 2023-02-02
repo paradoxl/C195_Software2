@@ -41,14 +41,14 @@
             <TextField fx:id="locationTextFLD" layoutX="220.0" layoutY="23.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <TextField fx:id="typeTextFLD" layoutX="220.0" layoutY="231.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <TextField fx:id="userIDTextFLD" layoutX="220.0" layoutY="435.0" GridPane.columnIndex="1" GridPane.rowIndex="11" />
-            <ComboBox fx:id="contactBOX" prefWidth="150.0" promptText="Contact Name" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <ComboBox fx:id="contactBOX" prefWidth="150.0" promptText="Name" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <DatePicker fx:id="startTextFLD" GridPane.columnIndex="1" GridPane.rowIndex="6" />
             <DatePicker fx:id="endTextFLD" layoutX="220.0" layoutY="333.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-            <Spinner fx:id="startTimeRoller" GridPane.columnIndex="1" GridPane.rowIndex="7" />
             <Label layoutX="10.0" layoutY="294.0" prefHeight="43.0" prefWidth="122.0" text="Start Time" GridPane.rowIndex="7" />
-            <Spinner fx:id="endTimeRoller" layoutX="220.0" layoutY="320.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
             <Label layoutX="10.0" layoutY="354.0" prefHeight="43.0" prefWidth="122.0" text="End Time" GridPane.rowIndex="9" />
-            <Spinner fx:id="customerRoller" layoutX="220.0" layoutY="406.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+            <ComboBox fx:id="startTimeBox" layoutX="220.0" layoutY="191.0" prefWidth="150.0" promptText="Time" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <ComboBox fx:id="endTimeBOX" layoutX="220.0" layoutY="191.0" prefWidth="150.0" promptText="Time" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+            <ComboBox fx:id="CustomerIDBOX" layoutX="220.0" layoutY="191.0" prefWidth="150.0" promptText="ID" GridPane.columnIndex="1" GridPane.rowIndex="10" />
          </children>
       </GridPane>
       <Button layoutX="655.0" layoutY="540.0" mnemonicParsing="false" onAction="#saveButton" text="Save" />
