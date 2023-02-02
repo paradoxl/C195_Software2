@@ -20,8 +20,8 @@
         </columns>
       </TableView>
       <Button layoutX="459.0" layoutY="381.0" mnemonicParsing="false" onAction="#addAppointment" text="Add Appointment" />
-      <Button layoutX="449.0" layoutY="427.0" mnemonicParsing="false" text="Update Appointment" />
-      <Button layoutX="452.0" layoutY="475.0" mnemonicParsing="false" text="Delete Appointment" />
+      <Button onAction="#updateAppointment" layoutX="449.0" layoutY="427.0" mnemonicParsing="false" text="Update Appointment" />
+      <Button onAction="#deleteAppointment" layoutX="452.0" layoutY="475.0" mnemonicParsing="false" text="Delete Appointment" />
       <Button layoutX="890.0" layoutY="488.0" mnemonicParsing="false" onAction="#back" text="Back" />
       <Label layoutX="121.0" layoutY="14.0" text="Appointments" />
       <RadioButton layoutX="813.0" layoutY="14.0" mnemonicParsing="false" text="Weekly" />

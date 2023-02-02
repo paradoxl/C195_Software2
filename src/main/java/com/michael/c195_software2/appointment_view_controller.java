@@ -1,21 +1,21 @@
 package com.michael.c195_software2;
 
 import com.michael.c195_software2.DataAccessObject.AppointmentDAO;
+import com.michael.c195_software2.con.InitCon;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ResourceBundle;
 
 public class appointment_view_controller implements Initializable {
@@ -41,6 +41,9 @@ public class appointment_view_controller implements Initializable {
     private TableColumn<?,?>custIDCOL;
     @FXML
     private TableColumn<?,?>usrIDCOL;
+    Alert noSelectedApp= new Alert(Alert.AlertType.ERROR, "You have not selected an appointment", ButtonType.OK);
+    Alert delete = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete this appointment?",ButtonType.YES,ButtonType.NO);
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -74,6 +77,41 @@ public class appointment_view_controller implements Initializable {
     public void addAppointment(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("add-appointment-view.fxml"));
         Scene scene = new Scene(loader.load());
+        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+        stage.setTitle("Customer Records");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void deleteAppointment(ActionEvent actionEvent) throws SQLException {
+        if (appointmentTABLE.getSelectionModel().getSelectedItem() == null){
+            noSelectedApp.showAndWait();
+        }
+        else {
+            delete.showAndWait();
+            if (delete.getResult() == ButtonType.YES) {
+                int selected = appointmentTABLE.getSelectionModel().getSelectedItem().getAppointmentID();
+                String query = "DELETE FROM appointments WHERE Appointment_ID = '" + selected + "'";
+                Statement statement = InitCon.connection.createStatement();
+                statement.executeUpdate(query);
+                ObservableList<Appointments> list = AppointmentDAO.getAppointment();
+                appointmentTABLE.setItems(list);
+            }
+            else{
+                System.out.println("again with pushing buttons for no reason...");
+            }
+        }
+    }
+
+    public void updateAppointment(ActionEvent actionEvent) throws IOException {
+        Appointments selected = appointmentTABLE.getSelectionModel().getSelectedItem();
+        if(selected == null){
+            noSelectedApp.showAndWait();
+        }
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("update-appointment-view.fxml"));
+        Scene scene = new Scene(loader.load());
+        update_appointment_controller helper = loader.getController();
+        helper.populate(selected);
         Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
         stage.setTitle("Customer Records");
         stage.setScene(scene);
