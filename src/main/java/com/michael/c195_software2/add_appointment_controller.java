@@ -37,18 +37,26 @@ public class add_appointment_controller implements Initializable {
     @FXML
     public TextField typeTextFLD;
     @FXML
+    public TextField userIDTextFLD;
+    @FXML
+    public ComboBox contactBOX;
+    @FXML
     public DatePicker startTextFLD;
     @FXML
     public DatePicker endTextFLD;
     @FXML
-    public TextField customerIDTextFLD;
+    public Spinner startTimeRoller;
     @FXML
-    public TextField userIDTextFLD;
+    public Spinner endTimeRoller;
     @FXML
-    public ComboBox contactBOX;
+    public Spinner customerRoller;
+    @FXML
     public TableView customerTABLE;
+    @FXML
     public TableColumn idCELL;
+    @FXML
     public TableColumn nameCELL;
+    @FXML
     public TableColumn phoneCELL;
 
     Alert exit = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to exit?", ButtonType.YES, ButtonType.NO);
@@ -78,33 +86,6 @@ public class add_appointment_controller implements Initializable {
 
         // populate combo box
 
-
-        //pull data from TF
-        newAppointment.setAppointmentID(appID);
-        newAppointment.setTitle(titleTextFLD.getText());
-        newAppointment.setDescription(descriptionTextFLD.getText());
-        newAppointment.setLocation(locationTextFLD.getText());
-        newAppointment.setType(typeTextFLD.getText());
-        newAppointment.setEnd(LocalDateTime.parse(endTextFLD.getAccessibleText()));
-        newAppointment.setStart(LocalDateTime.parse(startTextFLD.getAccessibleText()));
-        newAppointment.setCreateDate(LocalDateTime.now());
-        //TODO: fix all below
-        newAppointment.setCreatedBy("Ned Stark");
-        newAppointment.setCustomerID(Integer.parseInt(customerIDTextFLD.getText()));
-        newAppointment.setUserID(Integer.parseInt(customerIDTextFLD.getText()));
-//        newAppointment.setContactID(Integer.parseInt(contactBOX.getSelectionModel().getSelectedItem()));
-        // TODO: selecting contact id
-
-        String insertQuery = "INSERT INTO appointments VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-        PreparedStatement insertPS = InitCon.connection.prepareStatement(insertQuery);
-        insertPS.setInt(1,newAppointment.getAppointmentID());
-        insertPS.setString(2,newAppointment.getTitle());
-        insertPS.setString(3,newAppointment.getDescription());
-        insertPS.setString(4,newAppointment.getLocation());
-        insertPS.setString(5,newAppointment.getType());
-        insertPS.setTimestamp(6, Timestamp.valueOf(newAppointment.getStart()));
-        insertPS.setTimestamp(7, Timestamp.valueOf(newAppointment.getEnd()));
-        insertPS.executeUpdate();
 
 
     }
@@ -138,9 +119,14 @@ public class add_appointment_controller implements Initializable {
             //contact Combobox
             ObservableList<Contacts> contacts = ContactDAO.getContacts();
             ObservableList<String> contactVALS = FXCollections.observableArrayList();
-
             contacts.stream().map(Contacts::getContactName).forEach(contactVALS::add);
             contactBOX.setItems(contactVALS);
+
+            //time Rollers
+            
+
+
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
