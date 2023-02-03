@@ -194,7 +194,7 @@ public class add_appointment_controller implements Initializable {
             ObservableList<LocalTime> timeIsntReal = FXCollections.observableArrayList();
             while(start.isBefore(end)){
                 timeIsntReal.add(start);
-                start = start.plusHours(1);
+                start = start.plusMinutes(15);
             }
             startTimeBox.setItems(timeIsntReal);
             endTimeBOX.setItems(timeIsntReal);
