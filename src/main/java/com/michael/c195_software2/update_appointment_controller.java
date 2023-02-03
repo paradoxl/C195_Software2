@@ -1,19 +1,30 @@
 package com.michael.c195_software2;
 
+import com.michael.c195_software2.DataAccessObject.ContactDAO;
+import com.michael.c195_software2.DataAccessObject.CustomerDAO;
+import com.michael.c195_software2.con.InitCon;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ResourceBundle;
 
-public class update_appointment_controller implements Initializable {
+public class update_appointment_controller implements Initializable{
     @FXML
     public TextField appointmentIDTextFLD;
     @FXML
@@ -77,32 +88,100 @@ public class update_appointment_controller implements Initializable {
     }
 
     /**
-     * This method is used to populate all information on the page.
+     * This method is used to populate all fields found on the page with the selected appointment.
+     * @param working
+     * @throws SQLException
+     */
+    public void populate(Appointments working) throws SQLException {
+        //textBoxes
+        this.working = working;
+        int appointmentId = working.getAppointmentID();
+        appointmentIDTextFLD.setText(String.valueOf(appointmentId));
+        String title = working.getTitle();
+        titleTextFLD.setText(title);
+        String description = working.getDescription();
+        descriptionTextFLD.setText(description);
+        String location = working.getLocation();
+        locationTextFLD.setText(location);
+        String type = working.getType();
+        typeTextFLD.setText(type);
+        int customerID = working.getCustomerID();
+        CustomerIDBOX.setValue(customerID);
+        int userID = working.getUserID();
+        userIDTextFLD.setText(String.valueOf(userID));
+
+        //refactoring times
+        LocalDateTime start = working.getStart();
+        LocalDateTime end = working.getEnd();
+
+        LocalDate startDate = start.toLocalDate();
+        LocalTime startTime = start.toLocalTime();
+        LocalDate endDate = end.toLocalDate();
+        LocalTime endTime = end.toLocalTime();
+
+        startTimeBox.setValue(startTime);
+        endTimeBOX.setValue(endTime);
+        startTextFLD.setValue(startDate);
+        endTextFLD.setValue(endDate);
+
+        // pulling data on contact id
+        int contactID = working.getContactID();
+        String query = "SELECT Contact_Name FROM contacts WHERE Contact_ID = '" + contactID + "'";
+        PreparedStatement ps = InitCon.connection.prepareStatement(query);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next())
+        contactBOX.setValue(rs.getString("Contact_Name"));
+
+        //set custome box right side
+        ObservableList<Customers> customers = CustomerDAO.getCustomers();
+        customerTABLE.setItems(customers);
+        idCELL.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+        nameCELL.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        phoneCELL.setCellValueFactory(new PropertyValueFactory<>("phone"));
+    }
+
+    /**
+     * This method is used to populate the fields that were not brought in through the populate method.
      * @param url
      * @param resourceBundle
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //Textfield population
-//        appointmentIDTextFLD.setText();
+        try {
+            //set up contacts
+            ObservableList<Contacts>  contacts = ContactDAO.getContacts();
+            ObservableList<String> contactVALS = FXCollections.observableArrayList();
+            contacts.stream().map(Contacts::getContactName).forEach(contactVALS::add);
+            contactBOX.setItems(contactVALS);
 
+            //set up customer ID
+            ObservableList<Customers> customerID = CustomerDAO.getCustomers();
+            ObservableList<Integer> customerIDVALS = FXCollections.observableArrayList();
+            customerID.stream().map(Customers::getCustomerID).forEach(customerIDVALS::add);
+            CustomerIDBOX.setItems(customerIDVALS);
 
-    }
+            //Time Boxes
+            LocalTime start = LocalTime.MIN.plusHours(8);
+            LocalTime end = LocalTime.MIN.plusHours(23);
 
-    public void populate(Appointments working) {
-        this.working = working;
-        int appointmentId = working.getAppointmentID();
-        appointmentIDTextFLD.setText(String.valueOf(appointmentId));
-        String title = working.getTitle();
-        String description = working.getDescription();
-        String location = working.getLocation();
-        String type = working.getType();
-        LocalDateTime start = working.getStart();
-        LocalDateTime end = working.getEnd();
-        LocalDateTime createDate = working.getCreateDate();
-        String createdBy = working.getCreatedBy();
-        int customerID = working.getCustomerID();
-        int userID = working.getUserID();
-        int contactID = working.getContactID();
+            ObservableList<LocalTime> timeIsntReal = FXCollections.observableArrayList();
+            while(start.isBefore(end)){
+                timeIsntReal.add(start);
+                start = start.plusHours(1);
+            }
+            startTimeBox.setItems(timeIsntReal);
+            endTimeBOX.setItems(timeIsntReal);
+
+            //set customer box right side
+            ObservableList<Customers> customers = CustomerDAO.getCustomers();
+            customerTABLE.setItems(customers);
+            idCELL.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+            nameCELL.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+            phoneCELL.setCellValueFactory(new PropertyValueFactory<>("phone"));
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

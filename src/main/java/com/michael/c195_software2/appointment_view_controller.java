@@ -103,7 +103,7 @@ public class appointment_view_controller implements Initializable {
         }
     }
 
-    public void updateAppointment(ActionEvent actionEvent) throws IOException {
+    public void updateAppointment(ActionEvent actionEvent) throws IOException, SQLException {
         Appointments selected = appointmentTABLE.getSelectionModel().getSelectedItem();
         if(selected == null){
             noSelectedApp.showAndWait();
