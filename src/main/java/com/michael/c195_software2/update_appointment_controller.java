@@ -16,13 +16,12 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeoutException;
 
 public class update_appointment_controller implements Initializable{
     @FXML
@@ -62,7 +61,44 @@ public class update_appointment_controller implements Initializable{
      * This method is used to save new data to the database.
      * @param actionEvent
      */
-    public void saveButton(ActionEvent actionEvent) {
+    public void saveButton(ActionEvent actionEvent) throws SQLException, IOException {
+        int contactID = 0;
+        String query = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Contact_ID = ?, Type = ?, Start = ?,End=?,Last_Update = ?, Customer_ID = ?, User_ID = ? WHERE Appointment_ID = '" + Integer.parseInt(appointmentIDTextFLD.getText()) + "'";
+        PreparedStatement ps = InitCon.connection.prepareStatement(query);
+
+        ps.setString(1, titleTextFLD.getText());
+        ps.setString(2, descriptionTextFLD.getText());
+        ps.setString(3, locationTextFLD.getText());
+        String gatherContactID = "SELECT Contact_ID FROM contacts WHERE Contact_Name = '" + contactBOX.getSelectionModel().getSelectedItem() + "'";
+        PreparedStatement gatherPS = InitCon.connection.prepareStatement(gatherContactID);
+        ResultSet gatherRS = gatherPS.executeQuery();
+        while (gatherRS.next()){
+            contactID = gatherRS.getInt("Contact_ID");
+        }
+        ps.setInt(4,contactID);
+        ps.setString(5, typeTextFLD.getText());
+
+        LocalTime startTime = (LocalTime) startTimeBox.getSelectionModel().getSelectedItem();
+        LocalTime endTime = (LocalTime) endTimeBOX.getSelectionModel().getSelectedItem();
+        LocalDate startDate = (LocalDate) startTextFLD.getValue();
+        LocalDate endDate = (LocalDate) endTextFLD.getValue();
+
+        LocalDateTime start = LocalDateTime.of(startDate,startTime);
+        LocalDateTime end = LocalDateTime.of(endDate,endTime);
+
+        ps.setTimestamp(6,Timestamp.valueOf(start));
+        ps.setTimestamp(7,Timestamp.valueOf(end));
+        ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
+        ps.setInt(9, (Integer) CustomerIDBOX.getSelectionModel().getSelectedItem());
+        ps.setInt(10, Integer.parseInt(userIDTextFLD.getText()));
+        ps.executeUpdate();
+
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("appointments-view.fxml"));
+        Scene scene = new Scene(loader.load());
+        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+        stage.setTitle("Appointments");
+        stage.setScene(scene);
+        stage.show();
     }
 
     /**
