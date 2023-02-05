@@ -173,14 +173,9 @@ public class update_appointment_controller implements Initializable{
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         int difference = utc.getHour() - now.getHour();
 
-        System.out.println("OG start " + start.format(formatter));
-        System.out.println("UTC difference to local " + difference);
-        System.out.println(" og start time " + startTime);
-
-        // SUBTRACT DIFFERENCE
-        startTime = startTime.minusHours(difference);
-        endTime = endTime.minusHours(difference);
-        System.out.println("start time after sub " + startTime);
+//        // SUBTRACT DIFFERENCE
+//        startTime = startTime.minusHours(difference);
+//        endTime = endTime.minusHours(difference);
 
         startTimeBox.setValue(startTime);
         endTimeBOX.setValue(endTime);
