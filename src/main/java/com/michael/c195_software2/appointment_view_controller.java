@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.ZonedDateTime;
 import java.util.ResourceBundle;
 
 public class appointment_view_controller implements Initializable {
@@ -48,6 +49,8 @@ public class appointment_view_controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
+
+
             ObservableList<Appointments> list = AppointmentDAO.getAppointment();
             appointmentTABLE.setItems(list);
             IDCOL.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));

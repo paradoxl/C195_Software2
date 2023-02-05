@@ -18,7 +18,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
 import java.util.concurrent.TimeoutException;
 
 public class update_appointment_controller implements Initializable{
@@ -91,13 +93,6 @@ public class update_appointment_controller implements Initializable{
         ZonedDateTime endConv = end.atZone(ZoneId.systemDefault());
         ZonedDateTime utcEnd = endConv.withZoneSameInstant(ZoneOffset.UTC);
 
-        //timestamp.value of did not work with ZDT so we create a string.
-        String startFinal = utcStart.toString();
-        String endFinal = utcEnd.toString();
-
-        System.out.println(startFinal);
-        System.out.println(start);
-        System.out.println(utcStart.toLocalDateTime());
 
         ps.setTimestamp(6,Timestamp.valueOf(utcStart.toLocalDateTime()));
         ps.setTimestamp(7,Timestamp.valueOf(utcEnd.toLocalDateTime()));
@@ -159,14 +154,33 @@ public class update_appointment_controller implements Initializable{
         int userID = working.getUserID();
         userIDTextFLD.setText(String.valueOf(userID));
 
-        //refactoring times
+        //refactoring times (pulls in time)
         LocalDateTime start = working.getStart();
         LocalDateTime end = working.getEnd();
+
 
         LocalDate startDate = start.toLocalDate();
         LocalTime startTime = start.toLocalTime();
         LocalDate endDate = end.toLocalDate();
         LocalTime endTime = end.toLocalTime();
+
+
+        //Create UTC NOW
+        LocalDateTime now = LocalDateTime.now();
+        ZonedDateTime conv = now.atZone(ZoneId.systemDefault());
+        ZonedDateTime utc = conv.withZoneSameInstant(ZoneOffset.UTC);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        int difference = utc.getHour() - now.getHour();
+
+        System.out.println("OG start " + start.format(formatter));
+        System.out.println("UTC difference to local " + difference);
+        System.out.println(" og start time " + startTime);
+
+        // SUBTRACT DIFFERENCE
+        startTime = startTime.minusHours(difference);
+        endTime = endTime.minusHours(difference);
+        System.out.println("start time after sub " + startTime);
 
         startTimeBox.setValue(startTime);
         endTimeBOX.setValue(endTime);
