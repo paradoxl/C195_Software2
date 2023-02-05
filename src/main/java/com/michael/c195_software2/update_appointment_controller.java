@@ -17,9 +17,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeoutException;
 
@@ -83,11 +81,26 @@ public class update_appointment_controller implements Initializable{
         LocalDate startDate = (LocalDate) startTextFLD.getValue();
         LocalDate endDate = (LocalDate) endTextFLD.getValue();
 
+        //Local time
         LocalDateTime start = LocalDateTime.of(startDate,startTime);
         LocalDateTime end = LocalDateTime.of(endDate,endTime);
 
-        ps.setTimestamp(6,Timestamp.valueOf(start));
-        ps.setTimestamp(7,Timestamp.valueOf(end));
+        //converted to UTC
+        ZonedDateTime startConv = start.atZone(ZoneId.systemDefault());
+        ZonedDateTime utcStart = startConv.withZoneSameInstant(ZoneOffset.UTC);
+        ZonedDateTime endConv = end.atZone(ZoneId.systemDefault());
+        ZonedDateTime utcEnd = endConv.withZoneSameInstant(ZoneOffset.UTC);
+
+        //timestamp.value of did not work with ZDT so we create a string.
+        String startFinal = utcStart.toString();
+        String endFinal = utcEnd.toString();
+
+        System.out.println(startFinal);
+        System.out.println(start);
+        System.out.println(utcStart.toLocalDateTime());
+
+        ps.setTimestamp(6,Timestamp.valueOf(utcStart.toLocalDateTime()));
+        ps.setTimestamp(7,Timestamp.valueOf(utcEnd.toLocalDateTime()));
         ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
         ps.setInt(9, (Integer) CustomerIDBOX.getSelectionModel().getSelectedItem());
         ps.setInt(10, Integer.parseInt(userIDTextFLD.getText()));
@@ -203,7 +216,7 @@ public class update_appointment_controller implements Initializable{
             ObservableList<LocalTime> timeIsntReal = FXCollections.observableArrayList();
             while(start.isBefore(end)){
                 timeIsntReal.add(start);
-                start = start.plusHours(1);
+                start = start.plusMinutes(15);
             }
             startTimeBox.setItems(timeIsntReal);
             endTimeBOX.setItems(timeIsntReal);
