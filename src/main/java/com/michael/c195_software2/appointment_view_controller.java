@@ -49,8 +49,6 @@ public class appointment_view_controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-
-
             ObservableList<Appointments> list = AppointmentDAO.getAppointment();
             appointmentTABLE.setItems(list);
             IDCOL.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));

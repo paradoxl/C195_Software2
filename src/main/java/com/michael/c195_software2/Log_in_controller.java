@@ -88,10 +88,11 @@ public class Log_in_controller implements Initializable{
 
                for(int i = 0; i < 15; i++ ){
                    LocalDateTime warning = LocalDateTime.now().plusMinutes(i).truncatedTo(ChronoUnit.MINUTES);
-                   System.out.println("warning "  + warning);
-                   System.out.println("Current " + current.getStart());
+                   // easier than debugger. Dont judges
+//                   System.out.println("warning "  + warning);
+//                   System.out.println("Current " + current.getStart());
                    if(current.getStart().isEqual(warning)){
-                       Alert appointmentSoon = new Alert(Alert.AlertType.INFORMATION, "You have an upcoming appointment concerning " + current.getTitle() + " soon. Please check the appointments panel.", ButtonType.OK);
+                       Alert appointmentSoon = new Alert(Alert.AlertType.INFORMATION, "You have an upcoming appointment with ID: " + current.getAppointmentID() + " soon. Please check the appointments panel.", ButtonType.OK);
                        appointmentSoon.showAndWait();
                    }
                }

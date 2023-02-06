@@ -19,6 +19,8 @@ import java.net.URL;
 import java.sql.*;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
 import java.util.concurrent.TimeoutException;
@@ -62,51 +64,81 @@ public class update_appointment_controller implements Initializable{
      * @param actionEvent
      */
     public void saveButton(ActionEvent actionEvent) throws SQLException, IOException {
-        int contactID = 0;
-        String query = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Contact_ID = ?, Type = ?, Start = ?,End=?,Last_Update = ?, Customer_ID = ?, User_ID = ? WHERE Appointment_ID = '" + Integer.parseInt(appointmentIDTextFLD.getText()) + "'";
-        PreparedStatement ps = InitCon.connection.prepareStatement(query);
+        //Check that the appointment times are before they end.
+      LocalTime startCheck = (LocalTime) startTimeBox.getValue();
+      LocalTime endCheck = (LocalTime) endTimeBOX.getValue();
 
-        ps.setString(1, titleTextFLD.getText());
-        ps.setString(2, descriptionTextFLD.getText());
-        ps.setString(3, locationTextFLD.getText());
-        String gatherContactID = "SELECT Contact_ID FROM contacts WHERE Contact_Name = '" + contactBOX.getSelectionModel().getSelectedItem() + "'";
-        PreparedStatement gatherPS = InitCon.connection.prepareStatement(gatherContactID);
-        ResultSet gatherRS = gatherPS.executeQuery();
-        while (gatherRS.next()){
-            contactID = gatherRS.getInt("Contact_ID");
-        }
-        ps.setInt(4,contactID);
-        ps.setString(5, typeTextFLD.getText());
+      if (!startCheck.isBefore(endCheck)){
+          System.out.println("Are you a time traveler?");
+          Alert timeTravel = new Alert(Alert.AlertType.ERROR, "You have scheduled the appointment to start after it has already ended.",ButtonType.OK);
+          timeTravel.showAndWait();
+      }
+      else {
 
-        LocalTime startTime = (LocalTime) startTimeBox.getSelectionModel().getSelectedItem();
-        LocalTime endTime = (LocalTime) endTimeBOX.getSelectionModel().getSelectedItem();
-        LocalDate startDate = (LocalDate) startTextFLD.getValue();
-        LocalDate endDate = (LocalDate) endTextFLD.getValue();
+          // Check that app is m-f
+          HashSet<DayOfWeek> dateCheck = new HashSet<>();
+          dateCheck.add(DayOfWeek.SATURDAY);
+          dateCheck.add(DayOfWeek.SUNDAY);
+          LocalDate startcheck = startTextFLD.getValue();
+          LocalDate endCheckDay = endTextFLD.getValue();
+          if (dateCheck.contains(startcheck.getDayOfWeek())) {
+              Alert businessClosed = new Alert(Alert.AlertType.ERROR, "I'm sorry we are closed on weekends. Please schedule an appointment for a different day.", ButtonType.OK);
+              businessClosed.showAndWait();
 
-        //Local time
-        LocalDateTime start = LocalDateTime.of(startDate,startTime);
-        LocalDateTime end = LocalDateTime.of(endDate,endTime);
+          } else if (dateCheck.contains(endCheckDay.getDayOfWeek())) {
 
-        //converted to UTC
-        ZonedDateTime startConv = start.atZone(ZoneId.systemDefault());
-        ZonedDateTime utcStart = startConv.withZoneSameInstant(ZoneOffset.UTC);
-        ZonedDateTime endConv = end.atZone(ZoneId.systemDefault());
-        ZonedDateTime utcEnd = endConv.withZoneSameInstant(ZoneOffset.UTC);
+              Alert bCEnd = new Alert(Alert.AlertType.ERROR, "I'm sorry we are closed on weekends, and will not be able to finish your appointment on this day. Please select a different end date.",ButtonType.OK);
+              bCEnd.showAndWait();
+          }
+            else {
+
+              int contactID = 0;
+              String query = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Contact_ID = ?, Type = ?, Start = ?,End=?,Last_Update = ?, Customer_ID = ?, User_ID = ? WHERE Appointment_ID = '" + Integer.parseInt(appointmentIDTextFLD.getText()) + "'";
+              PreparedStatement ps = InitCon.connection.prepareStatement(query);
+
+              ps.setString(1, titleTextFLD.getText());
+              ps.setString(2, descriptionTextFLD.getText());
+              ps.setString(3, locationTextFLD.getText());
+              String gatherContactID = "SELECT Contact_ID FROM contacts WHERE Contact_Name = '" + contactBOX.getSelectionModel().getSelectedItem() + "'";
+              PreparedStatement gatherPS = InitCon.connection.prepareStatement(gatherContactID);
+              ResultSet gatherRS = gatherPS.executeQuery();
+              while (gatherRS.next()) {
+                  contactID = gatherRS.getInt("Contact_ID");
+              }
+              ps.setInt(4, contactID);
+              ps.setString(5, typeTextFLD.getText());
+
+              LocalTime startTime = (LocalTime) startTimeBox.getSelectionModel().getSelectedItem();
+              LocalTime endTime = (LocalTime) endTimeBOX.getSelectionModel().getSelectedItem();
+              LocalDate startDate = (LocalDate) startTextFLD.getValue();
+              LocalDate endDate = (LocalDate) endTextFLD.getValue();
+
+              //Local time
+              LocalDateTime start = LocalDateTime.of(startDate, startTime);
+              LocalDateTime end = LocalDateTime.of(endDate, endTime);
+
+              //converted to UTC
+              ZonedDateTime startConv = start.atZone(ZoneId.systemDefault());
+              ZonedDateTime utcStart = startConv.withZoneSameInstant(ZoneOffset.UTC);
+              ZonedDateTime endConv = end.atZone(ZoneId.systemDefault());
+              ZonedDateTime utcEnd = endConv.withZoneSameInstant(ZoneOffset.UTC);
 
 
-        ps.setTimestamp(6,Timestamp.valueOf(utcStart.toLocalDateTime()));
-        ps.setTimestamp(7,Timestamp.valueOf(utcEnd.toLocalDateTime()));
-        ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
-        ps.setInt(9, (Integer) CustomerIDBOX.getSelectionModel().getSelectedItem());
-        ps.setInt(10, Integer.parseInt(userIDTextFLD.getText()));
-        ps.executeUpdate();
+              ps.setTimestamp(6, Timestamp.valueOf(utcStart.toLocalDateTime()));
+              ps.setTimestamp(7, Timestamp.valueOf(utcEnd.toLocalDateTime()));
+              ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
+              ps.setInt(9, (Integer) CustomerIDBOX.getSelectionModel().getSelectedItem());
+              ps.setInt(10, Integer.parseInt(userIDTextFLD.getText()));
+              ps.executeUpdate();
 
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("appointments-view.fxml"));
-        Scene scene = new Scene(loader.load());
-        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-        stage.setTitle("Appointments");
-        stage.setScene(scene);
-        stage.show();
+              FXMLLoader loader = new FXMLLoader(Main.class.getResource("appointments-view.fxml"));
+              Scene scene = new Scene(loader.load());
+              Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+              stage.setTitle("Appointments");
+              stage.setScene(scene);
+              stage.show();
+          }
+      }
     }
 
     /**
@@ -176,6 +208,7 @@ public class update_appointment_controller implements Initializable{
 //        // SUBTRACT DIFFERENCE
 //        startTime = startTime.minusHours(difference);
 //        endTime = endTime.minusHours(difference);
+
 
         startTimeBox.setValue(startTime);
         endTimeBOX.setValue(endTime);
