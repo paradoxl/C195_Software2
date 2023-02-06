@@ -7,10 +7,11 @@
 - IDE: Idea-Community- 4:2022.3.2-1
 - JDK: JAVA SE corretto-17.0.5
 - JAVAFX: JavaFX-SDK-17.0.2
+- mysql-connector-j-8.0.32
 
 # Application Start:
 - Connect the associated database. 
-- Press shift-f10 within Idea (Linux) to run the program)
+- Press shift-f10 within Idea (Linux) to run the program.
 - Details on screens can be found below. 
 
 # Application overview:
@@ -19,7 +20,7 @@
 - Appointment view
 
 ## Login Screen:
-- Users will verify here and move to the Customer view upon successful login
+- Users will verify here and move to the Customer view upon successful login.
 ## Customer view:
 - Users will be able to add, modify, and delete customers from this page.
 - Users can navigate to available appointments from this page.
