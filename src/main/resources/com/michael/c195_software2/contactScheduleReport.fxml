@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="465.0" prefWidth="997.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.michael.c195_software2.contactReportController">
+   <children>
+      <Button layoutX="914.0" layoutY="405.0" mnemonicParsing="false" onAction="#back" text="Back" />
+      <ComboBox fx:id="contactBOX" layoutX="21.0" layoutY="32.0" prefWidth="150.0" promptText="Contact" />
+      <TableView fx:id="scheduleTable" layoutX="64.0" layoutY="109.0" prefHeight="200.0" prefWidth="870.0">
+        <columns>
+          <TableColumn fx:id="idCOL" prefWidth="144.0" text="Appointment ID" />
+          <TableColumn fx:id="titleCOL" prefWidth="87.0" text="Title" />
+            <TableColumn fx:id="typeCOL" prefWidth="76.0" text="Type" />
+            <TableColumn fx:id="descriptionCOL" minWidth="9.0" prefWidth="87.0" text="Description" />
+            <TableColumn fx:id="sDATECOL" prefWidth="73.0" text="Start Date" />
+            <TableColumn fx:id="sTIMECOL" prefWidth="76.0" text="Start Time" />
+            <TableColumn fx:id="eDATECOL" prefWidth="100.0" text="End Date" />
+            <TableColumn fx:id="eTIMECOL" prefWidth="103.0" text="End Time" />
+            <TableColumn fx:id="custIDCOL" prefWidth="121.0" text="Customer ID" />
+        </columns>
+      </TableView>
+   </children>
+</Pane>

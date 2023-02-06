@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="307.0" prefWidth="573.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.michael.c195_software2.totalReportController">
+   <children>
+      <Button onAction="#back" fx:id="backBTN" layoutX="432.0" layoutY="244.0" mnemonicParsing="false" text="Back" />
+      <ComboBox fx:id="typeBOX" layoutX="34.0" layoutY="49.0" prefWidth="150.0" promptText="Type" />
+      <ComboBox fx:id="monthBOX" layoutX="211.0" layoutY="49.0" prefWidth="150.0" promptText="Month" />
+      <Button fx:id="generate" layoutX="418.0" layoutY="49.0" mnemonicParsing="false" onAction="#genrateReport" text="Generate" />
+      <Label layoutX="204.0" layoutY="14.0" text="Total Appointments" />
+      <Label layoutX="247.0" layoutY="152.0" text="Total:" />
+      <Label fx:id="dynamicLabel" layoutX="260.0" layoutY="188.0" text="0" />
+   </children>
+</Pane>
