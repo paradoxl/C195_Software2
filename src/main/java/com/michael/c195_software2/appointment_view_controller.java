@@ -1,7 +1,9 @@
 package com.michael.c195_software2;
 
 import com.michael.c195_software2.DataAccessObject.AppointmentDAO;
+import com.michael.c195_software2.DataAccessObject.ContactDAO;
 import com.michael.c195_software2.con.InitCon;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,6 +18,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.*;
 import java.util.ResourceBundle;
 
 public class appointment_view_controller implements Initializable {
@@ -44,14 +47,18 @@ public class appointment_view_controller implements Initializable {
     Alert noSelectedApp= new Alert(Alert.AlertType.ERROR, "You have not selected an appointment", ButtonType.OK);
     Alert delete = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete this appointment?",ButtonType.YES,ButtonType.NO);
 
-
+    /**
+     * This method is used to populate all tables and values on the page.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             ObservableList<Appointments> list = AppointmentDAO.getAppointment();
             appointmentTABLE.setItems(list);
             IDCOL.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
-            titleCOL.setCellValueFactory(new PropertyValueFactory<>("description"));
+            titleCOL.setCellValueFactory(new PropertyValueFactory<>("title"));
             descriptionCOL.setCellValueFactory(new PropertyValueFactory<>("description"));
             locationCOL.setCellValueFactory(new PropertyValueFactory<>("location"));
             contactCOL.setCellValueFactory(new PropertyValueFactory<>("contactID"));
@@ -65,6 +72,11 @@ public class appointment_view_controller implements Initializable {
         }
     }
 
+    /**
+     * This method returns the user to the previous page.
+     * @param actionEvent
+     * @throws IOException
+     */
     public void back(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("customer-view.fxml"));
         Scene scene = new Scene(loader.load());
@@ -74,6 +86,11 @@ public class appointment_view_controller implements Initializable {
         stage.show();
     }
 
+    /**
+     * This method takes the user to a form to add appointments.
+     * @param actionEvent
+     * @throws IOException
+     */
     public void addAppointment(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("add-appointment-view.fxml"));
         Scene scene = new Scene(loader.load());
@@ -83,6 +100,11 @@ public class appointment_view_controller implements Initializable {
         stage.show();
     }
 
+    /**
+     * This method will delete appointments from the system.
+     * @param actionEvent
+     * @throws SQLException
+     */
     public void deleteAppointment(ActionEvent actionEvent) throws SQLException {
         if (appointmentTABLE.getSelectionModel().getSelectedItem() == null){
             noSelectedApp.showAndWait();
@@ -103,7 +125,13 @@ public class appointment_view_controller implements Initializable {
         }
     }
 
-    public void updateAppointment(ActionEvent actionEvent) throws IOException {
+    /**
+     * This method is used to change existing appointments.
+     * @param actionEvent
+     * @throws IOException
+     * @throws SQLException
+     */
+    public void updateAppointment(ActionEvent actionEvent) throws IOException, SQLException {
         Appointments selected = appointmentTABLE.getSelectionModel().getSelectedItem();
         if(selected == null){
             noSelectedApp.showAndWait();
@@ -116,5 +144,63 @@ public class appointment_view_controller implements Initializable {
         stage.setTitle("Customer Records");
         stage.setScene(scene);
         stage.show();
+    }
+
+    /**
+     * This method will sort the table by appointments on a weekly basis
+     * @param actionEvent
+     * @throws SQLException
+     */
+    public void sortWeekly(ActionEvent actionEvent) throws SQLException {
+        LocalDateTime start = LocalDateTime.now().minusWeeks(1);
+        LocalDateTime end = LocalDateTime.now().plusWeeks(1);
+
+        ObservableList<Appointments> appointments = AppointmentDAO.getAppointment();
+        ObservableList<Appointments> appointmentsVAL = FXCollections.observableArrayList();
+
+        for(Appointments appointment: appointments){
+            if (appointment.getStart().isAfter(start) && appointment.getStart().isBefore(end)){
+                appointmentsVAL.add(appointment);
+            }
+            appointmentTABLE.setItems(appointmentsVAL);
+        }
+
+
+    }
+
+    /**
+     * This method will sort the table by appointments on a monthly basis
+     * @param actionEvent
+     * @throws SQLException
+     */
+    public void sortMonthly(ActionEvent actionEvent) throws SQLException {
+        LocalDateTime start = LocalDateTime.now().minusMonths(1);
+        LocalDateTime end = LocalDateTime.now().plusMonths(1);
+
+        ObservableList<Appointments> appointments = AppointmentDAO.getAppointment();
+        ObservableList<Appointments> appointmentsVAL = FXCollections.observableArrayList();
+
+        for(Appointments appointment: appointments){
+            if (appointment.getStart().isAfter(start) && appointment.getStart().isBefore(end)){
+                appointmentsVAL.add(appointment);
+            }
+            appointmentTABLE.setItems(appointmentsVAL);
+        }
+    }
+
+    /**
+     * This method will display all appointments.
+     * @param actionEvent
+     * @throws SQLException
+     */
+    public void sortAll(ActionEvent actionEvent) throws SQLException {
+        ObservableList<Appointments> appointments = AppointmentDAO.getAppointment();
+        if(appointments.isEmpty()){
+            System.out.println("No Appointments");
+        }
+        else {
+            appointmentTABLE.setItems(appointments);
+        }
+
     }
 }

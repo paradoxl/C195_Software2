@@ -17,9 +17,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -92,6 +90,12 @@ public class add_appointment_controller implements Initializable {
             LocalDateTime start = LocalDateTime.of(startDate, startTime);
             LocalDateTime end = LocalDateTime.of(endDate, endTime);
 
+            ZonedDateTime startConv = start.atZone(ZoneId.systemDefault());
+            ZonedDateTime utcStart = startConv.withZoneSameInstant(ZoneOffset.UTC);
+            ZonedDateTime endConv = end.atZone(ZoneId.systemDefault());
+            ZonedDateTime utcEnd = endConv.withZoneSameInstant(ZoneOffset.UTC);
+
+
             //gather customer ID
             int customerID = (int) CustomerIDBOX.getSelectionModel().getSelectedItem();
 
@@ -103,7 +107,7 @@ public class add_appointment_controller implements Initializable {
             while (contactRS.next()){
                 contactID = contactRS.getInt("Contact_ID");
             }
-
+        System.out.println(utcStart);
             //insert times
             String insertQuery = "INSERT INTO appointments (Appointment_ID,Customer_ID,User_ID,Contact_ID,Location,Title,Description,Type,Create_Date,Created_By,Last_Update,Last_Updated_By,Start,End) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             PreparedStatement insertPS = InitCon.connection.prepareStatement(insertQuery);
@@ -119,8 +123,8 @@ public class add_appointment_controller implements Initializable {
             insertPS.setString(10, "Help im trapped");
             insertPS.setTimestamp(11, Timestamp.valueOf(LocalDateTime.now()));
             insertPS.setString(12, "Call john connor!");
-            insertPS.setTimestamp(13, Timestamp.valueOf(start));
-            insertPS.setTimestamp(14, Timestamp.valueOf(end));
+            insertPS.setTimestamp(13, Timestamp.valueOf(utcStart.toLocalDateTime()));
+            insertPS.setTimestamp(14, Timestamp.valueOf(utcEnd.toLocalDateTime()));
             //TODO: customer id user id contact id
             //TODO: check that times do not conflict
 
@@ -194,7 +198,7 @@ public class add_appointment_controller implements Initializable {
             ObservableList<LocalTime> timeIsntReal = FXCollections.observableArrayList();
             while(start.isBefore(end)){
                 timeIsntReal.add(start);
-                start = start.plusHours(1);
+                start = start.plusMinutes(15);
             }
             startTimeBox.setItems(timeIsntReal);
             endTimeBOX.setItems(timeIsntReal);

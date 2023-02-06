@@ -1,7 +1,9 @@
 package com.michael.c195_software2;
 
+import com.michael.c195_software2.DataAccessObject.AppointmentDAO;
 import com.michael.c195_software2.DataAccessObject.UserDAO;
 import com.michael.c195_software2.con.InitCon;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,14 +11,17 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import org.w3c.dom.Text;
+
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -35,6 +40,11 @@ public class Log_in_controller implements Initializable{
     private Label country;
     Alert exitAlert = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you want to exit?", ButtonType.YES, ButtonType.NO);
 
+    /**
+     * This method is used to initalize language settings.
+     * @param url
+     * @param resourceBundle
+     */
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         //language settings
@@ -68,7 +78,28 @@ public class Log_in_controller implements Initializable{
         String password = PasswordTextFLD.getText();
         FileWriter input  = new FileWriter("login_activity.txt",true);
         UserDAO user = new UserDAO();
+
         if(user.validation(username, password)){
+            ObservableList<Appointments> appSoon = AppointmentDAO.getAppointment();
+
+
+            // checks for upcoming appointments.
+           for(Appointments current: appSoon){
+               LocalDateTime warnp = current.getStart().plusMinutes(15);
+               LocalDateTime warnm = current.getStart().minusMinutes(15);
+               LocalDate startDate = LocalDate.from(current.getStart());
+               LocalDate today = LocalDate.now();
+
+               for(int i = 0; i < 15; i++ ){
+                   LocalDateTime warning = LocalDateTime.now().plusMinutes(i).truncatedTo(ChronoUnit.MINUTES);
+                   if(current.getStart().isEqual(warning)){
+                       Alert appointmentSoon = new Alert(Alert.AlertType.INFORMATION, "You have an upcoming appointment with ID: " + current.getAppointmentID() + " soon. Please check the appointments panel.", ButtonType.OK);
+                       appointmentSoon.showAndWait();
+                   }
+               }
+            }
+
+           // login
             try {
                 input.write("Username: " + username + " Status: Successful" + " Time: " + LocalDateTime.now() + "\n");
                 System.out.println("writing succesful login");
@@ -83,6 +114,7 @@ public class Log_in_controller implements Initializable{
             stage.setScene(scene);
             stage.show();
         }
+        //failed login
         else{
             try {
                 //10 char to un
@@ -105,9 +137,10 @@ public class Log_in_controller implements Initializable{
 
     }
 
-    public void signUp(ActionEvent actionEvent) {
-    }
-
+    /**
+     * This method will exit the program.
+     * @param actionEvent
+     */
     public void exit(ActionEvent actionEvent) {
         exitAlert.showAndWait();
         if(exitAlert.getResult() == ButtonType.YES){

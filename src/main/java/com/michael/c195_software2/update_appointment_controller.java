@@ -1,19 +1,31 @@
 package com.michael.c195_software2;
 
+import com.michael.c195_software2.DataAccessObject.ContactDAO;
+import com.michael.c195_software2.DataAccessObject.CustomerDAO;
+import com.michael.c195_software2.con.InitCon;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDateTime;
+import java.sql.*;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
+import java.util.concurrent.TimeoutException;
 
-public class update_appointment_controller implements Initializable {
+public class update_appointment_controller implements Initializable{
     @FXML
     public TextField appointmentIDTextFLD;
     @FXML
@@ -51,7 +63,82 @@ public class update_appointment_controller implements Initializable {
      * This method is used to save new data to the database.
      * @param actionEvent
      */
-    public void saveButton(ActionEvent actionEvent) {
+    public void saveButton(ActionEvent actionEvent) throws SQLException, IOException {
+        //Check that the appointment times are before they end.
+      LocalTime startCheck = (LocalTime) startTimeBox.getValue();
+      LocalTime endCheck = (LocalTime) endTimeBOX.getValue();
+
+      if (!startCheck.isBefore(endCheck)){
+          System.out.println("Are you a time traveler?");
+          Alert timeTravel = new Alert(Alert.AlertType.ERROR, "You have scheduled the appointment to start after it has already ended.",ButtonType.OK);
+          timeTravel.showAndWait();
+      }
+      else {
+
+          // Check that app is m-f
+          HashSet<DayOfWeek> dateCheck = new HashSet<>();
+          dateCheck.add(DayOfWeek.SATURDAY);
+          dateCheck.add(DayOfWeek.SUNDAY);
+          LocalDate startcheck = startTextFLD.getValue();
+          LocalDate endCheckDay = endTextFLD.getValue();
+          if (dateCheck.contains(startcheck.getDayOfWeek())) {
+              Alert businessClosed = new Alert(Alert.AlertType.ERROR, "I'm sorry we are closed on weekends. Please schedule an appointment for a different day.", ButtonType.OK);
+              businessClosed.showAndWait();
+
+          } else if (dateCheck.contains(endCheckDay.getDayOfWeek())) {
+
+              Alert bCEnd = new Alert(Alert.AlertType.ERROR, "I'm sorry we are closed on weekends, and will not be able to finish your appointment on this day. Please select a different end date.",ButtonType.OK);
+              bCEnd.showAndWait();
+          }
+            else {
+
+              int contactID = 0;
+              String query = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Contact_ID = ?, Type = ?, Start = ?,End=?,Last_Update = ?, Customer_ID = ?, User_ID = ? WHERE Appointment_ID = '" + Integer.parseInt(appointmentIDTextFLD.getText()) + "'";
+              PreparedStatement ps = InitCon.connection.prepareStatement(query);
+
+              ps.setString(1, titleTextFLD.getText());
+              ps.setString(2, descriptionTextFLD.getText());
+              ps.setString(3, locationTextFLD.getText());
+              String gatherContactID = "SELECT Contact_ID FROM contacts WHERE Contact_Name = '" + contactBOX.getSelectionModel().getSelectedItem() + "'";
+              PreparedStatement gatherPS = InitCon.connection.prepareStatement(gatherContactID);
+              ResultSet gatherRS = gatherPS.executeQuery();
+              while (gatherRS.next()) {
+                  contactID = gatherRS.getInt("Contact_ID");
+              }
+              ps.setInt(4, contactID);
+              ps.setString(5, typeTextFLD.getText());
+
+              LocalTime startTime = (LocalTime) startTimeBox.getSelectionModel().getSelectedItem();
+              LocalTime endTime = (LocalTime) endTimeBOX.getSelectionModel().getSelectedItem();
+              LocalDate startDate = (LocalDate) startTextFLD.getValue();
+              LocalDate endDate = (LocalDate) endTextFLD.getValue();
+
+              //Local time
+              LocalDateTime start = LocalDateTime.of(startDate, startTime);
+              LocalDateTime end = LocalDateTime.of(endDate, endTime);
+
+              //converted to UTC
+              ZonedDateTime startConv = start.atZone(ZoneId.systemDefault());
+              ZonedDateTime utcStart = startConv.withZoneSameInstant(ZoneOffset.UTC);
+              ZonedDateTime endConv = end.atZone(ZoneId.systemDefault());
+              ZonedDateTime utcEnd = endConv.withZoneSameInstant(ZoneOffset.UTC);
+
+
+              ps.setTimestamp(6, Timestamp.valueOf(utcStart.toLocalDateTime()));
+              ps.setTimestamp(7, Timestamp.valueOf(utcEnd.toLocalDateTime()));
+              ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
+              ps.setInt(9, (Integer) CustomerIDBOX.getSelectionModel().getSelectedItem());
+              ps.setInt(10, Integer.parseInt(userIDTextFLD.getText()));
+              ps.executeUpdate();
+
+              FXMLLoader loader = new FXMLLoader(Main.class.getResource("appointments-view.fxml"));
+              Scene scene = new Scene(loader.load());
+              Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+              stage.setTitle("Appointments");
+              stage.setScene(scene);
+              stage.show();
+          }
+      }
     }
 
     /**
@@ -77,32 +164,115 @@ public class update_appointment_controller implements Initializable {
     }
 
     /**
-     * This method is used to populate all information on the page.
+     * This method is used to populate all fields found on the page with the selected appointment.
+     * @param working
+     * @throws SQLException
+     */
+    public void populate(Appointments working) throws SQLException {
+        //textBoxes
+        this.working = working;
+        int appointmentId = working.getAppointmentID();
+        appointmentIDTextFLD.setText(String.valueOf(appointmentId));
+        String title = working.getTitle();
+        titleTextFLD.setText(title);
+        String description = working.getDescription();
+        descriptionTextFLD.setText(description);
+        String location = working.getLocation();
+        locationTextFLD.setText(location);
+        String type = working.getType();
+        typeTextFLD.setText(type);
+        int customerID = working.getCustomerID();
+        CustomerIDBOX.setValue(customerID);
+        int userID = working.getUserID();
+        userIDTextFLD.setText(String.valueOf(userID));
+
+        //refactoring times (pulls in time)
+        LocalDateTime start = working.getStart();
+        LocalDateTime end = working.getEnd();
+
+
+        LocalDate startDate = start.toLocalDate();
+        LocalTime startTime = start.toLocalTime();
+        LocalDate endDate = end.toLocalDate();
+        LocalTime endTime = end.toLocalTime();
+
+
+        //Create UTC NOW
+        LocalDateTime now = LocalDateTime.now();
+        ZonedDateTime conv = now.atZone(ZoneId.systemDefault());
+        ZonedDateTime utc = conv.withZoneSameInstant(ZoneOffset.UTC);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        int difference = utc.getHour() - now.getHour();
+
+//        // SUBTRACT DIFFERENCE
+//        startTime = startTime.minusHours(difference);
+//        endTime = endTime.minusHours(difference);
+
+
+        startTimeBox.setValue(startTime);
+        endTimeBOX.setValue(endTime);
+        startTextFLD.setValue(startDate);
+        endTextFLD.setValue(endDate);
+
+        // pulling data on contact id
+        int contactID = working.getContactID();
+        String query = "SELECT Contact_Name FROM contacts WHERE Contact_ID = '" + contactID + "'";
+        PreparedStatement ps = InitCon.connection.prepareStatement(query);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next())
+        contactBOX.setValue(rs.getString("Contact_Name"));
+
+        //set custome box right side
+        ObservableList<Customers> customers = CustomerDAO.getCustomers();
+        customerTABLE.setItems(customers);
+        idCELL.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+        nameCELL.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        phoneCELL.setCellValueFactory(new PropertyValueFactory<>("phone"));
+    }
+
+    /**
+     * This method is used to populate the fields that were not brought in through the populate method.
      * @param url
      * @param resourceBundle
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //Textfield population
-//        appointmentIDTextFLD.setText();
+        try {
+            //set up contacts
+            ObservableList<Contacts>  contacts = ContactDAO.getContacts();
+            ObservableList<String> contactVALS = FXCollections.observableArrayList();
+            contacts.stream().map(Contacts::getContactName).forEach(contactVALS::add);
+            contactBOX.setItems(contactVALS);
 
+            //set up customer ID
+            ObservableList<Customers> customerID = CustomerDAO.getCustomers();
+            ObservableList<Integer> customerIDVALS = FXCollections.observableArrayList();
+            customerID.stream().map(Customers::getCustomerID).forEach(customerIDVALS::add);
+            CustomerIDBOX.setItems(customerIDVALS);
 
-    }
+            //Time Boxes
+            LocalTime start = LocalTime.MIN.plusHours(8);
+            LocalTime end = LocalTime.MIN.plusHours(23);
 
-    public void populate(Appointments working) {
-        this.working = working;
-        int appointmentId = working.getAppointmentID();
-        appointmentIDTextFLD.setText(String.valueOf(appointmentId));
-        String title = working.getTitle();
-        String description = working.getDescription();
-        String location = working.getLocation();
-        String type = working.getType();
-        LocalDateTime start = working.getStart();
-        LocalDateTime end = working.getEnd();
-        LocalDateTime createDate = working.getCreateDate();
-        String createdBy = working.getCreatedBy();
-        int customerID = working.getCustomerID();
-        int userID = working.getUserID();
-        int contactID = working.getContactID();
+            ObservableList<LocalTime> timeIsntReal = FXCollections.observableArrayList();
+            while(start.isBefore(end)){
+                timeIsntReal.add(start);
+                start = start.plusMinutes(15);
+            }
+            startTimeBox.setItems(timeIsntReal);
+            endTimeBOX.setItems(timeIsntReal);
+
+            //set customer box right side
+            ObservableList<Customers> customers = CustomerDAO.getCustomers();
+            customerTABLE.setItems(customers);
+            idCELL.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+            nameCELL.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+            phoneCELL.setCellValueFactory(new PropertyValueFactory<>("phone"));
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

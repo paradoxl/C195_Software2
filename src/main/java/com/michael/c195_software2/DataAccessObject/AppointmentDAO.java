@@ -10,6 +10,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class AppointmentDAO {
     Appointments appointments = new Appointments();
@@ -20,14 +24,23 @@ public class AppointmentDAO {
         PreparedStatement ps = InitCon.connection.prepareStatement(query);
         ResultSet rs = ps.executeQuery();
         System.out.println("Gathering appointments");
+
+        //UTC conversion
+        LocalDateTime now = LocalDateTime.now();
+        ZonedDateTime conv = now.atZone(ZoneId.systemDefault());
+        ZonedDateTime utc = conv.withZoneSameInstant(ZoneOffset.UTC);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        int difference = utc.getHour() - now.getHour();
+
         while (rs.next()){
             int appointmentId = rs.getInt("Appointment_ID");
             String description = rs.getString("Description");
             String title = rs.getString("Title");
             String location =  rs.getString("Location");
             String type = rs.getString("Type");
-            LocalDateTime start = rs.getTimestamp("Start").toLocalDateTime();
-            LocalDateTime end = rs.getTimestamp("End").toLocalDateTime();
+            LocalDateTime start = rs.getTimestamp("Start").toLocalDateTime().minusHours(difference);
+            LocalDateTime end = rs.getTimestamp("End").toLocalDateTime().minusHours(difference);
             LocalDateTime Created = rs.getTimestamp("Create_Date").toLocalDateTime();
             int customerID = rs.getInt("Customer_ID");
             int userID = rs.getInt("User_ID");
