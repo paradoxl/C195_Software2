@@ -11,7 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import org.w3c.dom.Text;
+
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,7 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
+
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -40,7 +40,11 @@ public class Log_in_controller implements Initializable{
     private Label country;
     Alert exitAlert = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you want to exit?", ButtonType.YES, ButtonType.NO);
 
-
+    /**
+     * This method is used to initalize language settings.
+     * @param url
+     * @param resourceBundle
+     */
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         //language settings
@@ -76,10 +80,10 @@ public class Log_in_controller implements Initializable{
         UserDAO user = new UserDAO();
 
         if(user.validation(username, password)){
-            //TODO: Implement a warning here when appointment is within 15 minutes.
             ObservableList<Appointments> appSoon = AppointmentDAO.getAppointment();
 
 
+            // checks for upcoming appointments.
            for(Appointments current: appSoon){
                LocalDateTime warnp = current.getStart().plusMinutes(15);
                LocalDateTime warnm = current.getStart().minusMinutes(15);
@@ -88,9 +92,6 @@ public class Log_in_controller implements Initializable{
 
                for(int i = 0; i < 15; i++ ){
                    LocalDateTime warning = LocalDateTime.now().plusMinutes(i).truncatedTo(ChronoUnit.MINUTES);
-                   // easier than debugger. Dont judges
-//                   System.out.println("warning "  + warning);
-//                   System.out.println("Current " + current.getStart());
                    if(current.getStart().isEqual(warning)){
                        Alert appointmentSoon = new Alert(Alert.AlertType.INFORMATION, "You have an upcoming appointment with ID: " + current.getAppointmentID() + " soon. Please check the appointments panel.", ButtonType.OK);
                        appointmentSoon.showAndWait();
@@ -98,6 +99,7 @@ public class Log_in_controller implements Initializable{
                }
             }
 
+           // login
             try {
                 input.write("Username: " + username + " Status: Successful" + " Time: " + LocalDateTime.now() + "\n");
                 System.out.println("writing succesful login");
@@ -112,6 +114,7 @@ public class Log_in_controller implements Initializable{
             stage.setScene(scene);
             stage.show();
         }
+        //failed login
         else{
             try {
                 //10 char to un
@@ -134,9 +137,10 @@ public class Log_in_controller implements Initializable{
 
     }
 
-    public void signUp(ActionEvent actionEvent) {
-    }
-
+    /**
+     * This method will exit the program.
+     * @param actionEvent
+     */
     public void exit(ActionEvent actionEvent) {
         exitAlert.showAndWait();
         if(exitAlert.getResult() == ButtonType.YES){
