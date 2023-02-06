@@ -21,6 +21,7 @@
 
 ## Login Screen:
 - Users will verify here and move to the Customer view upon successful login.
+- This form is available in both English and French.
 ## Customer view:
 - Users will be able to add, modify, and delete customers from this page.
 - Users can navigate to available appointments from this page.
