@@ -224,7 +224,12 @@ public class appointment_view_controller implements Initializable {
             stage.show();
         }
         if(reportBox.getValue() == "Schedule by contact"){
-            //generate report
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("contactScheduleReport.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            stage.setTitle("Reports");
+            stage.setScene(scene);
+            stage.show();
         }
         if(reportBox.getValue() == "Schedule before lunch"){
             //generate report.

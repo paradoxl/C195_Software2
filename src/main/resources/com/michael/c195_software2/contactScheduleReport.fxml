@@ -20,5 +20,6 @@
             <TableColumn fx:id="custIDCOL" prefWidth="121.0" text="Customer ID" />
         </columns>
       </TableView>
+      <Button layoutX="187.0" layoutY="32.0" mnemonicParsing="false" onAction="#generateSchedule" text="Generate Schedule" />
    </children>
 </Pane>
