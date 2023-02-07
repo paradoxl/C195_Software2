@@ -7,10 +7,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,43 +34,50 @@ public class contactReportController implements Initializable {
     @FXML
     public TableColumn descriptionCOL;
     @FXML
-    public TableColumn sDATECOL;
-    @FXML
     public TableColumn sTIMECOL;
-    @FXML
-    public TableColumn eDATECOL;
     @FXML
     public TableColumn eTIMECOL;
     @FXML
     public TableColumn custIDCOL;
     public ComboBox contactBOX;
 
-    public void back(ActionEvent actionEvent) {
-
+    Alert exit = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you wish to return to the previous page?", ButtonType.YES,ButtonType.NO);
+    public void back(ActionEvent actionEvent) throws IOException {
+        exit.showAndWait();
+        if(exit.getResult() == ButtonType.YES) {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("appointments-view.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            stage.setTitle("Customer Records");
+            stage.setScene(scene);
+            stage.show();
+        }
+        else {
+            System.out.println("why even put the button there anymore.");
+        }
     }
 
 
     public void generateSchedule(ActionEvent actionEvent) throws SQLException {
         int contactID = 0;
-        String queryContactID = "Select Contact_ID from appointments WHERE Contact_Name = '" + contactBOX.getValue() + "'";
-        PreparedStatement ps = InitCon.connection.prepareStatement(queryContactID);
+        ObservableList<Appointments> appList = FXCollections.observableArrayList();
+        ObservableList<Appointments>appointments = AppointmentDAO.getAppointment();
+
+        //get correct id
+        String query = "Select Contact_ID from contacts WHERE Contact_Name = '"+ contactBOX.getValue() +"'";
+        PreparedStatement ps = InitCon.connection.prepareStatement(query);
         ResultSet rs = ps.executeQuery();
         while (rs.next()){
             contactID = rs.getInt("Contact_ID");
         }
-        ObservableList<Appointments> appList = FXCollections.observableArrayList();
-        ObservableList<Appointments>appointments = AppointmentDAO.getAppointment();
-//        String appQuery = "SELECT * FROM appointments WHERE Contact_ID = '" + contactID + "'";
-//        PreparedStatement psApp = InitCon.connection.prepareStatement(appQuery);
-//        ResultSet rsApp = psApp.executeQuery();
-//        while (rsApp.next()){
-//            scheduleTable.setItems();
-//        }
+        // pull all appointments with that contact id
+        String appQuery = "Select * from appointments WHERE Contact_Id = '"+ contactID + "'";
+        PreparedStatement appPS = InitCon.connection.prepareStatement(appQuery);
+        ResultSet appRs = appPS.executeQuery();
 
-        //populate with everything then filter like we did with the month/week
 
         for(Appointments app : appointments){
-            if(app.getContactID() == contactID){
+            if(app.getContactID() == contactID) {
                 appList.add(app);
             }
         }
@@ -77,6 +88,8 @@ public class contactReportController implements Initializable {
         typeCOL.setCellValueFactory(new PropertyValueFactory<>("type"));
         descriptionCOL.setCellValueFactory(new PropertyValueFactory<>("description"));
         custIDCOL.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+        sTIMECOL.setCellValueFactory(new PropertyValueFactory<>("start"));
+        eTIMECOL.setCellValueFactory(new PropertyValueFactory<>("end"));
 
 
 

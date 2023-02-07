@@ -6,9 +6,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -30,7 +33,6 @@ public class AppointmentDAO {
         ZonedDateTime conv = now.atZone(ZoneId.systemDefault());
         ZonedDateTime utc = conv.withZoneSameInstant(ZoneOffset.UTC);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         int difference = utc.getHour() - now.getHour();
 
         while (rs.next()){
@@ -45,6 +47,16 @@ public class AppointmentDAO {
             int customerID = rs.getInt("Customer_ID");
             int userID = rs.getInt("User_ID");
             int contactID = rs.getInt("Contact_ID");
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            start.format(formatter);
+            DateFormat timeOnly  = new SimpleDateFormat("HH:mm:ss");
+            DateFormat dateOnly  = new SimpleDateFormat("MM:dd:yyyy");
+
+
+
+
+
 
        Appointments adding = new Appointments(appointmentId,title,description,location,type,start,end,Created,customerID,userID,contactID);
         appList.add(adding);

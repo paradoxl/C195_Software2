@@ -3,10 +3,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="465.0" prefWidth="997.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.michael.c195_software2.contactReportController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="465.0" prefWidth="997.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.michael.c195_software2.MorningScheduleController">
    <children>
       <Button layoutX="914.0" layoutY="405.0" mnemonicParsing="false" onAction="#back" text="Back" />
-      <ComboBox fx:id="contactBOX" layoutX="21.0" layoutY="32.0" prefWidth="150.0" promptText="Contact" />
       <TableView fx:id="scheduleTable" layoutX="89.0" layoutY="125.0" prefHeight="200.0" prefWidth="820.0">
         <columns>
           <TableColumn fx:id="idCOL" prefWidth="116.0" text="Appointment ID" />
@@ -18,7 +17,6 @@
             <TableColumn fx:id="custIDCOL" prefWidth="117.0" text="Customer ID" />
         </columns>
       </TableView>
-      <Button layoutX="187.0" layoutY="32.0" mnemonicParsing="false" onAction="#generateSchedule" text="Generate Schedule" />
-      <Label layoutX="471.0" layoutY="95.0" text="Schedule" />
+      <Label layoutX="443.0" layoutY="94.0" text="Morning Schedule" />
    </children>
 </Pane>
