@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -191,9 +192,17 @@ public class add_appointment_controller implements Initializable {
             customerID.stream().map(Customers::getCustomerID).forEach(customerIDVALS::add);
             CustomerIDBOX.setItems(customerIDVALS);
 
+            ZoneId eastern = ZoneId.of("US/Eastern");
+            int difference = 0;
+
+            
             //Time Boxes
             LocalTime start = LocalTime.MIN.plusHours(8);
-            LocalTime end = LocalTime.MIN.plusHours(23);
+            LocalTime  end = LocalTime .MIN.plusHours(22);
+
+
+
+
 
             ObservableList<LocalTime> timeIsntReal = FXCollections.observableArrayList();
             while(start.isBefore(end)){
