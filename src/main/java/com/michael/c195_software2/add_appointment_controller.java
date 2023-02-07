@@ -68,6 +68,14 @@ public class add_appointment_controller implements Initializable {
      * @throws SQLException
      */
     public void saveButton(ActionEvent actionEvent) throws SQLException, IOException {
+            //check that appointments do not overlap
+
+
+
+
+
+
+
             //This will pull in the appointment ids and generate a new one randomly. This will only be done if the random is not already listed.
             ObservableList<Integer> list = FXCollections.observableArrayList();
             Appointments newAppointment = new Appointments();
@@ -96,6 +104,15 @@ public class add_appointment_controller implements Initializable {
             ZonedDateTime endConv = end.atZone(ZoneId.systemDefault());
             ZonedDateTime utcEnd = endConv.withZoneSameInstant(ZoneOffset.UTC);
 
+            //check
+
+            LocalDateTime open = LocalDateTime.MIN.plusHours(8);
+            LocalDateTime close = LocalDateTime.MIN.plusHours(22);
+
+            ZonedDateTime openConv = open.atZone(ZoneId.of("US/Eastern"));
+            ZonedDateTime closeConv = close.atZone(ZoneId.of("US/Eastern"));
+        System.out.println(open);
+        System.out.println(openConv);
 
             //gather customer ID
             int customerID = (int) CustomerIDBOX.getSelectionModel().getSelectedItem();
@@ -194,14 +211,10 @@ public class add_appointment_controller implements Initializable {
 
             ZoneId eastern = ZoneId.of("US/Eastern");
             int difference = 0;
-
             
             //Time Boxes
             LocalTime start = LocalTime.MIN.plusHours(8);
             LocalTime  end = LocalTime .MIN.plusHours(22);
-
-
-
 
 
             ObservableList<LocalTime> timeIsntReal = FXCollections.observableArrayList();
