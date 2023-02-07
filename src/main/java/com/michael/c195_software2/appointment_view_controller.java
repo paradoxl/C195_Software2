@@ -22,6 +22,8 @@ import java.time.*;
 import java.util.ResourceBundle;
 
 public class appointment_view_controller implements Initializable {
+    public ComboBox reportBox;
+    public Button generateBTN;
     @FXML
     private TableView<Appointments> appointmentTABLE;
     @FXML
@@ -67,6 +69,14 @@ public class appointment_view_controller implements Initializable {
             endCOL.setCellValueFactory(new PropertyValueFactory<>("end"));
             custIDCOL.setCellValueFactory(new PropertyValueFactory<>("customerID"));
             usrIDCOL.setCellValueFactory(new PropertyValueFactory<>("userID"));
+
+
+            //Reports
+            ObservableList<String> reports = FXCollections.observableArrayList();
+            reports.add("Total Appointments");
+            reports.add("Schedule by contact");
+            reports.add("Schedule before lunch");
+            reportBox.setItems(reports);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -202,5 +212,32 @@ public class appointment_view_controller implements Initializable {
             appointmentTABLE.setItems(appointments);
         }
 
+    }
+
+    public void generateReport(ActionEvent actionEvent) throws IOException {
+        if(reportBox.getValue() == "Total Appointments"){
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("totalAppointmentReport.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            stage.setTitle("Reports");
+            stage.setScene(scene);
+            stage.show();
+        }
+        if(reportBox.getValue() == "Schedule by contact"){
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("contactScheduleReport.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            stage.setTitle("Reports");
+            stage.setScene(scene);
+            stage.show();
+        }
+        if(reportBox.getValue() == "Schedule before lunch"){
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("scheduleBeforeLunch.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            stage.setTitle("Reports");
+            stage.setScene(scene);
+            stage.show();
+        }
     }
 }

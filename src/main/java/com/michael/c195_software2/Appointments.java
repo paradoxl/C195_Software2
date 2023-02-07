@@ -1,6 +1,7 @@
 package com.michael.c195_software2;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * This class is the backbone of the variables within appointments.
@@ -76,7 +77,11 @@ public class Appointments {
         return type;
     }
     public void setStart(LocalDateTime start){
+
         this.start = start;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        this.start.format(formatter);
+        System.out.println("Main class"+ start);
     }
     public LocalDateTime getStart(){
         return start;
