@@ -21,6 +21,7 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
 
 public class add_appointment_controller implements Initializable {
 
@@ -59,6 +60,7 @@ public class add_appointment_controller implements Initializable {
     public ComboBox CustomerIDBOX;
 
     Alert exit = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to exit?", ButtonType.YES, ButtonType.NO);
+    Alert zoned = new Alert(Alert.AlertType.ERROR,"You have chosen a time that is outside of our business hours. Note: our office is in Eastern Standard Time",ButtonType.OK );
 
     /**
      * This method is used to save user created appointments.
@@ -104,15 +106,21 @@ public class add_appointment_controller implements Initializable {
             ZonedDateTime endConv = end.atZone(ZoneId.systemDefault());
             ZonedDateTime utcEnd = endConv.withZoneSameInstant(ZoneOffset.UTC);
 
-            //check
 
-            LocalDateTime open = LocalDateTime.MIN.plusHours(8);
-            LocalDateTime close = LocalDateTime.MIN.plusHours(22);
 
-            ZonedDateTime openConv = open.atZone(ZoneId.of("US/Eastern"));
-            ZonedDateTime closeConv = close.atZone(ZoneId.of("US/Eastern"));
-        System.out.println(open);
-        System.out.println(openConv);
+            LocalDateTime DTStart = LocalDateTime.of(startDate, startTime);
+            LocalDateTime DTEnd = LocalDateTime.of(endDate, endTime);
+
+            ZonedDateTime zoneStart = ZonedDateTime.of(DTStart, ZoneId.systemDefault());
+            ZonedDateTime zoneEnd = ZonedDateTime.of(DTEnd, ZoneId.systemDefault());
+
+            ZonedDateTime convertStartEST = zoneStart.withZoneSameInstant(ZoneId.of("US/Eastern"));
+            ZonedDateTime convertEndEST = zoneEnd.withZoneSameInstant(ZoneId.of("US/Eastern"));
+
+            if(startTime.isBefore(LocalTime.from(convertStartEST)) || startTime.isAfter(LocalTime.from(convertEndEST)) || endTime.isBefore(LocalTime.from(convertStartEST)) || endTime.isAfter(LocalTime.from(convertEndEST))){
+                zoned.showAndWait();
+                return;
+            }
 
             //gather customer ID
             int customerID = (int) CustomerIDBOX.getSelectionModel().getSelectedItem();

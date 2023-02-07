@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.time.*;
+import java.time.chrono.ChronoZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -58,12 +59,55 @@ public class update_appointment_controller implements Initializable{
     @FXML
     public TableColumn phoneCELL;
     Alert exit = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to exit?",ButtonType.YES,ButtonType.NO);
+    Alert startError = new Alert(Alert.AlertType.ERROR,"You have chosen a start/end time that is outside of our business hours. Note: our office is in Eastern Standard Time",ButtonType.OK );
     private Appointments working;
     /**
      * This method is used to save new data to the database.
      * @param actionEvent
      */
     public void saveButton(ActionEvent actionEvent) throws SQLException, IOException {
+        LocalTime startTimetest = (LocalTime) startTimeBox.getSelectionModel().getSelectedItem();
+        LocalTime endTimetest = (LocalTime) endTimeBOX.getSelectionModel().getSelectedItem();
+        LocalDate startDatetest = startTextFLD.getValue();
+        LocalDate endDatetest= endTextFLD.getValue();
+
+        // converting scheduled time to est
+        LocalDateTime DTStartforSchedule = LocalDateTime.of(startDatetest, startTimetest);
+        LocalDateTime DTEndforSchedule = LocalDateTime.of(endDatetest, endTimetest);
+
+        ZonedDateTime zoneStartforSchedule = ZonedDateTime.of(DTStartforSchedule, ZoneId.systemDefault());
+        ZonedDateTime zoneEndforSchedule = ZonedDateTime.of(DTEndforSchedule, ZoneId.systemDefault());
+
+        ZonedDateTime convertStartESTforSchedule = zoneStartforSchedule.withZoneSameInstant(ZoneId.of("US/Eastern"));
+        ZonedDateTime convertEndforSchedule = zoneEndforSchedule.withZoneSameInstant(ZoneId.of("US/Eastern"));
+
+        System.out.println("Schedule start EST: " + convertStartESTforSchedule);
+        System.out.println("Schedule start local: " + startTimetest);
+
+
+
+        // open and close in est
+        LocalTime open = LocalTime.of(8,0);
+        LocalTime close = LocalTime.of(22,0);
+        LocalDateTime DTStart = LocalDateTime.of(startDatetest, open);
+        LocalDateTime DTEnd = LocalDateTime.of(endDatetest, close);
+
+        ZonedDateTime zoneStart = ZonedDateTime.of(DTStart, ZoneId.systemDefault());
+        ZonedDateTime zoneEnd = ZonedDateTime.of(DTEnd, ZoneId.systemDefault());
+
+        ZonedDateTime convertStartEST = zoneStart.withZoneSameInstant(ZoneId.of("US/Eastern"));
+        ZonedDateTime convertEndEST = zoneEnd.withZoneSameInstant(ZoneId.of("US/Eastern"));
+
+        System.out.println("open Time in Local: " +startTimetest);
+        System.out.println("open Time in EST: " + convertStartEST);
+
+        if(convertStartESTforSchedule.isBefore(convertStartEST) || convertStartEST.isAfter(convertEndEST)||convertEndforSchedule.isAfter(convertEndEST) || convertEndforSchedule.isBefore(convertStartEST)){
+            startError.showAndWait();
+            return;
+        }
+
+
+
         //Check that the appointment times are before they end.
       LocalTime startCheck = (LocalTime) startTimeBox.getValue();
       LocalTime endCheck = (LocalTime) endTimeBOX.getValue();
