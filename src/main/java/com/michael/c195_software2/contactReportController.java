@@ -63,6 +63,8 @@ public class contactReportController implements Initializable {
 //            scheduleTable.setItems();
 //        }
 
+        //populate with everything then filter like we did with the month/week
+
         for(Appointments app : appointments){
             if(app.getContactID() == contactID){
                 appList.add(app);
