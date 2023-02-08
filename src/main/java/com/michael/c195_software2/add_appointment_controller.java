@@ -1,5 +1,6 @@
 package com.michael.c195_software2;
 
+import com.michael.c195_software2.DataAccessObject.AppointmentDAO;
 import com.michael.c195_software2.DataAccessObject.ContactDAO;
 import com.michael.c195_software2.DataAccessObject.CustomerDAO;
 import com.michael.c195_software2.con.InitCon;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.time.*;
+import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -61,6 +63,7 @@ public class add_appointment_controller implements Initializable {
 
     Alert exit = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to exit?", ButtonType.YES, ButtonType.NO);
     Alert zoned = new Alert(Alert.AlertType.ERROR,"You have chosen a time that is outside of our business hours. Note: our office is in Eastern Standard Time",ButtonType.OK );
+    Alert overlap = new Alert(Alert.AlertType.ERROR, "This appointment overlaps with another for this customer. Please choose a different time");
 
     /**
      * This method is used to save user created appointments.
@@ -71,14 +74,42 @@ public class add_appointment_controller implements Initializable {
      */
     public void saveButton(ActionEvent actionEvent) throws SQLException, IOException {
             //check that appointments do not overlap
+        ObservableList<Appointments> appointments = AppointmentDAO.getAppointment();
+        ObservableList<Appointments>   vals = FXCollections.observableArrayList();
+        LocalTime checkStart = (LocalTime) startTimeBox.getSelectionModel().getSelectedItem();
+        LocalTime checkStartEnd = (LocalTime) endTimeBOX.getSelectionModel().getSelectedItem();
+
+        int overlapCheck = (int) CustomerIDBOX.getValue();
+        for(Appointments app: appointments){
+            LocalTime first = LocalTime.from(app.getStart());
+            LocalTime second = LocalTime.from(app.getEnd());
+            if(overlapCheck == app.getAppointmentID()){
+                if(checkStart.isAfter(first)&& checkStart.isBefore(second) || checkStartEnd.isAfter(first) && checkStartEnd.isBefore(second)){
+                    overlap.showAndWait();
+                    System.out.println("start");
+                    return;
+                }
+            }
+        }
+        // issue here with end date not registering that its in the beginning of an appointment.
+
+        //checkstart is whats in the box
+        // first is from db
+
+        for(Appointments app: appointments){
+            LocalTime first = LocalTime.from(app.getStart());
+            LocalTime second = LocalTime.from(app.getEnd());
+            if(overlapCheck == app.getAppointmentID()){
+                if(checkStartEnd.isAfter(first) && checkStartEnd.isBefore(second)){
+                    overlap.showAndWait();
+                    System.out.println("end");
+                    return;
+                }
+            }
+        }
 
 
-
-
-
-
-
-            //This will pull in the appointment ids and generate a new one randomly. This will only be done if the random is not already listed.
+        //This will pull in the appointment ids and generate a new one randomly. This will only be done if the random is not already listed.
             ObservableList<Integer> list = FXCollections.observableArrayList();
             Appointments newAppointment = new Appointments();
             String query = "SELECT Appointment_ID FROM appointments";
@@ -108,21 +139,43 @@ public class add_appointment_controller implements Initializable {
 
 
 
-            LocalDateTime DTStart = LocalDateTime.of(startDate, startTime);
-            LocalDateTime DTEnd = LocalDateTime.of(endDate, endTime);
+        LocalDateTime DTStartforSchedule = LocalDateTime.of(startDate, startTime);
+        LocalDateTime DTEndforSchedule = LocalDateTime.of(endDate, endTime);
 
-            ZonedDateTime zoneStart = ZonedDateTime.of(DTStart, ZoneId.systemDefault());
-            ZonedDateTime zoneEnd = ZonedDateTime.of(DTEnd, ZoneId.systemDefault());
+        ZonedDateTime zoneStartforSchedule = ZonedDateTime.of(DTStartforSchedule, ZoneId.systemDefault());
+        ZonedDateTime zoneEndforSchedule = ZonedDateTime.of(DTEndforSchedule, ZoneId.systemDefault());
 
-            ZonedDateTime convertStartEST = zoneStart.withZoneSameInstant(ZoneId.of("US/Eastern"));
-            ZonedDateTime convertEndEST = zoneEnd.withZoneSameInstant(ZoneId.of("US/Eastern"));
+        ZonedDateTime convertStartESTforSchedule = zoneStartforSchedule.withZoneSameInstant(ZoneId.of("US/Eastern"));
+        ZonedDateTime convertEndforSchedule = zoneEndforSchedule.withZoneSameInstant(ZoneId.of("US/Eastern"));
 
-            if(startTime.isBefore(LocalTime.from(convertStartEST)) || startTime.isAfter(LocalTime.from(convertEndEST)) || endTime.isBefore(LocalTime.from(convertStartEST)) || endTime.isAfter(LocalTime.from(convertEndEST))){
-                zoned.showAndWait();
-                return;
-            }
+        System.out.println("Schedule start EST: " + convertStartESTforSchedule);
+        System.out.println("Schedule start local: " + startTime);
 
-            //gather customer ID
+
+
+        // open and close in est
+        LocalTime open = LocalTime.of(8,0);
+        LocalTime close = LocalTime.of(22,0);
+        LocalDateTime DTStart = LocalDateTime.of(startDate, open);
+        LocalDateTime DTEnd = LocalDateTime.of(endDate, close);
+
+        ZonedDateTime zoneStart = ZonedDateTime.of(DTStart, ZoneId.systemDefault());
+        ZonedDateTime zoneEnd = ZonedDateTime.of(DTEnd, ZoneId.systemDefault());
+
+        ZonedDateTime convertStartEST = zoneStart.withZoneSameInstant(ZoneId.of("US/Eastern"));
+        ZonedDateTime convertEndEST = zoneEnd.withZoneSameInstant(ZoneId.of("US/Eastern"));
+
+        System.out.println("open Time in Local: " +startTime);
+        System.out.println("open Time in EST: " + convertStartEST);
+
+        if(convertStartESTforSchedule.isBefore(convertStartEST) || convertStartEST.isAfter(convertEndEST)||convertEndforSchedule.isAfter(convertEndEST) || convertEndforSchedule.isBefore(convertStartEST)){
+            zoned.showAndWait();
+            return;
+        }
+
+
+
+        //gather customer ID
             int customerID = (int) CustomerIDBOX.getSelectionModel().getSelectedItem();
 
             //gather Contact ID
@@ -198,6 +251,8 @@ public class add_appointment_controller implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
     //implement the choice box
         try {
+
+
             //Customer Table
             ObservableList<Customers> customers = CustomerDAO.getCustomers();
             customerTABLE.setItems(customers);
@@ -217,9 +272,7 @@ public class add_appointment_controller implements Initializable {
             customerID.stream().map(Customers::getCustomerID).forEach(customerIDVALS::add);
             CustomerIDBOX.setItems(customerIDVALS);
 
-            ZoneId eastern = ZoneId.of("US/Eastern");
-            int difference = 0;
-            
+
             //Time Boxes
             LocalTime start = LocalTime.MIN.plusHours(8);
             LocalTime  end = LocalTime .MIN.plusHours(22);

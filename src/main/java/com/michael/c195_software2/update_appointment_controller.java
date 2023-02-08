@@ -1,5 +1,6 @@
 package com.michael.c195_software2;
 
+import com.michael.c195_software2.DataAccessObject.AppointmentDAO;
 import com.michael.c195_software2.DataAccessObject.ContactDAO;
 import com.michael.c195_software2.DataAccessObject.CustomerDAO;
 import com.michael.c195_software2.con.InitCon;
@@ -59,6 +60,7 @@ public class update_appointment_controller implements Initializable{
     @FXML
     public TableColumn phoneCELL;
     Alert exit = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to exit?",ButtonType.YES,ButtonType.NO);
+    Alert overlap = new Alert(Alert.AlertType.ERROR, "This appointment overlaps with another for this customer. Please choose a different time");
     Alert startError = new Alert(Alert.AlertType.ERROR,"You have chosen a start/end time that is outside of our business hours. Note: our office is in Eastern Standard Time",ButtonType.OK );
     private Appointments working;
     /**
@@ -66,6 +68,36 @@ public class update_appointment_controller implements Initializable{
      * @param actionEvent
      */
     public void saveButton(ActionEvent actionEvent) throws SQLException, IOException {
+        //Check overlap
+        ObservableList<Appointments> appointments = AppointmentDAO.getAppointment();
+        ObservableList<Appointments>   vals = FXCollections.observableArrayList();
+        int overlapCheck = working.getCustomerID();
+
+        for(Appointments app: appointments){
+            if(overlapCheck == app.getAppointmentID()){
+                if(app.getEnd().isBefore(working.getStart())){
+                    overlap.showAndWait();
+                    return;
+                }
+            }
+        }
+
+//        {
+//            LocalDateTime checkStart = appointment.getStart();
+//            LocalDateTime checkEnd = appointment.getEnd();
+
+//            if ((customerID == appointment.getCustomerID()) && (newAppointmentID != appointment.getAppointmentID()) &&
+//                    (dateTimeStart.isBefore(checkStart)) && (dateTimeEnd.isAfter(checkEnd))) {
+//                return;
+//            }
+//
+//            if ((customerID == appointment.getCustomerID()) && (newAppointmentID != appointment.getAppointmentID()) &&
+//                    (dateTimeStart.isAfter(checkStart)) && (dateTimeStart.isBefore(checkEnd))) {
+//                return;
+//            }
+
+
+
         LocalTime startTimetest = (LocalTime) startTimeBox.getSelectionModel().getSelectedItem();
         LocalTime endTimetest = (LocalTime) endTimeBOX.getSelectionModel().getSelectedItem();
         LocalDate startDatetest = startTextFLD.getValue();
@@ -297,7 +329,7 @@ public class update_appointment_controller implements Initializable{
 
             //Time Boxes
             LocalTime start = LocalTime.MIN.plusHours(8);
-            LocalTime end = LocalTime.MIN.plusHours(23);
+            LocalTime end = LocalTime.MIN.plusHours(22);
 
             ObservableList<LocalTime> timeIsntReal = FXCollections.observableArrayList();
             while(start.isBefore(end)){
