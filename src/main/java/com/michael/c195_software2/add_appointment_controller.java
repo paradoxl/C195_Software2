@@ -114,6 +114,16 @@ public class add_appointment_controller implements Initializable {
             noEnd.showAndWait();
             return;
         }
+        if(endTimeBOX.getValue() == null){
+            Alert noEndTime = new Alert(Alert.AlertType.ERROR, "You have not selected an end time",ButtonType.OK);
+            noEndTime.showAndWait();
+            return;
+        }
+        if(startTimeBox.getValue() == null){
+            Alert noStartTime = new Alert(Alert.AlertType.ERROR,"You have not selected a start time",ButtonType.OK);
+            noStartTime.showAndWait();
+            return;
+        }
         
 
 
