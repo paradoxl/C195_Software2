@@ -120,12 +120,9 @@ public class appointment_view_controller implements Initializable {
      * @throws SQLException
      */
     public void deleteAppointment(ActionEvent actionEvent) throws SQLException {
-        int selectedForDelete = appointmentTABLE.getSelectionModel().getSelectedItem().getAppointmentID();
-        Alert delete = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete this appointment? Appointment Number: " + selectedForDelete  ,ButtonType.YES,ButtonType.NO);
-        if (appointmentTABLE.getSelectionModel().getSelectedItem() == null){
-            noSelectedApp.showAndWait();
-        }
-        else {
+        try {
+            int selectedForDelete = appointmentTABLE.getSelectionModel().getSelectedItem().getAppointmentID();
+            Alert delete = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete this appointment? Appointment Number: " + selectedForDelete  ,ButtonType.YES,ButtonType.NO);
             delete.showAndWait();
             if (delete.getResult() == ButtonType.YES) {
                 int selected = appointmentTABLE.getSelectionModel().getSelectedItem().getAppointmentID();
@@ -139,7 +136,11 @@ public class appointment_view_controller implements Initializable {
                 System.out.println("again with pushing buttons for no reason...");
             }
         }
-    }
+        catch (NullPointerException e){
+            noSelectedApp.showAndWait();
+        }
+        }
+
 
     /**
      * This method is used to change existing appointments.

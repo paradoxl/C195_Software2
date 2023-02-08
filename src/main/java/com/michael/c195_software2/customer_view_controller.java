@@ -153,15 +153,13 @@ public class customer_view_controller implements Initializable {
      */
     public void deleteRecord(ActionEvent actionEvent) throws SQLException {
         ObservableList<Integer> idlist = FXCollections.observableArrayList();
-        int selected = customerTable.getSelectionModel().getSelectedItem().getCustomerID();
-        Alert deleteRecord = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete this Customer Record? Record Number: "+ selected,ButtonType.YES,ButtonType.NO );
-        deleteRecord.showAndWait();
+        try {
+            int selected = customerTable.getSelectionModel().getSelectedItem().getCustomerID();
 
-        if (deleteRecord.getResult() == ButtonType.YES) {
+            Alert deleteRecord = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete this Customer Record? Record Number: " + selected, ButtonType.YES, ButtonType.NO);
 
-            if (customerTable.getSelectionModel().getSelectedItem() == null) {
-                noSelectedCust.showAndWait();
-            } else {
+            deleteRecord.showAndWait();
+            if (deleteRecord.getResult() == ButtonType.YES) {
                 String checkAppointment = "Select Customer_ID FROM appointments";
                 PreparedStatement checkPS = InitCon.connection.prepareStatement(checkAppointment);
                 ResultSet checkRS = checkPS.executeQuery();
@@ -181,9 +179,19 @@ public class customer_view_controller implements Initializable {
                     customerTable.setItems(list);
                 }
             }
+        }catch (NullPointerException e){
+            noSelectedCust.showAndWait();
         }
 
-        }
+//        if (customerTable.getSelectionModel().getSelectedItem() == null) {
+//
+//            return;
+//        }
+
+
+    }
+
+
 
     /**
      * This method is used to refresh the Table.

@@ -162,12 +162,17 @@ public class add_customer_view_controller implements Initializable {
      * @throws IOException
      */
     public void cancel(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("customer-view.fxml"));
-        Scene scene = new Scene(loader.load());
-        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-        stage.setTitle("Customer Records");
-        stage.setScene(scene);
-        stage.show();
+        Alert cancel = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you wish to exit this page?",ButtonType.YES,ButtonType.NO);
+        cancel.showAndWait();
+
+        if(cancel.getResult() == ButtonType.YES) {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("customer-view.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            stage.setTitle("Customer Records");
+            stage.setScene(scene);
+            stage.show();
+        }
     }
 
     public void dynamicCombo() throws SQLException {
