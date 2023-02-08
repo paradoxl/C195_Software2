@@ -6,11 +6,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -68,6 +71,18 @@ public class MorningScheduleController implements Initializable {
 
     }
 
-    public void back(ActionEvent actionEvent) {
+    public void back(ActionEvent actionEvent) throws IOException {
+        Alert back = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to go back? ", ButtonType.YES,ButtonType.NO);
+        back.showAndWait();
+
+        if (back.getResult() == ButtonType.YES) {
+
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("appointments-view.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            stage.setTitle("Appointments");
+            stage.setScene(scene);
+            stage.show();
+        }
     }
 }

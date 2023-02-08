@@ -10,9 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.FileWriter;
@@ -46,6 +44,53 @@ public class add_customer_view_controller implements Initializable {
 
 
     public void save(ActionEvent actionEvent) throws SQLException, IOException {
+        if(nameTextFLD.getText().isEmpty()){
+            Alert noName = new Alert(Alert.AlertType.ERROR,"You have not entered a name", ButtonType.OK);
+            noName.showAndWait();
+            return;
+        }
+        if(addressTextFLD.getText().isEmpty()){
+            Alert noAddress = new Alert(Alert.AlertType.ERROR,"You have not entered an address",ButtonType.OK);
+            noAddress.showAndWait();
+            return;
+        }
+        if (postalTextFLD.getText().isEmpty()){
+            Alert noPostal = new Alert(Alert.AlertType.ERROR,"You have not entered a postal code",ButtonType.OK);
+            noPostal.showAndWait();
+            return;
+        }
+        if(phoneTextFLD.getText().isEmpty()){
+            Alert noPhone = new Alert(Alert.AlertType.ERROR, "You have not entered a phone number",ButtonType.OK);
+            noPhone.showAndWait();
+            return;
+        }
+        try {
+            if(CBOX.getSelectionModel().getSelectedItem().isEmpty()){
+                Alert noCountry = new Alert(Alert.AlertType.ERROR,"You have not selected a Country",ButtonType.OK);
+                noCountry.showAndWait();
+                return;
+            }
+        }
+        catch (NullPointerException e){
+            Alert noCountry = new Alert(Alert.AlertType.ERROR,"You have not selected a Country",ButtonType.OK);
+            noCountry.showAndWait();
+        }
+        try{
+            if(SBOX.getSelectionModel().getSelectedItem().isEmpty()){
+                Alert noState = new Alert(Alert.AlertType.ERROR,"You have not selected a State/Prov",ButtonType.OK  );
+                noState.showAndWait();
+                return;
+            }
+        }
+        catch (NullPointerException e){
+            Alert noState = new Alert(Alert.AlertType.ERROR,"You have not selected a State/Prov",ButtonType.OK  );
+            noState.showAndWait();
+        }
+
+
+
+
+
         //TODO: BUG with customer id. +2 works for the first addition but not any others.
         ObservableList<Integer> list = FXCollections.observableArrayList();
         Customers newCustomer = new Customers();
@@ -117,12 +162,17 @@ public class add_customer_view_controller implements Initializable {
      * @throws IOException
      */
     public void cancel(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("customer-view.fxml"));
-        Scene scene = new Scene(loader.load());
-        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-        stage.setTitle("Customer Records");
-        stage.setScene(scene);
-        stage.show();
+        Alert cancel = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you wish to exit this page?",ButtonType.YES,ButtonType.NO);
+        cancel.showAndWait();
+
+        if(cancel.getResult() == ButtonType.YES) {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("customer-view.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            stage.setTitle("Customer Records");
+            stage.setScene(scene);
+            stage.show();
+        }
     }
 
     public void dynamicCombo() throws SQLException {

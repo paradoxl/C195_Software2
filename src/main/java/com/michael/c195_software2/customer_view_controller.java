@@ -1,6 +1,8 @@
 package com.michael.c195_software2;
 
+import com.michael.c195_software2.DataAccessObject.CountryDAO;
 import com.michael.c195_software2.DataAccessObject.CustomerDAO;
+import com.michael.c195_software2.DataAccessObject.FirstLevelDivisionDAO;
 import com.michael.c195_software2.con.InitCon;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,6 +25,10 @@ import java.sql.Statement;
 import java.util.ResourceBundle;
 
 public class customer_view_controller implements Initializable {
+    @FXML
+    public TableColumn countryCOL;
+    @FXML
+    public TableColumn stateCOL;
     @FXML
     private TableView<Customers> customerTable;
     @FXML
@@ -49,12 +55,19 @@ public class customer_view_controller implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             ObservableList<Customers> list = CustomerDAO.getCustomers();
+            ObservableList<FirstLevelDivisions> div = FirstLevelDivisionDAO.getFLD();
+            ObservableList<Countries> countries = CountryDAO.getCountries();
+            ObservableList<String> vals = FXCollections.observableArrayList();
+
+
+
             customerTable.setItems(list);
             idCOL.setCellValueFactory(new PropertyValueFactory<>("customerID"));
             nameCOL.setCellValueFactory(new PropertyValueFactory<>("customerName"));
             addressCOL.setCellValueFactory(new PropertyValueFactory<>("address"));
             postalCOL.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
             phoneCOL.setCellValueFactory(new PropertyValueFactory<>("phone"));
+            stateCOL.setCellValueFactory(new PropertyValueFactory<>("divisionID"));
 
 
         } catch (SQLException e) {
@@ -140,33 +153,45 @@ public class customer_view_controller implements Initializable {
      */
     public void deleteRecord(ActionEvent actionEvent) throws SQLException {
         ObservableList<Integer> idlist = FXCollections.observableArrayList();
-        int selected = customerTable.getSelectionModel().getSelectedItem().getCustomerID();
+        try {
+            int selected = customerTable.getSelectionModel().getSelectedItem().getCustomerID();
 
-        if(customerTable.getSelectionModel().getSelectedItem() == null){
+            Alert deleteRecord = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete this Customer Record? Record Number: " + selected, ButtonType.YES, ButtonType.NO);
+
+            deleteRecord.showAndWait();
+            if (deleteRecord.getResult() == ButtonType.YES) {
+                String checkAppointment = "Select Customer_ID FROM appointments";
+                PreparedStatement checkPS = InitCon.connection.prepareStatement(checkAppointment);
+                ResultSet checkRS = checkPS.executeQuery();
+                System.out.println("Gathering appointment data");
+
+                while (checkRS.next()) {
+                    idlist.add(checkRS.getInt("Customer_ID"));
+                }
+                if (idlist.contains(selected)) {
+                    hasAppointments.showAndWait();
+                } else {
+                    String query = "DELETE FROM customers WHERE Customer_ID = '" + selected + "'";
+                    Statement statement = InitCon.connection.createStatement();
+                    statement.executeUpdate(query);
+                    System.out.println("Begone Demon!");
+                    ObservableList<Customers> list = CustomerDAO.getCustomers();
+                    customerTable.setItems(list);
+                }
+            }
+        }catch (NullPointerException e){
             noSelectedCust.showAndWait();
         }
-        else {
-            String checkAppointment = "Select Customer_ID FROM appointments";
-            PreparedStatement checkPS = InitCon.connection.prepareStatement(checkAppointment);
-            ResultSet checkRS = checkPS.executeQuery();
-            System.out.println("Gathering appointment data");
 
-            while (checkRS.next()) {
-                idlist.add(checkRS.getInt("Customer_ID"));
-            }
-            if(idlist.contains(selected)){
-                hasAppointments.showAndWait();
-            }
-            else {
-                String query = "DELETE FROM customers WHERE Customer_ID = '" + selected + "'";
-                Statement statement = InitCon.connection.createStatement();
-                statement.executeUpdate(query);
-                System.out.println("Begone Demon!");
-                ObservableList<Customers> list = CustomerDAO.getCustomers();
-                customerTable.setItems(list);
-             }
-            }
-        }
+//        if (customerTable.getSelectionModel().getSelectedItem() == null) {
+//
+//            return;
+//        }
+
+
+    }
+
+
 
     /**
      * This method is used to refresh the Table.

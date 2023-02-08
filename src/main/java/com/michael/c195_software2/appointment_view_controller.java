@@ -47,7 +47,7 @@ public class appointment_view_controller implements Initializable {
     @FXML
     private TableColumn<?,?>usrIDCOL;
     Alert noSelectedApp= new Alert(Alert.AlertType.ERROR, "You have not selected an appointment", ButtonType.OK);
-    Alert delete = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete this appointment?",ButtonType.YES,ButtonType.NO);
+
 
     /**
      * This method is used to populate all tables and values on the page.
@@ -88,12 +88,16 @@ public class appointment_view_controller implements Initializable {
      * @throws IOException
      */
     public void back(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("customer-view.fxml"));
-        Scene scene = new Scene(loader.load());
-        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-        stage.setTitle("Customer Records");
-        stage.setScene(scene);
-        stage.show();
+        Alert back = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to leave this page?",ButtonType.YES,ButtonType.NO);
+        back.showAndWait();
+        if(back.getResult() == ButtonType.YES) {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("customer-view.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            stage.setTitle("Customer Records");
+            stage.setScene(scene);
+            stage.show();
+        }
     }
 
     /**
@@ -116,10 +120,9 @@ public class appointment_view_controller implements Initializable {
      * @throws SQLException
      */
     public void deleteAppointment(ActionEvent actionEvent) throws SQLException {
-        if (appointmentTABLE.getSelectionModel().getSelectedItem() == null){
-            noSelectedApp.showAndWait();
-        }
-        else {
+        try {
+            int selectedForDelete = appointmentTABLE.getSelectionModel().getSelectedItem().getAppointmentID();
+            Alert delete = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete this appointment? Appointment Number: " + selectedForDelete  ,ButtonType.YES,ButtonType.NO);
             delete.showAndWait();
             if (delete.getResult() == ButtonType.YES) {
                 int selected = appointmentTABLE.getSelectionModel().getSelectedItem().getAppointmentID();
@@ -133,7 +136,11 @@ public class appointment_view_controller implements Initializable {
                 System.out.println("again with pushing buttons for no reason...");
             }
         }
-    }
+        catch (NullPointerException e){
+            noSelectedApp.showAndWait();
+        }
+        }
+
 
     /**
      * This method is used to change existing appointments.

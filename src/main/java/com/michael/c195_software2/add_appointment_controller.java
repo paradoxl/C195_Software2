@@ -1,5 +1,6 @@
 package com.michael.c195_software2;
 
+import com.michael.c195_software2.DataAccessObject.AppointmentDAO;
 import com.michael.c195_software2.DataAccessObject.ContactDAO;
 import com.michael.c195_software2.DataAccessObject.CustomerDAO;
 import com.michael.c195_software2.con.InitCon;
@@ -18,8 +19,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.time.*;
+import java.time.chrono.ChronoLocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
 
 public class add_appointment_controller implements Initializable {
 
@@ -58,16 +62,96 @@ public class add_appointment_controller implements Initializable {
     public ComboBox CustomerIDBOX;
 
     Alert exit = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to exit?", ButtonType.YES, ButtonType.NO);
+    Alert zoned = new Alert(Alert.AlertType.ERROR,"You have chosen a time that is outside of our business hours. Note: our office is in Eastern Standard Time",ButtonType.OK );
+    Alert overlap = new Alert(Alert.AlertType.ERROR, "This appointment overlaps with another for this customer. Please choose a different time");
 
     /**
      * This method is used to save user created appointments.
      * Generates a random appointment id
      * Pulls data from text-fields and combo box to populate tables.
+     * Checks for overlapping appointments.
      * @param actionEvent
      * @throws SQLException
      */
     public void saveButton(ActionEvent actionEvent) throws SQLException, IOException {
-            //This will pull in the appointment ids and generate a new one randomly. This will only be done if the random is not already listed.
+        if(titleTextFLD.getText().isEmpty()){
+            Alert noTitle = new Alert(Alert.AlertType.ERROR,"You have not selected a title",ButtonType.OK);
+            noTitle.showAndWait();
+            return;
+        }
+        if (descriptionTextFLD.getText().isEmpty()){
+            Alert noDescription = new Alert(Alert.AlertType.ERROR,"You have not added a description",ButtonType.OK);
+            noDescription.showAndWait();
+            return;
+        }
+        if (locationTextFLD.getText().isEmpty()){
+            Alert noLocation = new Alert(Alert.AlertType.ERROR,"You have not added a location",ButtonType.OK);
+            noLocation.showAndWait();
+            return;
+        }
+        if (typeTextFLD.getText().isEmpty()){
+            Alert noType = new Alert(Alert.AlertType.ERROR,"You have not added a type",ButtonType.OK);
+            noType.showAndWait();
+            return;
+        }
+        if(userIDTextFLD.getText().isEmpty()){
+            Alert noUser = new Alert(Alert.AlertType.ERROR,"You have not added a user",ButtonType.OK);
+            noUser.showAndWait();
+            return;
+        }
+        if (contactBOX.getSelectionModel().getSelectedItem() == null){
+            Alert noContact = new Alert(Alert.AlertType.ERROR,"You have not added a contact", ButtonType.OK);
+            noContact.showAndWait();
+            return;
+        }
+        if(startTextFLD.getValue() == null){
+            Alert noStart = new Alert(Alert.AlertType.ERROR, "You have not selected a start date",ButtonType.OK);
+            noStart.showAndWait();
+            return;
+        }
+        if(endTextFLD.getValue() == null){
+            Alert noEnd = new Alert(Alert.AlertType.ERROR, "You have not selected an end date",ButtonType.OK);
+            noEnd.showAndWait();
+            return;
+        }
+        if(endTimeBOX.getValue() == null){
+            Alert noEndTime = new Alert(Alert.AlertType.ERROR, "You have not selected an end time",ButtonType.OK);
+            noEndTime.showAndWait();
+            return;
+        }
+        if(startTimeBox.getValue() == null){
+            Alert noStartTime = new Alert(Alert.AlertType.ERROR,"You have not selected a start time",ButtonType.OK);
+            noStartTime.showAndWait();
+            return;
+        }
+        
+
+
+
+            //check that appointments do not overlap
+        ObservableList<Appointments> appointments = AppointmentDAO.getAppointment();
+        ObservableList<Appointments>   vals = FXCollections.observableArrayList();
+        LocalTime checkStart = (LocalTime) startTimeBox.getSelectionModel().getSelectedItem();
+        LocalTime checkStartEnd = (LocalTime) endTimeBOX.getSelectionModel().getSelectedItem();
+
+        int overlapCheck = (int) CustomerIDBOX.getValue();
+        for(Appointments app: appointments){
+            LocalTime first = LocalTime.from(app.getStart());
+            LocalTime second = LocalTime.from(app.getEnd());
+            if(overlapCheck == app.getCustomerID()){
+                if(checkStart.isAfter(first) && checkStart.isBefore(second) || checkStartEnd.isAfter(first) && checkStartEnd.isBefore(second)){
+                    System.out.println("MADE IT HERE");
+                    overlap.showAndWait();
+                    return;
+                }
+            }
+        }
+
+
+
+
+
+        //This will pull in the appointment ids and generate a new one randomly. This will only be done if the random is not already listed.
             ObservableList<Integer> list = FXCollections.observableArrayList();
             Appointments newAppointment = new Appointments();
             String query = "SELECT Appointment_ID FROM appointments";
@@ -96,7 +180,38 @@ public class add_appointment_controller implements Initializable {
             ZonedDateTime utcEnd = endConv.withZoneSameInstant(ZoneOffset.UTC);
 
 
-            //gather customer ID
+
+        LocalDateTime DTStartforSchedule = LocalDateTime.of(startDate, startTime);
+        LocalDateTime DTEndforSchedule = LocalDateTime.of(endDate, endTime);
+
+        ZonedDateTime zoneStartforSchedule = ZonedDateTime.of(DTStartforSchedule, ZoneId.systemDefault());
+        ZonedDateTime zoneEndforSchedule = ZonedDateTime.of(DTEndforSchedule, ZoneId.systemDefault());
+
+        ZonedDateTime convertStartESTforSchedule = zoneStartforSchedule.withZoneSameInstant(ZoneId.of("US/Eastern"));
+        ZonedDateTime convertEndforSchedule = zoneEndforSchedule.withZoneSameInstant(ZoneId.of("US/Eastern"));
+
+
+
+        // open and close in est
+        LocalTime open = LocalTime.of(8,0);
+        LocalTime close = LocalTime.of(22,0);
+        LocalDateTime DTStart = LocalDateTime.of(startDate, open);
+        LocalDateTime DTEnd = LocalDateTime.of(endDate, close);
+
+        ZonedDateTime zoneStart = ZonedDateTime.of(DTStart, ZoneId.systemDefault());
+        ZonedDateTime zoneEnd = ZonedDateTime.of(DTEnd, ZoneId.systemDefault());
+
+        ZonedDateTime convertStartEST = zoneStart.withZoneSameInstant(ZoneId.of("US/Eastern"));
+        ZonedDateTime convertEndEST = zoneEnd.withZoneSameInstant(ZoneId.of("US/Eastern"));
+
+
+        if(convertStartESTforSchedule.isBefore(convertStartEST) || convertStartEST.isAfter(convertEndEST)||convertEndforSchedule.isAfter(convertEndEST) || convertEndforSchedule.isBefore(convertStartEST)){
+            zoned.showAndWait();
+            return;
+        }
+
+
+        //gather customer ID
             int customerID = (int) CustomerIDBOX.getSelectionModel().getSelectedItem();
 
             //gather Contact ID
@@ -151,7 +266,7 @@ public class add_appointment_controller implements Initializable {
     public void exitButton(ActionEvent actionEvent) throws IOException {
         exit.showAndWait();
         if(exit.getResult() == ButtonType.YES) {
-            FXMLLoader loader = new FXMLLoader(Main.class.getResource("customer-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("appointments-view.fxml"));
             Scene scene = new Scene(loader.load());
             Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
             stage.setTitle("Customer Records");
@@ -172,6 +287,8 @@ public class add_appointment_controller implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
     //implement the choice box
         try {
+
+
             //Customer Table
             ObservableList<Customers> customers = CustomerDAO.getCustomers();
             customerTABLE.setItems(customers);
@@ -191,9 +308,11 @@ public class add_appointment_controller implements Initializable {
             customerID.stream().map(Customers::getCustomerID).forEach(customerIDVALS::add);
             CustomerIDBOX.setItems(customerIDVALS);
 
+
             //Time Boxes
             LocalTime start = LocalTime.MIN.plusHours(8);
-            LocalTime end = LocalTime.MIN.plusHours(23);
+            LocalTime  end = LocalTime .MIN.plusHours(22);
+
 
             ObservableList<LocalTime> timeIsntReal = FXCollections.observableArrayList();
             while(start.isBefore(end)){
