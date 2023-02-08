@@ -69,6 +69,7 @@ public class add_appointment_controller implements Initializable {
      * This method is used to save user created appointments.
      * Generates a random appointment id
      * Pulls data from text-fields and combo box to populate tables.
+     * Checks for overlapping appointments.
      * @param actionEvent
      * @throws SQLException
      */
@@ -83,10 +84,10 @@ public class add_appointment_controller implements Initializable {
         for(Appointments app: appointments){
             LocalTime first = LocalTime.from(app.getStart());
             LocalTime second = LocalTime.from(app.getEnd());
-            if(overlapCheck == app.getAppointmentID()){
-                if(checkStart.isAfter(first)&& checkStart.isBefore(second) || checkStartEnd.isAfter(first) && checkStartEnd.isBefore(second)){
+            if(overlapCheck == app.getCustomerID()){
+                if(checkStart.isAfter(first) && checkStart.isBefore(second) || checkStartEnd.isAfter(first) && checkStartEnd.isBefore(second)){
+                    System.out.println("MADE IT HERE");
                     overlap.showAndWait();
-                    System.out.println("start");
                     return;
                 }
             }
@@ -102,7 +103,7 @@ public class add_appointment_controller implements Initializable {
             if(overlapCheck == app.getAppointmentID()){
                 if(checkStartEnd.isAfter(first) && checkStartEnd.isBefore(second)){
                     overlap.showAndWait();
-                    System.out.println("end");
+//                    System.out.println("end");
                     return;
                 }
             }
@@ -148,8 +149,8 @@ public class add_appointment_controller implements Initializable {
         ZonedDateTime convertStartESTforSchedule = zoneStartforSchedule.withZoneSameInstant(ZoneId.of("US/Eastern"));
         ZonedDateTime convertEndforSchedule = zoneEndforSchedule.withZoneSameInstant(ZoneId.of("US/Eastern"));
 
-        System.out.println("Schedule start EST: " + convertStartESTforSchedule);
-        System.out.println("Schedule start local: " + startTime);
+//        System.out.println("Schedule start EST: " + convertStartESTforSchedule);
+//        System.out.println("Schedule start local: " + startTime);
 
 
 
@@ -165,8 +166,8 @@ public class add_appointment_controller implements Initializable {
         ZonedDateTime convertStartEST = zoneStart.withZoneSameInstant(ZoneId.of("US/Eastern"));
         ZonedDateTime convertEndEST = zoneEnd.withZoneSameInstant(ZoneId.of("US/Eastern"));
 
-        System.out.println("open Time in Local: " +startTime);
-        System.out.println("open Time in EST: " + convertStartEST);
+//        System.out.println("open Time in Local: " +startTime);
+//        System.out.println("open Time in EST: " + convertStartEST);
 
         if(convertStartESTforSchedule.isBefore(convertStartEST) || convertStartEST.isAfter(convertEndEST)||convertEndforSchedule.isAfter(convertEndEST) || convertEndforSchedule.isBefore(convertStartEST)){
             zoned.showAndWait();
