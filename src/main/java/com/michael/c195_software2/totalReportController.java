@@ -25,6 +25,9 @@ import java.util.Arrays;
 import java.util.Formattable;
 import java.util.ResourceBundle;
 
+/**
+ * This class is used to control the total reports view.
+ */
 public class totalReportController implements Initializable {
     @FXML
     public Label dynamicLabel;
@@ -35,6 +38,11 @@ public class totalReportController implements Initializable {
     @FXML
     public Button backBTN;
 
+    /**
+     * This method will generate a report based on month and type selected
+     * @param actionEvent
+     * @throws SQLException
+     */
     public void genrateReport(ActionEvent actionEvent) throws SQLException {
         int counter = 0;
 
@@ -56,6 +64,11 @@ public class totalReportController implements Initializable {
 
     }
 
+    /**
+     * This method is used to populate the view
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -92,6 +105,11 @@ public class totalReportController implements Initializable {
         }
     }
 
+    /**
+     * This method returns the user to the appointment view.
+     * @param actionEvent
+     * @throws IOException
+     */
     public void back(ActionEvent actionEvent) throws IOException {
         Alert back = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to leave this page?", ButtonType.YES,ButtonType.NO);
         back.showAndWait();

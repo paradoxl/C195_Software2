@@ -11,6 +11,8 @@
 
 # Application Start:
 - Connect the associated database. 
+- If receiving an error during launch:
+
 - Press shift-f10 within Idea (Linux) to run the program.
 - Details on screens can be found below. 
 

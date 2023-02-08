@@ -11,7 +11,15 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * This is the driver class for the program.
+ */
 public class Main extends Application {
+    /**
+     * Start method
+     * @param stage
+     * @throws IOException
+     */
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("log-in-view.fxml"));
@@ -21,6 +29,11 @@ public class Main extends Application {
         stage.show();
     }
 
+    /**
+     * Main method
+     * @param args
+     * @throws SQLException
+     */
     public static void main(String[] args) throws SQLException {
         InitCon.openConnection();
         AppointmentDAO test  = new AppointmentDAO();

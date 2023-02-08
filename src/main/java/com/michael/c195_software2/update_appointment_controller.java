@@ -27,6 +27,9 @@ import java.util.ResourceBundle;
 import java.util.TimeZone;
 import java.util.concurrent.TimeoutException;
 
+/**
+ * This class is used to update appointments.
+ */
 public class update_appointment_controller implements Initializable{
     @FXML
     public TextField appointmentIDTextFLD;

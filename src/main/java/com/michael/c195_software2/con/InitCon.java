@@ -3,6 +3,9 @@ package com.michael.c195_software2.con;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+/**
+ * This class acts as a link between the program and database.
+ */
 public abstract class InitCon {
     private static final String protocol = "jdbc";
     private static final String vendor = ":mysql:";
@@ -14,6 +17,9 @@ public abstract class InitCon {
     private static String password = "Passw0rd!"; // Password
     public static Connection connection;  // Connection Interface
 
+    /**
+     * This method will open a database connection.
+     */
     public static void openConnection()
     {
         try {
@@ -28,6 +34,9 @@ public abstract class InitCon {
         }
     }
 
+    /**
+     * This method will close a database connection
+     */
     public static void closeConnection() {
         try {
             connection.close();

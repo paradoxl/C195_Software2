@@ -175,6 +175,11 @@ public class add_customer_view_controller implements Initializable {
         }
     }
 
+    /**
+     * This method is used to set up the combo boxes for the Country and State first level division data.
+     * This method contains the first lambda used    "FLD.forEach((firstLevelDivisions -> fldCC.add(firstLevelDivisions.getCountryID())));"
+     * @throws SQLException
+     */
     public void dynamicCombo() throws SQLException {
 
         // sets combo boxes

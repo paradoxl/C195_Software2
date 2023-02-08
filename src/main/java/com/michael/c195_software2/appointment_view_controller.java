@@ -21,6 +21,10 @@ import java.sql.Statement;
 import java.time.*;
 import java.util.ResourceBundle;
 
+/**
+ * This is the main appointments tab.
+ * You will be able to add delete and modify appointments here.
+ */
 public class appointment_view_controller implements Initializable {
     public ComboBox reportBox;
     public Button generateBTN;
@@ -221,6 +225,11 @@ public class appointment_view_controller implements Initializable {
 
     }
 
+    /**
+     * This method will bring you to one of the three reports available to generate.
+     * @param actionEvent
+     * @throws IOException
+     */
     public void generateReport(ActionEvent actionEvent) throws IOException {
         if(reportBox.getValue() == "Total Appointments"){
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("totalAppointmentReport.fxml"));

@@ -1,5 +1,8 @@
 package com.michael.c195_software2;
 
+/**
+ * This class holds all information on Contacts.
+ */
 public class Contacts {
     private int contactID;
     private String contactName;

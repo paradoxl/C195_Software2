@@ -18,9 +18,17 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * This class is used as a bridge between the Database and the appointments class.
+ */
 public class AppointmentDAO {
     Appointments appointments = new Appointments();
 
+    /**
+     * This method returns information on appointments.
+     * @return
+     * @throws SQLException
+     */
     public static ObservableList<Appointments> getAppointment() throws SQLException {
         ObservableList<Appointments> appList = FXCollections.observableArrayList();
         String query = "SELECT * FROM appointments";

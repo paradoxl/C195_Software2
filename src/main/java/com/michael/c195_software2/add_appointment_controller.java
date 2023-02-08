@@ -25,6 +25,9 @@ import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
 
+/**
+ * This class is used to control the screen for adding appointments.
+ */
 public class add_appointment_controller implements Initializable {
 
     @FXML

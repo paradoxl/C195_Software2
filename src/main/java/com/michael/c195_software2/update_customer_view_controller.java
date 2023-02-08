@@ -18,6 +18,9 @@ import java.sql.Timestamp;
 import java.text.Format;
 import java.time.LocalDateTime;
 
+/**
+ * This class is used to update the customer records.
+ */
 public class update_customer_view_controller {
     @FXML
     public Button save;
@@ -48,7 +51,7 @@ public class update_customer_view_controller {
 
     /**
      * This method is used to populate all fields with the customer's data.
-     * This method contains lambda number two
+     * This method contains lambda number two "country.stream().map(countries -> countries.getCountry()).forEach(countryVal::add);"
      * @param selected
      */
     public void populate(Customers selected){
@@ -120,6 +123,11 @@ public class update_customer_view_controller {
 
     }
 
+    /**
+     * This method will return the user to the customer view page.
+     * @param actionEvent
+     * @throws IOException
+     */
     public void cancel(ActionEvent actionEvent) throws IOException {
         cancelAlert.showAndWait();
         if(cancelAlert.getResult() == ButtonType.YES){
@@ -135,6 +143,13 @@ public class update_customer_view_controller {
         }
     }
 
+    /**
+     * This method will save customer records to the database.
+     * @param actionEvent
+     * @throws SQLException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public void save(ActionEvent actionEvent) throws SQLException, IOException, InterruptedException {
 
         if(nameTextFLD.getText().isEmpty()){
@@ -189,6 +204,12 @@ public class update_customer_view_controller {
 
     }
 
+    /**
+     * This method is used to populate the country and state combo boxes.
+     * This method contains a copy of the first lambda i used.
+     * @param actionEvent
+     * @throws SQLException
+     */
     public void dynamicCombo(ActionEvent actionEvent) throws SQLException {
         // sets combo boxes
         SBOX.setOpacity(100);

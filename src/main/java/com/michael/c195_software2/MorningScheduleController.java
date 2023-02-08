@@ -21,6 +21,9 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
+/**
+ * This class will show all appointments scheduled before noon on the day you are viewing it.
+ */
 public class MorningScheduleController implements Initializable {
     @FXML
     public TableView scheduleTable;
@@ -39,6 +42,11 @@ public class MorningScheduleController implements Initializable {
     @FXML
     public TableColumn custIDCOL;
 
+    /**
+     * This method will populate the table with all appointments that are scheduled before noon.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -71,6 +79,11 @@ public class MorningScheduleController implements Initializable {
 
     }
 
+    /**
+     * This method will take the user back to the appointments-view
+     * @param actionEvent
+     * @throws IOException
+     */
     public void back(ActionEvent actionEvent) throws IOException {
         Alert back = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to go back? ", ButtonType.YES,ButtonType.NO);
         back.showAndWait();

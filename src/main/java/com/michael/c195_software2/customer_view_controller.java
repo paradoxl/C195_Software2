@@ -24,6 +24,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
 
+/**
+ * This class represents the main screen.
+ * You can reach all aspects of the program from here.
+ */
 public class customer_view_controller implements Initializable {
     @FXML
     public TableColumn countryCOL;
