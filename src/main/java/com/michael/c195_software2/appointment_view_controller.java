@@ -47,7 +47,7 @@ public class appointment_view_controller implements Initializable {
     @FXML
     private TableColumn<?,?>usrIDCOL;
     Alert noSelectedApp= new Alert(Alert.AlertType.ERROR, "You have not selected an appointment", ButtonType.OK);
-    Alert delete = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete this appointment?",ButtonType.YES,ButtonType.NO);
+
 
     /**
      * This method is used to populate all tables and values on the page.
@@ -116,6 +116,8 @@ public class appointment_view_controller implements Initializable {
      * @throws SQLException
      */
     public void deleteAppointment(ActionEvent actionEvent) throws SQLException {
+        int selectedForDelete = appointmentTABLE.getSelectionModel().getSelectedItem().getAppointmentID();
+        Alert delete = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete this appointment? Appointment Number: " + selectedForDelete  ,ButtonType.YES,ButtonType.NO);
         if (appointmentTABLE.getSelectionModel().getSelectedItem() == null){
             noSelectedApp.showAndWait();
         }

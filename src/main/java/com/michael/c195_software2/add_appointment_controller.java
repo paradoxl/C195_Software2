@@ -92,22 +92,9 @@ public class add_appointment_controller implements Initializable {
                 }
             }
         }
-        // issue here with end date not registering that its in the beginning of an appointment.
 
-        //checkstart is whats in the box
-        // first is from db
 
-        for(Appointments app: appointments){
-            LocalTime first = LocalTime.from(app.getStart());
-            LocalTime second = LocalTime.from(app.getEnd());
-            if(overlapCheck == app.getAppointmentID()){
-                if(checkStartEnd.isAfter(first) && checkStartEnd.isBefore(second)){
-                    overlap.showAndWait();
-//                    System.out.println("end");
-                    return;
-                }
-            }
-        }
+
 
 
         //This will pull in the appointment ids and generate a new one randomly. This will only be done if the random is not already listed.
@@ -149,9 +136,6 @@ public class add_appointment_controller implements Initializable {
         ZonedDateTime convertStartESTforSchedule = zoneStartforSchedule.withZoneSameInstant(ZoneId.of("US/Eastern"));
         ZonedDateTime convertEndforSchedule = zoneEndforSchedule.withZoneSameInstant(ZoneId.of("US/Eastern"));
 
-//        System.out.println("Schedule start EST: " + convertStartESTforSchedule);
-//        System.out.println("Schedule start local: " + startTime);
-
 
 
         // open and close in est
@@ -166,14 +150,11 @@ public class add_appointment_controller implements Initializable {
         ZonedDateTime convertStartEST = zoneStart.withZoneSameInstant(ZoneId.of("US/Eastern"));
         ZonedDateTime convertEndEST = zoneEnd.withZoneSameInstant(ZoneId.of("US/Eastern"));
 
-//        System.out.println("open Time in Local: " +startTime);
-//        System.out.println("open Time in EST: " + convertStartEST);
 
         if(convertStartESTforSchedule.isBefore(convertStartEST) || convertStartEST.isAfter(convertEndEST)||convertEndforSchedule.isAfter(convertEndEST) || convertEndforSchedule.isBefore(convertStartEST)){
             zoned.showAndWait();
             return;
         }
-
 
 
         //gather customer ID
@@ -231,7 +212,7 @@ public class add_appointment_controller implements Initializable {
     public void exitButton(ActionEvent actionEvent) throws IOException {
         exit.showAndWait();
         if(exit.getResult() == ButtonType.YES) {
-            FXMLLoader loader = new FXMLLoader(Main.class.getResource("customer-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("appointments-view.fxml"));
             Scene scene = new Scene(loader.load());
             Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
             stage.setTitle("Customer Records");

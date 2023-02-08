@@ -25,7 +25,6 @@ public class CustomerDAO {
             String postal = rs.getString("Postal_Code");
             String phone = rs.getString("Phone");
             int divID = rs.getInt("Division_ID");
-
             Customers customer = new Customers(customerid,name,address,postal,phone,divID);
             customerList.add(customer);
         }

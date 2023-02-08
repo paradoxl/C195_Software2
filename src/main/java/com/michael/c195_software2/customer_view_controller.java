@@ -1,6 +1,8 @@
 package com.michael.c195_software2;
 
+import com.michael.c195_software2.DataAccessObject.CountryDAO;
 import com.michael.c195_software2.DataAccessObject.CustomerDAO;
+import com.michael.c195_software2.DataAccessObject.FirstLevelDivisionDAO;
 import com.michael.c195_software2.con.InitCon;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,6 +25,10 @@ import java.sql.Statement;
 import java.util.ResourceBundle;
 
 public class customer_view_controller implements Initializable {
+    @FXML
+    public TableColumn countryCOL;
+    @FXML
+    public TableColumn stateCOL;
     @FXML
     private TableView<Customers> customerTable;
     @FXML
@@ -49,12 +55,19 @@ public class customer_view_controller implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             ObservableList<Customers> list = CustomerDAO.getCustomers();
+            ObservableList<FirstLevelDivisions> div = FirstLevelDivisionDAO.getFLD();
+            ObservableList<Countries> countries = CountryDAO.getCountries();
+            ObservableList<String> vals = FXCollections.observableArrayList();
+
+
+
             customerTable.setItems(list);
             idCOL.setCellValueFactory(new PropertyValueFactory<>("customerID"));
             nameCOL.setCellValueFactory(new PropertyValueFactory<>("customerName"));
             addressCOL.setCellValueFactory(new PropertyValueFactory<>("address"));
             postalCOL.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
             phoneCOL.setCellValueFactory(new PropertyValueFactory<>("phone"));
+            stateCOL.setCellValueFactory(new PropertyValueFactory<>("divisionID"));
 
 
         } catch (SQLException e) {
