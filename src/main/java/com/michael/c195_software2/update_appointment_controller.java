@@ -121,21 +121,27 @@ public class update_appointment_controller implements Initializable{
 
 
 
-
-
-        //Check overlap
+        //check that appointments do not overlap
         ObservableList<Appointments> appointments = AppointmentDAO.getAppointment();
         ObservableList<Appointments>   vals = FXCollections.observableArrayList();
-        int overlapCheck = working.getCustomerID();
+        LocalTime checkStart = (LocalTime) startTimeBox.getSelectionModel().getSelectedItem();
+        LocalTime checkStartEnd = (LocalTime) endTimeBOX.getSelectionModel().getSelectedItem();
 
+        int overlapCheck = (int) CustomerIDBOX.getValue();
         for(Appointments app: appointments){
-            if(overlapCheck == app.getAppointmentID()){
-                if(app.getEnd().isBefore(working.getStart())){
-                    overlap.showAndWait();
-                    return;
+            LocalTime first = LocalTime.from(app.getStart());
+            LocalTime second = LocalTime.from(app.getEnd());
+            if(overlapCheck == app.getCustomerID()){
+                if(checkStart.isAfter(first) && checkStart.isBefore(second) || checkStartEnd.isAfter(first) && checkStartEnd.isBefore(second)){
+                    if((app.getAppointmentID() != Integer.parseInt(appointmentIDTextFLD.getText()))) {
+                        System.out.println("MADE IT HERE");
+                        overlap.showAndWait();
+                        return;
+                    }
                 }
             }
         }
+
 
 //        {
 //            LocalDateTime checkStart = appointment.getStart();
