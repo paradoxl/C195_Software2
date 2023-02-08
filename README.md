@@ -11,8 +11,7 @@
 
 # Application Start:
 - Connect the associated database. 
-- If receiving an error during launch:
-
+- If receiving an error during launch: Remove the MYSQL connector dependency. Reapply the MYSQL connector VIA project settings.
 - Press shift-f10 within Idea (Linux) to run the program.
 - Details on screens can be found below. 
 
