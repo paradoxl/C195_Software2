@@ -74,6 +74,7 @@ public class add_appointment_controller implements Initializable {
      * @throws SQLException
      */
     public void saveButton(ActionEvent actionEvent) throws SQLException, IOException {
+
             //check that appointments do not overlap
         ObservableList<Appointments> appointments = AppointmentDAO.getAppointment();
         ObservableList<Appointments>   vals = FXCollections.observableArrayList();

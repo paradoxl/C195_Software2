@@ -88,12 +88,16 @@ public class appointment_view_controller implements Initializable {
      * @throws IOException
      */
     public void back(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("customer-view.fxml"));
-        Scene scene = new Scene(loader.load());
-        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-        stage.setTitle("Customer Records");
-        stage.setScene(scene);
-        stage.show();
+        Alert back = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to leave this page?",ButtonType.YES,ButtonType.NO);
+        back.showAndWait();
+        if(back.getResult() == ButtonType.YES) {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("customer-view.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            stage.setTitle("Customer Records");
+            stage.setScene(scene);
+            stage.show();
+        }
     }
 
     /**

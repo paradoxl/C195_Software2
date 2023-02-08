@@ -137,6 +137,30 @@ public class update_customer_view_controller {
 
     public void save(ActionEvent actionEvent) throws SQLException, IOException, InterruptedException {
 
+        if(nameTextFLD.getText().isEmpty()){
+            Alert noName = new Alert(Alert.AlertType.ERROR,"You have not entered a name", ButtonType.OK);
+            noName.showAndWait();
+            return;
+        }
+        if(addressTextFLD.getText().isEmpty()){
+            Alert noAddress = new Alert(Alert.AlertType.ERROR,"You have not entered an address",ButtonType.OK);
+            noAddress.showAndWait();
+            return;
+        }
+        if (postalTextFLD.getText().isEmpty()){
+            Alert noPostal = new Alert(Alert.AlertType.ERROR,"You have not entered a postal code",ButtonType.OK);
+            noPostal.showAndWait();
+            return;
+        }
+        if(phoneTextFLD.getText().isEmpty()){
+            Alert noPhone = new Alert(Alert.AlertType.ERROR, "You have not entered a phone number",ButtonType.OK);
+            noPhone.showAndWait();
+            return;
+        }
+
+
+
+
         //TODO: Collect which user is logged in so we can add the changed by.
         String insertQuery = "UPDATE customers SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, Last_Update = ? WHERE Customer_ID = '" + custIDTextFLD.getText() + "'";
         PreparedStatement insertPS = InitCon.connection.prepareStatement(insertQuery);
