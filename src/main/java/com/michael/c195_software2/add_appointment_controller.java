@@ -74,6 +74,49 @@ public class add_appointment_controller implements Initializable {
      * @throws SQLException
      */
     public void saveButton(ActionEvent actionEvent) throws SQLException, IOException {
+        if(titleTextFLD.getText().isEmpty()){
+            Alert noTitle = new Alert(Alert.AlertType.ERROR,"You have not selected a title",ButtonType.OK);
+            noTitle.showAndWait();
+            return;
+        }
+        if (descriptionTextFLD.getText().isEmpty()){
+            Alert noDescription = new Alert(Alert.AlertType.ERROR,"You have not added a description",ButtonType.OK);
+            noDescription.showAndWait();
+            return;
+        }
+        if (locationTextFLD.getText().isEmpty()){
+            Alert noLocation = new Alert(Alert.AlertType.ERROR,"You have not added a location",ButtonType.OK);
+            noLocation.showAndWait();
+            return;
+        }
+        if (typeTextFLD.getText().isEmpty()){
+            Alert noType = new Alert(Alert.AlertType.ERROR,"You have not added a type",ButtonType.OK);
+            noType.showAndWait();
+            return;
+        }
+        if(userIDTextFLD.getText().isEmpty()){
+            Alert noUser = new Alert(Alert.AlertType.ERROR,"You have not added a user",ButtonType.OK);
+            noUser.showAndWait();
+            return;
+        }
+        if (contactBOX.getSelectionModel().getSelectedItem() == null){
+            Alert noContact = new Alert(Alert.AlertType.ERROR,"You have not added a contact", ButtonType.OK);
+            noContact.showAndWait();
+            return;
+        }
+        if(startTextFLD.getValue() == null){
+            Alert noStart = new Alert(Alert.AlertType.ERROR, "You have not selected a start date",ButtonType.OK);
+            noStart.showAndWait();
+            return;
+        }
+        if(endTextFLD.getValue() == null){
+            Alert noEnd = new Alert(Alert.AlertType.ERROR, "You have not selected an end date",ButtonType.OK);
+            noEnd.showAndWait();
+            return;
+        }
+        
+
+
 
             //check that appointments do not overlap
         ObservableList<Appointments> appointments = AppointmentDAO.getAppointment();
