@@ -125,15 +125,21 @@ public class update_appointment_controller implements Initializable{
         ObservableList<Appointments> appointments = AppointmentDAO.getAppointment();
         ObservableList<Appointments>   vals = FXCollections.observableArrayList();
         LocalTime checkStart = (LocalTime) startTimeBox.getSelectionModel().getSelectedItem();
+        LocalDate startDateCheck =  startTextFLD.getValue();
+        LocalDate endDateCheck = endTextFLD.getValue();
         LocalTime checkStartEnd = (LocalTime) endTimeBOX.getSelectionModel().getSelectedItem();
+        LocalDate today = LocalDate.now();
+        System.out.println(today);
 
         int overlapCheck = (int) CustomerIDBOX.getValue();
         for(Appointments app: appointments){
             LocalTime first = LocalTime.from(app.getStart());
             LocalTime second = LocalTime.from(app.getEnd());
             if(overlapCheck == app.getCustomerID()){
-                if(checkStart.isAfter(first) && checkStart.isBefore(second) || checkStartEnd.isAfter(first) && checkStartEnd.isBefore(second)){
+                if(checkStart.isAfter(first) && checkStart.isBefore(second)&& startDateCheck.isEqual(today) && endDateCheck.isEqual(today) || checkStartEnd.isAfter(first) && checkStartEnd.isBefore(second) && startDateCheck.isEqual(today) && endDateCheck.isEqual(today)){
                     if((app.getAppointmentID() != Integer.parseInt(appointmentIDTextFLD.getText()))) {
+                        System.out.println("Start date " + startDateCheck);
+                        System.out.println("today " + today);
                         System.out.println("MADE IT HERE");
                         overlap.showAndWait();
                         return;
