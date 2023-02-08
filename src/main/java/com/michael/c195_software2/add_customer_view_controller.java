@@ -178,6 +178,7 @@ public class add_customer_view_controller implements Initializable {
     /**
      * This method is used to set up the combo boxes for the Country and State first level division data.
      * This method contains the first lambda used    "FLD.forEach((firstLevelDivisions -> fldCC.add(firstLevelDivisions.getCountryID())));"
+     * This lambda is used in place of a loop.
      * @throws SQLException
      */
     public void dynamicCombo() throws SQLException {
@@ -190,7 +191,8 @@ public class add_customer_view_controller implements Initializable {
         ObservableList<String> finalFLDVALCA = FXCollections.observableArrayList();
         ObservableList<String> finalFLDVALUK = FXCollections.observableArrayList();
         //First set of LAMBDA expressions used to gather data on FLD base on country id
-        FLD.forEach((firstLevelDivisions -> fldCC.add(firstLevelDivisions.getCountryID()) ));
+
+        FLD.forEach((firstLevelDivisions -> fldCC.add(firstLevelDivisions.getCountryID())));
         FLD.forEach(firstLevelDivision -> fldVAL.add(firstLevelDivision.getDivision()));
         if(CBOX.getSelectionModel().getSelectedIndex() == 0){
           SBOX.setOpacity(100);

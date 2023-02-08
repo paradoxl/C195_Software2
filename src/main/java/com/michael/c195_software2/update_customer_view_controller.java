@@ -52,6 +52,7 @@ public class update_customer_view_controller {
     /**
      * This method is used to populate all fields with the customer's data.
      * This method contains lambda number two "country.stream().map(countries -> countries.getCountry()).forEach(countryVal::add);"
+     * This lambda is used to add the country name to an observable list.
      * @param selected
      */
     public void populate(Customers selected){
