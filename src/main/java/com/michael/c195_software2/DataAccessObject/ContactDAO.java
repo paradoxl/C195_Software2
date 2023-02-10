@@ -1,7 +1,7 @@
 package com.michael.c195_software2.DataAccessObject;
 
 import com.michael.c195_software2.Contacts;
-import com.michael.c195_software2.con.InitCon;
+import com.michael.c195_software2.dataBaseConnection.InitCon;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -9,9 +9,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * This method is used as a bridge between the Database and the Contact class.
+ */
 public class ContactDAO {
 
-
+    /**
+     * This method is used to return contact information.
+     * @return
+     * @throws SQLException
+     */
     public static ObservableList<Contacts> getContacts() throws SQLException{
         ObservableList<Contacts> contacts = FXCollections.observableArrayList();
         String query = "SELECT * FROM contacts";

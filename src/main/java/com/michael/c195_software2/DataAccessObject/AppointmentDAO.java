@@ -1,12 +1,11 @@
 package com.michael.c195_software2.DataAccessObject;
 
 import com.michael.c195_software2.Appointments;
-import com.michael.c195_software2.con.InitCon;
+import com.michael.c195_software2.dataBaseConnection.InitCon;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,9 +17,17 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * This class is used as a bridge between the Database and the appointments class.
+ */
 public class AppointmentDAO {
     Appointments appointments = new Appointments();
 
+    /**
+     * This method returns information on appointments.
+     * @return
+     * @throws SQLException
+     */
     public static ObservableList<Appointments> getAppointment() throws SQLException {
         ObservableList<Appointments> appList = FXCollections.observableArrayList();
         String query = "SELECT * FROM appointments";

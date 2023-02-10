@@ -22,7 +22,20 @@ public class Appointments {
     private int userID;
     private int contactID;
 
-
+    /**
+     * constructor
+     * @param appointmentID
+     * @param title
+     * @param description
+     * @param location
+     * @param type
+     * @param start
+     * @param end
+     * @param createDate
+     * @param customerID
+     * @param userID
+     * @param contactID
+     */
     public Appointments(int appointmentID, String title, String description, String location, String type, LocalDateTime start, LocalDateTime end, LocalDateTime createDate, int customerID, int userID, int contactID){
         this.appointmentID = appointmentID;
         this.title = title;
@@ -38,7 +51,10 @@ public class Appointments {
         this.contactID = contactID;
 
     }
-    // TODO: check that we don't need values here.
+
+    /**
+     * Empty constructor
+     */
     public Appointments(){
 
     }

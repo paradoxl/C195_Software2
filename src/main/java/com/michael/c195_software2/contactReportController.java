@@ -2,7 +2,7 @@ package com.michael.c195_software2;
 
 import com.michael.c195_software2.DataAccessObject.AppointmentDAO;
 import com.michael.c195_software2.DataAccessObject.ContactDAO;
-import com.michael.c195_software2.con.InitCon;
+import com.michael.c195_software2.dataBaseConnection.InitCon;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,9 +19,11 @@ import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ResourceBundle;
 
+/**
+ * This class will allow for the generation of a report based on Contacts.
+ */
 public class contactReportController implements Initializable {
     @FXML
     public TableView scheduleTable;
@@ -41,6 +43,9 @@ public class contactReportController implements Initializable {
     public TableColumn custIDCOL;
     public ComboBox contactBOX;
 
+    /**
+     * This method is used to return the user back to the appointments view.
+     */
     Alert exit = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you wish to return to the previous page?", ButtonType.YES,ButtonType.NO);
     public void back(ActionEvent actionEvent) throws IOException {
         exit.showAndWait();
@@ -57,7 +62,11 @@ public class contactReportController implements Initializable {
         }
     }
 
-
+    /**
+     * This method will generate a report based on the selected contact.
+     * @param actionEvent
+     * @throws SQLException
+     */
     public void generateSchedule(ActionEvent actionEvent) throws SQLException {
         int contactID = 0;
         ObservableList<Appointments> appList = FXCollections.observableArrayList();
@@ -95,6 +104,11 @@ public class contactReportController implements Initializable {
 
     }
 
+    /**
+     * This method will implement the contact box with all contacts in the system.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 

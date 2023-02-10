@@ -1,7 +1,9 @@
 package com.michael.c195_software2;
 
 
-
+/**
+ * This class contains information on the customers
+ */
 public class Customers {
     private int customerID;
     private String customerName;

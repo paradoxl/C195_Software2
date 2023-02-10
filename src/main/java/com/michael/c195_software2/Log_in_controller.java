@@ -2,7 +2,7 @@ package com.michael.c195_software2;
 
 import com.michael.c195_software2.DataAccessObject.AppointmentDAO;
 import com.michael.c195_software2.DataAccessObject.UserDAO;
-import com.michael.c195_software2.con.InitCon;
+import com.michael.c195_software2.dataBaseConnection.InitCon;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,8 +25,12 @@ import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-
+/**
+ * This class will handle login.
+ */
 public class Log_in_controller implements Initializable{
+    @FXML
+    public Label welcome;
     @FXML
     private Button exitBTN;
     @FXML
@@ -38,7 +42,8 @@ public class Log_in_controller implements Initializable{
     private TextField PasswordTextFLD;
     @FXML
     private Label country;
-    Alert exitAlert = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you want to exit?", ButtonType.YES, ButtonType.NO);
+
+    Alert loginError = new Alert(Alert.AlertType.ERROR);
 
     /**
      * This method is used to initalize language settings.
@@ -46,7 +51,6 @@ public class Log_in_controller implements Initializable{
      * @param resourceBundle
      */
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
         //language settings
         Locale locale = Locale.getDefault();
         ZoneId zoneid = ZoneId.systemDefault();
@@ -58,12 +62,15 @@ public class Log_in_controller implements Initializable{
         PasswordTextFLD.setPromptText(resourceBundle.getString("password"));
         exitBTN.setText(resourceBundle.getString("exit"));
         country.setText(resourceBundle.getString("country"));
+        welcome.setText(resourceBundle.getString("welcome"));
 
-
-
+        loginError.setContentText(resourceBundle.getString("loginError"));
+        Button loginErrorBTN = new Button(resourceBundle.getString("ok"));
+        ((Button) loginError.getDialogPane().lookupButton(ButtonType.OK)).setText(resourceBundle.getString("ok"));
 
 
     }
+    Alert exitAlert = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you want to exit?", ButtonType.YES, ButtonType.NO);
 
     /**
      * This method is used to confirm the user is authentic.
@@ -72,12 +79,16 @@ public class Log_in_controller implements Initializable{
      * @throws IOException
      */
     public void signIn(ActionEvent actionEvent) throws IOException, SQLException {
+
+
         InitCon.openConnection();
         // check user is legit
         String username = UsernameTextFLD.getText();
         String password = PasswordTextFLD.getText();
         FileWriter input  = new FileWriter("login_activity.txt",true);
         UserDAO user = new UserDAO();
+
+
 
         if(user.validation(username, password)){
             ObservableList<Appointments> appSoon = AppointmentDAO.getAppointment();
@@ -125,8 +136,7 @@ public class Log_in_controller implements Initializable{
                 System.out.println("no soup for you");
             }
 
-            Alert loginError = new Alert(Alert.AlertType.ERROR, "Incorrect username or password",ButtonType.OK);
-            loginError.showAndWait();
+         loginError.showAndWait();
         }
 
 

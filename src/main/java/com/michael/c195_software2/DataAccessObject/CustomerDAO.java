@@ -2,7 +2,7 @@ package com.michael.c195_software2.DataAccessObject;
 
 import com.michael.c195_software2.Customers;
 
-import com.michael.c195_software2.con.InitCon;
+import com.michael.c195_software2.dataBaseConnection.InitCon;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -10,7 +10,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * This class is used as a bridge between the Database and the customer class.
+ */
 public class CustomerDAO {
+    /**
+     * This method is used to return customer information.
+     * @return
+     * @throws SQLException
+     */
     public static ObservableList<Customers> getCustomers() throws SQLException {
         ObservableList<Customers> customerList = FXCollections.observableArrayList();
         String query = "SELECT * FROM customers";

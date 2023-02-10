@@ -1,7 +1,7 @@
 package com.michael.c195_software2.DataAccessObject;
 
 import com.michael.c195_software2.FirstLevelDivisions;
-import com.michael.c195_software2.con.InitCon;
+import com.michael.c195_software2.dataBaseConnection.InitCon;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -10,9 +10,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
+/**
+ * This class is used as a bridge between the Database and first level division.
+ */
 public class FirstLevelDivisionDAO {
 
-
+    /**
+     * This method is used to return data on first level division
+     * @return
+     * @throws SQLException
+     */
     public  static ObservableList<FirstLevelDivisions> getFLD() throws SQLException {
 //        FirstLevelDivisions FLD = new FirstLevelDivisions();
         ObservableList<FirstLevelDivisions> FLD = FXCollections.observableArrayList();

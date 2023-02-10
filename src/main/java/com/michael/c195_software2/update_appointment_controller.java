@@ -3,7 +3,7 @@ package com.michael.c195_software2;
 import com.michael.c195_software2.DataAccessObject.AppointmentDAO;
 import com.michael.c195_software2.DataAccessObject.ContactDAO;
 import com.michael.c195_software2.DataAccessObject.CustomerDAO;
-import com.michael.c195_software2.con.InitCon;
+import com.michael.c195_software2.dataBaseConnection.InitCon;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,14 +19,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.time.*;
-import java.time.chrono.ChronoZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.ResourceBundle;
-import java.util.TimeZone;
-import java.util.concurrent.TimeoutException;
 
+/**
+ * This class is used to update appointments.
+ */
 public class update_appointment_controller implements Initializable{
     @FXML
     public TextField appointmentIDTextFLD;
@@ -293,7 +292,7 @@ public class update_appointment_controller implements Initializable{
         exit.showAndWait();
 
         if (exit.getResult() == ButtonType.YES){
-            FXMLLoader loader = new FXMLLoader(Main.class.getResource("customer-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("appointments-view.fxml"));
             Scene scene = new Scene(loader.load());
             Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
             stage.setTitle("Customer Records");

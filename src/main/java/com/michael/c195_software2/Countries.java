@@ -2,6 +2,9 @@ package com.michael.c195_software2;
 
 import java.time.LocalDateTime;
 
+/**
+ * This class hold all information regarding specific countries.
+ */
 public class Countries {
     private int countryID;
     private String country;

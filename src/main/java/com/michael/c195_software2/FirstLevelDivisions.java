@@ -2,6 +2,9 @@ package com.michael.c195_software2;
 
 import java.time.LocalDateTime;
 
+/**
+ * This method contains information on first level divisions.
+ */
 public class FirstLevelDivisions {
     private int divisionID;
     private String division;

@@ -1,7 +1,7 @@
 package com.michael.c195_software2.DataAccessObject;
 
 import com.michael.c195_software2.Countries;
-import com.michael.c195_software2.con.InitCon;
+import com.michael.c195_software2.dataBaseConnection.InitCon;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -10,7 +10,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
+/**
+ * This class is used as a bridge between the database and the country class.
+ */
 public class CountryDAO {
+    /**
+     * This method is used to return country data.
+     * @return
+     * @throws SQLException
+     */
     public static ObservableList<Countries> getCountries() throws SQLException{
         ObservableList<Countries> countries = FXCollections.observableArrayList();
         String query = "SELECT * FROM countries";
