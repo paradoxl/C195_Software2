@@ -1,8 +1,7 @@
 package com.michael.c195_software2;
 
 import com.michael.c195_software2.DataAccessObject.AppointmentDAO;
-import com.michael.c195_software2.DataAccessObject.UserDAO;
-import com.michael.c195_software2.con.InitCon;
+import com.michael.c195_software2.dataBaseConnection.InitCon;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

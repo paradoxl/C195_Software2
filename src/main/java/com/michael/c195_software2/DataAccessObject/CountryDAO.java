@@ -1,7 +1,7 @@
 package com.michael.c195_software2.DataAccessObject;
 
 import com.michael.c195_software2.Countries;
-import com.michael.c195_software2.con.InitCon;
+import com.michael.c195_software2.dataBaseConnection.InitCon;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

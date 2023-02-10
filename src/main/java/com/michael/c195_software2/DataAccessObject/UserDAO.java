@@ -1,14 +1,10 @@
 package com.michael.c195_software2.DataAccessObject;
 
-import com.michael.c195_software2.Users;
-import com.michael.c195_software2.con.InitCon;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
+import com.michael.c195_software2.dataBaseConnection.InitCon;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  * This class is used as a bridge between the Database and the user class.

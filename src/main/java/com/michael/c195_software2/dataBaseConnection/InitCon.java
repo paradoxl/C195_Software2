@@ -1,4 +1,4 @@
-package com.michael.c195_software2.con;
+package com.michael.c195_software2.dataBaseConnection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

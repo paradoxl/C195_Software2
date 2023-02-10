@@ -2,7 +2,7 @@ package com.michael.c195_software2;
 
 import com.michael.c195_software2.DataAccessObject.CountryDAO;
 import com.michael.c195_software2.DataAccessObject.FirstLevelDivisionDAO;
-import com.michael.c195_software2.con.InitCon;
+import com.michael.c195_software2.dataBaseConnection.InitCon;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,12 +13,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Random;
 import java.util.ResourceBundle;
 

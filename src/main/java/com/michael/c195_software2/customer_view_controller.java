@@ -3,7 +3,7 @@ package com.michael.c195_software2;
 import com.michael.c195_software2.DataAccessObject.CountryDAO;
 import com.michael.c195_software2.DataAccessObject.CustomerDAO;
 import com.michael.c195_software2.DataAccessObject.FirstLevelDivisionDAO;
-import com.michael.c195_software2.con.InitCon;
+import com.michael.c195_software2.dataBaseConnection.InitCon;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
