@@ -12,6 +12,7 @@
 # Application Start:
 - Connect the associated database. 
 - If receiving an error during launch: Remove the MYSQL connector dependency. Reapply the MYSQL connector VIA project settings.
+- Note: Windows may complain about a folder called CON when extracting files. This can be skipped.
 - Press shift-f10 within Idea (Linux) to run the program.
 - Details on screens can be found below. 
 
