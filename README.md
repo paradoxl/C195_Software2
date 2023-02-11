@@ -1,8 +1,9 @@
 # C195_Software2 Patient/Client Portal
 - Michael Evans
 - Student ID: 010539989
-- Version 0.0.1
-
+- Version: 0.0.1
+- Purpose: Comply with real world constraints to create a high quality and functional program that simulates real world production code.
+- Creation date: 2/11/23
 # Technical Details
 - IDE: Idea-Community- 4:2022.3.2-1
 - JDK: JAVA SE corretto-17.0.5
