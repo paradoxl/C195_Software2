@@ -125,7 +125,8 @@ public class appointment_view_controller implements Initializable {
     public void deleteAppointment(ActionEvent actionEvent) throws SQLException {
         try {
             int selectedForDelete = appointmentTABLE.getSelectionModel().getSelectedItem().getAppointmentID();
-            Alert delete = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete this appointment? Appointment Number: " + selectedForDelete  ,ButtonType.YES,ButtonType.NO);
+            String type = appointmentTABLE.getSelectionModel().getSelectedItem().getType();
+            Alert delete = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete this appointment? Appointment Number: " + selectedForDelete +" Type: " + type ,ButtonType.YES,ButtonType.NO);
             delete.showAndWait();
             if (delete.getResult() == ButtonType.YES) {
                 int selected = appointmentTABLE.getSelectionModel().getSelectedItem().getAppointmentID();
