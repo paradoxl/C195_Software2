@@ -20,8 +20,8 @@
         </columns>
       </TableView>
       <Button layoutX="587.0" layoutY="385.0" mnemonicParsing="false" onAction="#addAppointment" text="Add Appointment" />
-      <Button layoutX="577.0" layoutY="416.0" mnemonicParsing="false" onAction="#updateAppointment" text="Update Appointment" />
-      <Button layoutX="579.0" layoutY="449.0" mnemonicParsing="false" onAction="#deleteAppointment" text="Delete Appointment" />
+      <Button layoutX="554.0" layoutY="416.0" mnemonicParsing="false" onAction="#updateAppointment" text="Update Appointment Details" />
+      <Button layoutX="579.0" layoutY="482.0" mnemonicParsing="false" onAction="#deleteAppointment" text="Delete Appointment" />
       <Button layoutX="890.0" layoutY="488.0" mnemonicParsing="false" onAction="#back" text="Back" />
       <Label layoutX="121.0" layoutY="14.0" text="Appointments" />
       <RadioButton layoutX="813.0" layoutY="14.0" mnemonicParsing="false" onAction="#sortWeekly" text="Weekly">
@@ -32,5 +32,6 @@
       <RadioButton layoutX="759.0" layoutY="14.0" mnemonicParsing="false" onAction="#sortAll" selected="true" text="All" toggleGroup="$sort" />
       <ComboBox fx:id="reportBox" layoutX="121.0" layoutY="429.0" prefWidth="150.0" promptText="Reports" />
       <Button fx:id="generateBTN" layoutX="290.0" layoutY="429.0" mnemonicParsing="false" onAction="#generateReport" text="Go" />
+      <Button layoutX="557.0" layoutY="449.0" mnemonicParsing="false" onAction="#updateAppointmentTime" text="Update Appointment Times" />
    </children>
 </Pane>

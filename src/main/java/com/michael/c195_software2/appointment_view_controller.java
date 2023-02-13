@@ -256,4 +256,20 @@ public class appointment_view_controller implements Initializable {
             stage.show();
         }
     }
+
+    public void updateAppointmentTime(ActionEvent actionEvent) throws IOException, SQLException {
+
+        Appointments selected = appointmentTABLE.getSelectionModel().getSelectedItem();
+        if(selected == null){
+            noSelectedApp.showAndWait();
+        }
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("appointment-update-time.fxml"));
+        Scene scene = new Scene(loader.load());
+        updateAppointmentTimeController helper = loader.getController();
+        helper.populate(selected);
+        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+        stage.setTitle("Customer Records");
+        stage.setScene(scene);
+        stage.show();
+    }
 }
