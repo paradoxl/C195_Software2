@@ -57,7 +57,7 @@ public class update_customer_view_controller implements Initializable {
      * This lambda is used to add the country name to an observable list.
      * @param selected
      */
-    public void populate(Customers selected){
+    public void populate(Customers selected) throws SQLException {
         //Pull data in
         this.selected = selected;
         int id = selected.getCustomerID();
@@ -85,7 +85,6 @@ public class update_customer_view_controller implements Initializable {
             ObservableList<String> fldVAl = FXCollections.observableArrayList();
 
             String choice = "";
-
             for(FirstLevelDivisions divs:fld){
                 if(selected.getDivisionID() == divs.getDivisionID()){
                     SBOX.setValue(divs.getDivision());
@@ -98,6 +97,7 @@ public class update_customer_view_controller implements Initializable {
                 for(int i = 0; i < 51; i++){
                     if(selected.getDivisionID() == i) {
                         CBOX.setValue("U.S");
+
                     }
                 }
                 for(int i = 64; i < 104; i++){
@@ -110,6 +110,43 @@ public class update_customer_view_controller implements Initializable {
                         CBOX.setValue("Canada");
                     }
                 }
+
+
+
+            ObservableList<FirstLevelDivisions> FLD = FirstLevelDivisionDAO.getFLD();
+            ObservableList<String> fldVAL = FXCollections.observableArrayList();
+            ObservableList<Integer> fldCC = FXCollections.observableArrayList();
+            ObservableList<String> finalFLDVALUS = FXCollections.observableArrayList();
+            ObservableList<String> finalFLDVALCA = FXCollections.observableArrayList();
+            ObservableList<String> finalFLDVALUK = FXCollections.observableArrayList();
+            //First set of LAMBDA expressions used to gather data on FLD base on country id
+            FLD.forEach((firstLevelDivisions -> fldCC.add(firstLevelDivisions.getCountryID()) ));
+            FLD.forEach(firstLevelDivision -> fldVAL.add(firstLevelDivision.getDivision()));
+
+
+
+            if(CBOX.getSelectionModel().getSelectedItem() == "U.S"){
+                SBOX.setOpacity(100);
+                for(int i = 0; i < 51; i++){
+                    finalFLDVALUS.add(fldVAL.get(i));
+                }
+                SBOX.setItems(finalFLDVALUS);
+            }
+            if(CBOX.getSelectionModel().getSelectedItem() == "UK"){
+                SBOX.setOpacity(100);
+                for(int i = 64; i < 68; i++){
+                    finalFLDVALUK.add(fldVAL.get(i));
+                }
+                SBOX.setItems(finalFLDVALUK);
+            }
+            if(CBOX.getSelectionModel().getSelectedItem() == "Canada"){
+                SBOX.setOpacity(100);
+                for(int i = 51; i < 64; i++){
+                    finalFLDVALCA.add(fldVAL.get(i));
+                }
+                SBOX.setItems(finalFLDVALCA);
+            }
+
 
             //Lambda Number two
             country.stream().map(countries -> countries.getCountry()).forEach(countryVal::add);
