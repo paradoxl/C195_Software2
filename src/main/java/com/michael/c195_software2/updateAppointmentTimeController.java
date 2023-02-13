@@ -83,6 +83,17 @@ public class updateAppointmentTimeController implements Initializable {
             ZonedDateTime endConv = end.atZone(ZoneId.systemDefault());
             ZonedDateTime utcEnd = endConv.withZoneSameInstant(ZoneOffset.UTC);
 
+            //spike
+            ZonedDateTime test = utcStart.withZoneSameInstant(ZoneId.systemDefault());
+            System.out.println("Debugging times:");
+            System.out.println("Start time in box: "+ startTimeVal);
+            System.out.println("Start converted to LDT: " + start);
+            System.out.println("Start time converted to ZDT in same zone: " + startConv);
+            System.out.println("start time converted to UTC: " + utcStart);
+            System.out.println("Converting UTC back to MST: "+ test);
+
+
+
             String query = "Update appointments SET  Start = ?, End = ? WHERE Appointment_ID = '" + current.getAppointmentID() +"'";
             PreparedStatement ps = InitCon.connection.prepareStatement(query);
             ps.setTimestamp(1, Timestamp.valueOf(utcStart.toLocalDateTime()));

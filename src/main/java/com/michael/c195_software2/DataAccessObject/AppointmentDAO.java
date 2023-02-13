@@ -48,7 +48,7 @@ public class AppointmentDAO {
             String title = rs.getString("Title");
             String location =  rs.getString("Location");
             String type = rs.getString("Type");
-            LocalDateTime start = rs.getTimestamp("Start").toLocalDateTime().minusHours(difference);
+            LocalDateTime start = rs.getTimestamp("Start").toLocalDateTime();
             LocalDateTime end = rs.getTimestamp("End").toLocalDateTime().minusHours(difference);
             LocalDateTime Created = rs.getTimestamp("Create_Date").toLocalDateTime();
             int customerID = rs.getInt("Customer_ID");
@@ -60,12 +60,13 @@ public class AppointmentDAO {
             DateFormat timeOnly  = new SimpleDateFormat("HH:mm:ss");
             DateFormat dateOnly  = new SimpleDateFormat("MM:dd:yyyy");
 
+            ZonedDateTime startConv = start.atZone(ZoneId.systemDefault());
+            LocalDateTime startLDT = startConv.toLocalDateTime();
+            LocalDateTime startFinal = startLDT.atZone(ZoneId.systemDefault()).toLocalDateTime();
 
 
 
-
-
-       Appointments adding = new Appointments(appointmentId,title,description,location,type,start,end,Created,customerID,userID,contactID);
+       Appointments adding = new Appointments(appointmentId,title,description,location,type,startFinal,end,Created,customerID,userID,contactID);
         appList.add(adding);
             System.out.println(appList);
         }

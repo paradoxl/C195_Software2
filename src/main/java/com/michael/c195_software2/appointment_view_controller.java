@@ -258,9 +258,9 @@ public class appointment_view_controller implements Initializable {
     }
 
     public void updateAppointmentTime(ActionEvent actionEvent) throws IOException, SQLException {
-
+    try {
         Appointments selected = appointmentTABLE.getSelectionModel().getSelectedItem();
-        if(selected == null){
+        if (selected == null) {
             noSelectedApp.showAndWait();
         }
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("appointment-update-time.fxml"));
@@ -271,5 +271,9 @@ public class appointment_view_controller implements Initializable {
         stage.setTitle("Customer Records");
         stage.setScene(scene);
         stage.show();
+    }
+    catch (NullPointerException e){
+        System.out.println("Null pointer");
+    }
     }
 }
