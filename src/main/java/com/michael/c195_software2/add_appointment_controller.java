@@ -229,6 +229,8 @@ public class add_appointment_controller implements Initializable {
             }
         System.out.println(utcStart);
             //insert times
+
+        //TODO: li lee issue here with out of order insert
             String insertQuery = "INSERT INTO appointments (Appointment_ID,Customer_ID,User_ID,Contact_ID,Location,Title,Description,Type,Create_Date,Created_By,Last_Update,Last_Updated_By,Start,End) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             PreparedStatement insertPS = InitCon.connection.prepareStatement(insertQuery);
             insertPS.setInt(1, appID);
