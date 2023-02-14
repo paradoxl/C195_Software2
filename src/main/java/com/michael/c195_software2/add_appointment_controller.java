@@ -74,6 +74,8 @@ public class add_appointment_controller implements Initializable {
      * @throws SQLException
      */
     public void saveButton(ActionEvent actionEvent) throws SQLException, IOException {
+
+        // Error checks for individual fields.
         if(titleTextFLD.getText().isEmpty()){
             Alert noTitle = new Alert(Alert.AlertType.ERROR,"You have not selected a title",ButtonType.OK);
             noTitle.showAndWait();
@@ -124,6 +126,7 @@ public class add_appointment_controller implements Initializable {
             noStartTime.showAndWait();
             return;
         }
+        //end error checks
         
 
 
@@ -165,7 +168,7 @@ public class add_appointment_controller implements Initializable {
                     appID = ran.nextInt(10000);
                 }
             }
-            //gather times
+//            gather times to be saved to database.
             LocalTime startTime = (LocalTime) startTimeBox.getSelectionModel().getSelectedItem();
             LocalTime endTime = (LocalTime) endTimeBOX.getSelectionModel().getSelectedItem();
             LocalDate startDate = startTextFLD.getValue();
@@ -178,6 +181,8 @@ public class add_appointment_controller implements Initializable {
             ZonedDateTime utcStart = startConv.withZoneSameInstant(ZoneOffset.UTC);
             ZonedDateTime endConv = end.atZone(ZoneId.systemDefault());
             ZonedDateTime utcEnd = endConv.withZoneSameInstant(ZoneOffset.UTC);
+
+
 
 
 
