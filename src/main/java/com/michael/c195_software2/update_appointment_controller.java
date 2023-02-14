@@ -41,14 +41,6 @@ public class update_appointment_controller implements Initializable{
     @FXML
     public ComboBox contactBOX;
     @FXML
-    public DatePicker startTextFLD;
-    @FXML
-    public DatePicker endTextFLD;
-    @FXML
-    public ComboBox startTimeBox;
-    @FXML
-    public ComboBox endTimeBOX;
-    @FXML
     public ComboBox CustomerIDBOX;
     @FXML
     public TableView customerTABLE;
@@ -67,221 +59,66 @@ public class update_appointment_controller implements Initializable{
      * @param actionEvent
      */
     public void saveButton(ActionEvent actionEvent) throws SQLException, IOException {
-        if(titleTextFLD.getText().isEmpty()){
-            Alert noTitle = new Alert(Alert.AlertType.ERROR,"You have not selected a title",ButtonType.OK);
+        if (titleTextFLD.getText().isEmpty()) {
+            Alert noTitle = new Alert(Alert.AlertType.ERROR, "You have not selected a title", ButtonType.OK);
             noTitle.showAndWait();
             return;
         }
-        if (descriptionTextFLD.getText().isEmpty()){
-            Alert noDescription = new Alert(Alert.AlertType.ERROR,"You have not added a description",ButtonType.OK);
+        if (descriptionTextFLD.getText().isEmpty()) {
+            Alert noDescription = new Alert(Alert.AlertType.ERROR, "You have not added a description", ButtonType.OK);
             noDescription.showAndWait();
             return;
         }
-        if (locationTextFLD.getText().isEmpty()){
-            Alert noLocation = new Alert(Alert.AlertType.ERROR,"You have not added a location",ButtonType.OK);
+        if (locationTextFLD.getText().isEmpty()) {
+            Alert noLocation = new Alert(Alert.AlertType.ERROR, "You have not added a location", ButtonType.OK);
             noLocation.showAndWait();
             return;
         }
-        if (typeTextFLD.getText().isEmpty()){
-            Alert noType = new Alert(Alert.AlertType.ERROR,"You have not added a type",ButtonType.OK);
+        if (typeTextFLD.getText().isEmpty()) {
+            Alert noType = new Alert(Alert.AlertType.ERROR, "You have not added a type", ButtonType.OK);
             noType.showAndWait();
             return;
         }
-        if(userIDTextFLD.getText().isEmpty()){
-            Alert noUser = new Alert(Alert.AlertType.ERROR,"You have not added a user",ButtonType.OK);
+        if (userIDTextFLD.getText().isEmpty()) {
+            Alert noUser = new Alert(Alert.AlertType.ERROR, "You have not added a user", ButtonType.OK);
             noUser.showAndWait();
             return;
         }
-        if (contactBOX.getSelectionModel().getSelectedItem() == null){
-            Alert noContact = new Alert(Alert.AlertType.ERROR,"You have not added a contact", ButtonType.OK);
+        if (contactBOX.getSelectionModel().getSelectedItem() == null) {
+            Alert noContact = new Alert(Alert.AlertType.ERROR, "You have not added a contact", ButtonType.OK);
             noContact.showAndWait();
             return;
         }
-        if(startTextFLD.getValue() == null){
-            Alert noStart = new Alert(Alert.AlertType.ERROR, "You have not selected a start date",ButtonType.OK);
-            noStart.showAndWait();
-            return;
+
+        int contactID = 0;
+        String query = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Contact_ID = ?, Type = ?,Last_Update = ?, Customer_ID = ?, User_ID = ? WHERE Appointment_ID = '" + Integer.parseInt(appointmentIDTextFLD.getText()) + "'";
+        PreparedStatement ps = InitCon.connection.prepareStatement(query);
+
+        ps.setString(1, titleTextFLD.getText());
+        ps.setString(2, descriptionTextFLD.getText());
+        ps.setString(3, locationTextFLD.getText());
+        String gatherContactID = "SELECT Contact_ID FROM contacts WHERE Contact_Name = '" + contactBOX.getSelectionModel().getSelectedItem() + "'";
+        PreparedStatement gatherPS = InitCon.connection.prepareStatement(gatherContactID);
+        ResultSet gatherRS = gatherPS.executeQuery();
+        while (gatherRS.next()) {
+            contactID = gatherRS.getInt("Contact_ID");
         }
-        if(endTextFLD.getValue() == null){
-            Alert noEnd = new Alert(Alert.AlertType.ERROR, "You have not selected an end date",ButtonType.OK);
-            noEnd.showAndWait();
-            return;
-        }
-        if(endTimeBOX.getValue() == null){
-            Alert noEndTime = new Alert(Alert.AlertType.ERROR, "You have not selected an end time",ButtonType.OK);
-            noEndTime.showAndWait();
-            return;
-        }
-        if(startTimeBox.getValue() == null){
-            Alert noStartTime = new Alert(Alert.AlertType.ERROR,"You have not selected a start time",ButtonType.OK);
-            noStartTime.showAndWait();
-            return;
-        }
+        ps.setInt(4, contactID);
+        ps.setString(5, typeTextFLD.getText());
+        ps.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
+        ps.setInt(7, (Integer) CustomerIDBOX.getSelectionModel().getSelectedItem());
+        ps.setInt(8, Integer.parseInt(userIDTextFLD.getText()));
+        ps.executeUpdate();
 
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("appointments-view.fxml"));
+        Scene scene = new Scene(loader.load());
+        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+        stage.setTitle("Appointments");
+        stage.setScene(scene);
+        stage.show();
 
-
-        //check that appointments do not overlap
-        ObservableList<Appointments> appointments = AppointmentDAO.getAppointment();
-        ObservableList<Appointments>   vals = FXCollections.observableArrayList();
-        LocalTime checkStart = (LocalTime) startTimeBox.getSelectionModel().getSelectedItem();
-        LocalDate startDateCheck =  startTextFLD.getValue();
-        LocalDate endDateCheck = endTextFLD.getValue();
-        LocalTime checkStartEnd = (LocalTime) endTimeBOX.getSelectionModel().getSelectedItem();
-        LocalDate today = LocalDate.now();
-        System.out.println(today);
-
-        int overlapCheck = (int) CustomerIDBOX.getValue();
-        for(Appointments app: appointments){
-            LocalTime first = LocalTime.from(app.getStart());
-            LocalTime second = LocalTime.from(app.getEnd());
-            if(overlapCheck == app.getCustomerID()){
-                if(checkStart.isAfter(first) && checkStart.isBefore(second)&& startDateCheck.isEqual(today) && endDateCheck.isEqual(today) || checkStartEnd.isAfter(first) && checkStartEnd.isBefore(second) && startDateCheck.isEqual(today) && endDateCheck.isEqual(today)){
-                    if((app.getAppointmentID() != Integer.parseInt(appointmentIDTextFLD.getText()))) {
-                        System.out.println("Start date " + startDateCheck);
-                        System.out.println("today " + today);
-                        System.out.println("MADE IT HERE");
-                        overlap.showAndWait();
-                        return;
-                    }
-                }
-            }
-        }
-
-
-//        {
-//            LocalDateTime checkStart = appointment.getStart();
-//            LocalDateTime checkEnd = appointment.getEnd();
-
-//            if ((customerID == appointment.getCustomerID()) && (newAppointmentID != appointment.getAppointmentID()) &&
-//                    (dateTimeStart.isBefore(checkStart)) && (dateTimeEnd.isAfter(checkEnd))) {
-//                return;
-//            }
-//
-//            if ((customerID == appointment.getCustomerID()) && (newAppointmentID != appointment.getAppointmentID()) &&
-//                    (dateTimeStart.isAfter(checkStart)) && (dateTimeStart.isBefore(checkEnd))) {
-//                return;
-//            }
-
-
-
-        LocalTime startTimetest = (LocalTime) startTimeBox.getSelectionModel().getSelectedItem();
-        LocalTime endTimetest = (LocalTime) endTimeBOX.getSelectionModel().getSelectedItem();
-        LocalDate startDatetest = startTextFLD.getValue();
-        LocalDate endDatetest= endTextFLD.getValue();
-
-        // converting scheduled time to est
-        LocalDateTime DTStartforSchedule = LocalDateTime.of(startDatetest, startTimetest);
-        LocalDateTime DTEndforSchedule = LocalDateTime.of(endDatetest, endTimetest);
-
-        ZonedDateTime zoneStartforSchedule = ZonedDateTime.of(DTStartforSchedule, ZoneId.systemDefault());
-        ZonedDateTime zoneEndforSchedule = ZonedDateTime.of(DTEndforSchedule, ZoneId.systemDefault());
-
-        ZonedDateTime convertStartESTforSchedule = zoneStartforSchedule.withZoneSameInstant(ZoneId.of("US/Eastern"));
-        ZonedDateTime convertEndforSchedule = zoneEndforSchedule.withZoneSameInstant(ZoneId.of("US/Eastern"));
-
-        System.out.println("Schedule start EST: " + convertStartESTforSchedule);
-        System.out.println("Schedule start local: " + startTimetest);
-
-
-
-        // open and close in est
-        LocalTime open = LocalTime.of(8,0);
-        LocalTime close = LocalTime.of(22,0);
-        LocalDateTime DTStart = LocalDateTime.of(startDatetest, open);
-        LocalDateTime DTEnd = LocalDateTime.of(endDatetest, close);
-
-        ZonedDateTime zoneStart = ZonedDateTime.of(DTStart, ZoneId.systemDefault());
-        ZonedDateTime zoneEnd = ZonedDateTime.of(DTEnd, ZoneId.systemDefault());
-
-        ZonedDateTime convertStartEST = zoneStart.withZoneSameInstant(ZoneId.of("US/Eastern"));
-        ZonedDateTime convertEndEST = zoneEnd.withZoneSameInstant(ZoneId.of("US/Eastern"));
-
-        System.out.println("open Time in Local: " +startTimetest);
-        System.out.println("open Time in EST: " + convertStartEST);
-
-        if(convertStartESTforSchedule.isBefore(convertStartEST) || convertStartEST.isAfter(convertEndEST)||convertEndforSchedule.isAfter(convertEndEST) || convertEndforSchedule.isBefore(convertStartEST)){
-            startError.showAndWait();
-            return;
-        }
-
-
-
-        //Check that the appointment times are before they end.
-      LocalTime startCheck = (LocalTime) startTimeBox.getValue();
-      LocalTime endCheck = (LocalTime) endTimeBOX.getValue();
-
-      if (!startCheck.isBefore(endCheck)){
-          System.out.println("Are you a time traveler?");
-          Alert timeTravel = new Alert(Alert.AlertType.ERROR, "You have scheduled the appointment to start after it has already ended.",ButtonType.OK);
-          timeTravel.showAndWait();
-      }
-      else {
-
-          // Check that app is m-f
-          HashSet<DayOfWeek> dateCheck = new HashSet<>();
-          dateCheck.add(DayOfWeek.SATURDAY);
-          dateCheck.add(DayOfWeek.SUNDAY);
-          LocalDate startcheck = startTextFLD.getValue();
-          LocalDate endCheckDay = endTextFLD.getValue();
-          if (dateCheck.contains(startcheck.getDayOfWeek())) {
-              Alert businessClosed = new Alert(Alert.AlertType.ERROR, "I'm sorry we are closed on weekends. Please schedule an appointment for a different day.", ButtonType.OK);
-              businessClosed.showAndWait();
-
-          } else if (dateCheck.contains(endCheckDay.getDayOfWeek())) {
-
-              Alert bCEnd = new Alert(Alert.AlertType.ERROR, "I'm sorry we are closed on weekends, and will not be able to finish your appointment on this day. Please select a different end date.",ButtonType.OK);
-              bCEnd.showAndWait();
-          }
-            else {
-
-              int contactID = 0;
-              String query = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Contact_ID = ?, Type = ?, Start = ?,End=?,Last_Update = ?, Customer_ID = ?, User_ID = ? WHERE Appointment_ID = '" + Integer.parseInt(appointmentIDTextFLD.getText()) + "'";
-              PreparedStatement ps = InitCon.connection.prepareStatement(query);
-
-              ps.setString(1, titleTextFLD.getText());
-              ps.setString(2, descriptionTextFLD.getText());
-              ps.setString(3, locationTextFLD.getText());
-              String gatherContactID = "SELECT Contact_ID FROM contacts WHERE Contact_Name = '" + contactBOX.getSelectionModel().getSelectedItem() + "'";
-              PreparedStatement gatherPS = InitCon.connection.prepareStatement(gatherContactID);
-              ResultSet gatherRS = gatherPS.executeQuery();
-              while (gatherRS.next()) {
-                  contactID = gatherRS.getInt("Contact_ID");
-              }
-              ps.setInt(4, contactID);
-              ps.setString(5, typeTextFLD.getText());
-
-              LocalTime startTime = (LocalTime) startTimeBox.getSelectionModel().getSelectedItem();
-              LocalTime endTime = (LocalTime) endTimeBOX.getSelectionModel().getSelectedItem();
-              LocalDate startDate = (LocalDate) startTextFLD.getValue();
-              LocalDate endDate = (LocalDate) endTextFLD.getValue();
-
-              //Local time
-              LocalDateTime start = LocalDateTime.of(startDate, startTime);
-              LocalDateTime end = LocalDateTime.of(endDate, endTime);
-
-              //converted to UTC
-              ZonedDateTime startConv = start.atZone(ZoneId.systemDefault());
-              ZonedDateTime utcStart = startConv.withZoneSameInstant(ZoneOffset.UTC);
-              ZonedDateTime endConv = end.atZone(ZoneId.systemDefault());
-              ZonedDateTime utcEnd = endConv.withZoneSameInstant(ZoneOffset.UTC);
-
-
-              ps.setTimestamp(6, Timestamp.valueOf(utcStart.toLocalDateTime()));
-              ps.setTimestamp(7, Timestamp.valueOf(utcEnd.toLocalDateTime()));
-              ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
-              ps.setInt(9, (Integer) CustomerIDBOX.getSelectionModel().getSelectedItem());
-              ps.setInt(10, Integer.parseInt(userIDTextFLD.getText()));
-              ps.executeUpdate();
-
-              FXMLLoader loader = new FXMLLoader(Main.class.getResource("appointments-view.fxml"));
-              Scene scene = new Scene(loader.load());
-              Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-              stage.setTitle("Appointments");
-              stage.setScene(scene);
-              stage.show();
-          }
-      }
     }
+
 
     /**
      * This method is used to return the user to the main appointments page.
@@ -328,34 +165,6 @@ public class update_appointment_controller implements Initializable{
         int userID = working.getUserID();
         userIDTextFLD.setText(String.valueOf(userID));
 
-        //refactoring times (pulls in time)
-        LocalDateTime start = working.getStart();
-        LocalDateTime end = working.getEnd();
-
-
-        LocalDate startDate = start.toLocalDate();
-        LocalTime startTime = start.toLocalTime();
-        LocalDate endDate = end.toLocalDate();
-        LocalTime endTime = end.toLocalTime();
-
-
-        //Create UTC NOW
-        LocalDateTime now = LocalDateTime.now();
-        ZonedDateTime conv = now.atZone(ZoneId.systemDefault());
-        ZonedDateTime utc = conv.withZoneSameInstant(ZoneOffset.UTC);
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        int difference = utc.getHour() - now.getHour();
-
-//        // SUBTRACT DIFFERENCE
-//        startTime = startTime.minusHours(difference);
-//        endTime = endTime.minusHours(difference);
-
-
-        startTimeBox.setValue(startTime);
-        endTimeBOX.setValue(endTime);
-        startTextFLD.setValue(startDate);
-        endTextFLD.setValue(endDate);
 
         // pulling data on contact id
         int contactID = working.getContactID();
@@ -393,17 +202,6 @@ public class update_appointment_controller implements Initializable{
             customerID.stream().map(Customers::getCustomerID).forEach(customerIDVALS::add);
             CustomerIDBOX.setItems(customerIDVALS);
 
-            //Time Boxes
-            LocalTime start = LocalTime.MIN.plusHours(8);
-            LocalTime end = LocalTime.MIN.plusHours(22);
-
-            ObservableList<LocalTime> timeIsntReal = FXCollections.observableArrayList();
-            while(start.isBefore(end)){
-                timeIsntReal.add(start);
-                start = start.plusMinutes(15);
-            }
-            startTimeBox.setItems(timeIsntReal);
-            endTimeBOX.setItems(timeIsntReal);
 
             //set customer box right side
             ObservableList<Customers> customers = CustomerDAO.getCustomers();
