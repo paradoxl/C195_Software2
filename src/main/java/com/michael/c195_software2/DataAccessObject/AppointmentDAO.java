@@ -62,9 +62,9 @@ public class AppointmentDAO {
             DateFormat dateOnly  = new SimpleDateFormat("MM:dd:yyyy");
 
             //Converting times to UTC then to LDT
-            ZonedDateTime startConv = start.atZone(ZoneId.of("UTC"));
-            ZonedDateTime startLDT = startConv.withZoneSameInstant(ZoneId.systemDefault());
-            LocalDateTime startFinal = startLDT.toLocalDateTime();
+            ZonedDateTime startConv = start.atZone(ZoneId.of("UTC")); // set LDT to ZDT with utc timezone
+            ZonedDateTime startLDT = startConv.withZoneSameInstant(ZoneId.systemDefault()); // convert UTC to local
+            LocalDateTime startFinal = startLDT.toLocalDateTime(); // convert ZDT to LDT
 
             ZonedDateTime endConv = end.atZone(ZoneId.of("UTC"));
             ZonedDateTime endLDT = endConv.withZoneSameInstant(ZoneId.systemDefault());
@@ -72,7 +72,7 @@ public class AppointmentDAO {
 
        Appointments adding = new Appointments(appointmentId,title,description,location,type,startFinal,endFinal,Created,customerID,userID,contactID);
         appList.add(adding);
-            System.out.println(appList);
+            System.out.println("Appointments: " + appList);
         }
         return appList;
     }
