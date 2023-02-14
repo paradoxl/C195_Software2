@@ -160,7 +160,7 @@ public class customer_view_controller implements Initializable {
         try {
             int selected = customerTable.getSelectionModel().getSelectedItem().getCustomerID();
 
-            Alert deleteRecord = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete this Customer Record? Record Number: " + selected, ButtonType.YES, ButtonType.NO);
+            Alert deleteRecord = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete this Customer Record? Record Number: " + selected + " This will also delete all appointments for this customer.", ButtonType.YES, ButtonType.NO);
 
             deleteRecord.showAndWait();
             if (deleteRecord.getResult() == ButtonType.YES) {
@@ -173,15 +173,19 @@ public class customer_view_controller implements Initializable {
                     idlist.add(checkRS.getInt("Customer_ID"));
                 }
                 if (idlist.contains(selected)) {
-                    hasAppointments.showAndWait();
-                } else {
+                    String appdelete = "DELETE FROM appointments WHERE Customer_ID = '" + selected + "'";
+                    Statement appStatement = InitCon.connection.createStatement();
+                    appStatement.executeUpdate(appdelete);
+
+                }
+
                     String query = "DELETE FROM customers WHERE Customer_ID = '" + selected + "'";
                     Statement statement = InitCon.connection.createStatement();
                     statement.executeUpdate(query);
                     System.out.println("Begone Demon!");
                     ObservableList<Customers> list = CustomerDAO.getCustomers();
                     customerTable.setItems(list);
-                }
+
             }
         }catch (NullPointerException e){
             noSelectedCust.showAndWait();

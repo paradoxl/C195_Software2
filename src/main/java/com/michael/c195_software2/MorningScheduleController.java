@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ResourceBundle;
 
 /**
@@ -51,9 +52,10 @@ public class MorningScheduleController implements Initializable {
             ObservableList<Appointments> appointments = AppointmentDAO.getAppointment();
             ObservableList<Appointments> val = FXCollections.observableArrayList();
 
-            LocalDateTime noon = LocalDateTime.now().toLocalDate().atTime(12,0);
+            LocalTime noon = LocalTime.of(12,00);
+            System.out.println(noon);
             for(Appointments app : appointments){
-                if(app.getStart().isBefore(noon)) {
+                if(app.getStart().toLocalTime().isBefore(noon)) {
                     val.add(app);
                 }
             }

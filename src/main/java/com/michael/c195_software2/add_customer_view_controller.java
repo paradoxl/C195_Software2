@@ -6,6 +6,7 @@ import com.michael.c195_software2.dataBaseConnection.InitCon;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -42,6 +43,7 @@ public class add_customer_view_controller implements Initializable {
 
 
     public void save(ActionEvent actionEvent) throws SQLException, IOException {
+
         if(nameTextFLD.getText().isEmpty()){
             Alert noName = new Alert(Alert.AlertType.ERROR,"You have not entered a name", ButtonType.OK);
             noName.showAndWait();
@@ -173,6 +175,8 @@ public class add_customer_view_controller implements Initializable {
         }
     }
 
+
+
     /**
      * This method is used to set up the combo boxes for the Country and State first level division data.
      * This method contains the first lambda used    "FLD.forEach((firstLevelDivisions -> fldCC.add(firstLevelDivisions.getCountryID())));"
@@ -181,42 +185,48 @@ public class add_customer_view_controller implements Initializable {
      */
     public void dynamicCombo() throws SQLException {
 
-        // sets combo boxes
-        ObservableList<FirstLevelDivisions> FLD = FirstLevelDivisionDAO.getFLD();
-        ObservableList<String> fldVAL = FXCollections.observableArrayList();
-        ObservableList<Integer> fldCC = FXCollections.observableArrayList();
-        ObservableList<String> finalFLDVALUS = FXCollections.observableArrayList();
-        ObservableList<String> finalFLDVALCA = FXCollections.observableArrayList();
-        ObservableList<String> finalFLDVALUK = FXCollections.observableArrayList();
-        //First set of LAMBDA expressions used to gather data on FLD base on country id
-
-        FLD.forEach((firstLevelDivisions -> fldCC.add(firstLevelDivisions.getCountryID())));
-        FLD.forEach(firstLevelDivision -> fldVAL.add(firstLevelDivision.getDivision()));
-        if(CBOX.getSelectionModel().getSelectedIndex() == 0){
-          SBOX.setOpacity(100);
-          for(int i = 0; i < 51; i++){
-                finalFLDVALUS.add(fldVAL.get(i));
-            }
-            SBOX.setItems(finalFLDVALUS);
-        }
-        if(CBOX.getSelectionModel().getSelectedIndex() == 1){
-            SBOX.setOpacity(100);
-            for(int i = 64; i < 68; i++){
-                finalFLDVALUK.add(fldVAL.get(i));
-            }
-            SBOX.setItems(finalFLDVALUK);
-        }
-        if(CBOX.getSelectionModel().getSelectedIndex() == 2){
-            SBOX.setOpacity(100);
-            for(int i = 51; i < 64; i++){
-                finalFLDVALCA.add(fldVAL.get(i));
-            }
-            SBOX.setItems(finalFLDVALCA);
-        }
-
-        // gathers info on division id
-        System.out.println(SBOX.getSelectionModel().getSelectedItem());
-        // query db based off division
+//
+//        // sets combo boxes
+//        ObservableList<FirstLevelDivisions> FLD = FirstLevelDivisionDAO.getFLD();
+//        ObservableList<String> fldVAL = FXCollections.observableArrayList();
+//        ObservableList<Integer> fldCC = FXCollections.observableArrayList();
+//        ObservableList<String> finalFLDVALUS = FXCollections.observableArrayList();
+//        ObservableList<String> finalFLDVALCA = FXCollections.observableArrayList();
+//        ObservableList<String> finalFLDVALUK = FXCollections.observableArrayList();
+//        //First set of LAMBDA expressions used to gather data on FLD base on country id
+//
+//
+//        CBOX.setOnAction( e ->{
+//            FLD.forEach((firstLevelDivisions -> fldCC.add(firstLevelDivisions.getCountryID())));
+//            FLD.forEach(firstLevelDivision -> fldVAL.add(firstLevelDivision.getDivision()));
+//            if(CBOX.getSelectionModel().getSelectedIndex() == 0){
+//                SBOX.setOpacity(100);
+//                for(int i = 0; i < 51; i++){
+//                    finalFLDVALUS.add(fldVAL.get(i));
+//                }
+//                SBOX.setItems(finalFLDVALUS);
+//            }
+//            if(CBOX.getSelectionModel().getSelectedIndex() == 1){
+//                SBOX.setOpacity(100);
+//                for(int i = 64; i < 68; i++){
+//                    finalFLDVALUK.add(fldVAL.get(i));
+//                }
+//                SBOX.setItems(finalFLDVALUK);
+//            }
+//            if(CBOX.getSelectionModel().getSelectedIndex() == 2){
+//                SBOX.setOpacity(100);
+//                for(int i = 51; i < 64; i++){
+//                    finalFLDVALCA.add(fldVAL.get(i));
+//                }
+//                SBOX.setItems(finalFLDVALCA);
+////            }
+//
+//        });
+//
+//
+//        // gathers info on division id
+//        System.out.println(SBOX.getSelectionModel().getSelectedItem());
+//        // query db based off division
 
 
     }
@@ -231,6 +241,40 @@ public class add_customer_view_controller implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         hiddenVar.setOpacity(0);
         try {
+            ObservableList<FirstLevelDivisions> FLD = FirstLevelDivisionDAO.getFLD();
+            ObservableList<String> fldVAL = FXCollections.observableArrayList();
+            ObservableList<Integer> fldCC = FXCollections.observableArrayList();
+            ObservableList<String> finalFLDVALUS = FXCollections.observableArrayList();
+            ObservableList<String> finalFLDVALCA = FXCollections.observableArrayList();
+            ObservableList<String> finalFLDVALUK = FXCollections.observableArrayList();
+
+            CBOX.setOnAction( e ->{
+                FLD.forEach((firstLevelDivisions -> fldCC.add(firstLevelDivisions.getCountryID())));
+                FLD.forEach(firstLevelDivision -> fldVAL.add(firstLevelDivision.getDivision()));
+                if(CBOX.getSelectionModel().getSelectedIndex() == 0){
+                    SBOX.setOpacity(100);
+                    for(int i = 0; i < 51; i++){
+                        finalFLDVALUS.add(fldVAL.get(i));
+                    }
+                    SBOX.setItems(finalFLDVALUS);
+                }
+                if(CBOX.getSelectionModel().getSelectedIndex() == 1){
+                    SBOX.setOpacity(100);
+                    for(int i = 64; i < 68; i++){
+                        finalFLDVALUK.add(fldVAL.get(i));
+                    }
+                    SBOX.setItems(finalFLDVALUK);
+                }
+                if(CBOX.getSelectionModel().getSelectedIndex() == 2){
+                    SBOX.setOpacity(100);
+                    for(int i = 51; i < 64; i++){
+                        finalFLDVALCA.add(fldVAL.get(i));
+                    }
+                    SBOX.setItems(finalFLDVALCA);
+                }
+
+            });
+
             // lists
             ObservableList<Countries> country = CountryDAO.getCountries();
             ObservableList<String> countryVal = FXCollections.observableArrayList();

@@ -8,19 +8,22 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ResourceBundle;
 
 /**
  * This class is used to update the customer records.
  */
-public class update_customer_view_controller {
+public class update_customer_view_controller implements Initializable {
     @FXML
     public Button save;
     @FXML
@@ -54,7 +57,7 @@ public class update_customer_view_controller {
      * This lambda is used to add the country name to an observable list.
      * @param selected
      */
-    public void populate(Customers selected){
+    public void populate(Customers selected) throws SQLException {
         //Pull data in
         this.selected = selected;
         int id = selected.getCustomerID();
@@ -72,7 +75,6 @@ public class update_customer_view_controller {
         phoneTextFLD.setText(phone);
 
 
-
         //we need to pull in the current selected values and then populate.
         hiddenVar.setOpacity(0);
         try {
@@ -83,7 +85,6 @@ public class update_customer_view_controller {
             ObservableList<String> fldVAl = FXCollections.observableArrayList();
 
             String choice = "";
-
             for(FirstLevelDivisions divs:fld){
                 if(selected.getDivisionID() == divs.getDivisionID()){
                     SBOX.setValue(divs.getDivision());
@@ -95,26 +96,64 @@ public class update_customer_view_controller {
 
                 for(int i = 0; i < 51; i++){
                     if(selected.getDivisionID() == i) {
-                        CBOX.setValue("U.S.");
+                        CBOX.setValue("U.S");
+
                     }
                 }
                 for(int i = 64; i < 104; i++){
                     if(selected.getDivisionID() == i) {
-                        CBOX.setValue("U.K.");
+                        CBOX.setValue("UK");
                     }
                 }
                 for(int i = 51; i < 64; i++){
                     if(selected.getDivisionID() == i) {
-                        CBOX.setValue("CANADA");
+                        CBOX.setValue("Canada");
                     }
                 }
+
+
+
+            ObservableList<FirstLevelDivisions> FLD = FirstLevelDivisionDAO.getFLD();
+            ObservableList<String> fldVAL = FXCollections.observableArrayList();
+            ObservableList<Integer> fldCC = FXCollections.observableArrayList();
+            ObservableList<String> finalFLDVALUS = FXCollections.observableArrayList();
+            ObservableList<String> finalFLDVALCA = FXCollections.observableArrayList();
+            ObservableList<String> finalFLDVALUK = FXCollections.observableArrayList();
+            //First set of LAMBDA expressions used to gather data on FLD base on country id
+            FLD.forEach((firstLevelDivisions -> fldCC.add(firstLevelDivisions.getCountryID()) ));
+            FLD.forEach(firstLevelDivision -> fldVAL.add(firstLevelDivision.getDivision()));
+
+
+
+            if(CBOX.getSelectionModel().getSelectedItem() == "U.S"){
+                SBOX.setOpacity(100);
+                for(int i = 0; i < 51; i++){
+                    finalFLDVALUS.add(fldVAL.get(i));
+                }
+                SBOX.setItems(finalFLDVALUS);
+            }
+            if(CBOX.getSelectionModel().getSelectedItem() == "UK"){
+                SBOX.setOpacity(100);
+                for(int i = 64; i < 68; i++){
+                    finalFLDVALUK.add(fldVAL.get(i));
+                }
+                SBOX.setItems(finalFLDVALUK);
+            }
+            if(CBOX.getSelectionModel().getSelectedItem() == "Canada"){
+                SBOX.setOpacity(100);
+                for(int i = 51; i < 64; i++){
+                    finalFLDVALCA.add(fldVAL.get(i));
+                }
+                SBOX.setItems(finalFLDVALCA);
+            }
+
 
             //Lambda Number two
             country.stream().map(countries -> countries.getCountry()).forEach(countryVal::add);
             CBOX.setItems(countryVal);
 
             // Hides the state/prov box until a country selection is made.
-            SBOX.setOpacity(0);
+//            SBOX.setOpacity(0);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -190,7 +229,7 @@ public class update_customer_view_controller {
 
         saveAlert.showAndWait();
         if(saveAlert.getResult() == ButtonType.YES) {
-            FXMLLoader loader = new FXMLLoader(Main.class.getResource("customer-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("customer-view.fxmimplements Initializablel"));
             Scene scene = new Scene(loader.load());
             Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
             stage.setTitle("Customer Records");
@@ -204,49 +243,45 @@ public class update_customer_view_controller {
 
     }
 
-    /**
-     * This method is used to populate the country and state combo boxes.
-     * This method contains a copy of the first lambda i used.
-     * @param actionEvent
-     * @throws SQLException
-     */
-    public void dynamicCombo(ActionEvent actionEvent) throws SQLException {
-        // sets combo boxes
-        SBOX.setOpacity(100);
-        ObservableList<FirstLevelDivisions> FLD = FirstLevelDivisionDAO.getFLD();
-        ObservableList<String> fldVAL = FXCollections.observableArrayList();
-        ObservableList<Integer> fldCC = FXCollections.observableArrayList();
-        ObservableList<String> finalFLDVALUS = FXCollections.observableArrayList();
-        ObservableList<String> finalFLDVALCA = FXCollections.observableArrayList();
-        ObservableList<String> finalFLDVALUK = FXCollections.observableArrayList();
-        //First set of LAMBDA expressions used to gather data on FLD base on country id
-        FLD.forEach((firstLevelDivisions -> fldCC.add(firstLevelDivisions.getCountryID()) ));
-        FLD.forEach(firstLevelDivision -> fldVAL.add(firstLevelDivision.getDivision()));
-        if(CBOX.getSelectionModel().getSelectedIndex() == 0){
-            SBOX.setOpacity(100);
-            for(int i = 0; i < 51; i++){
-                finalFLDVALUS.add(fldVAL.get(i));
-            }
-            SBOX.setItems(finalFLDVALUS);
-        }
-        if(CBOX.getSelectionModel().getSelectedIndex() == 1){
-            SBOX.setOpacity(100);
-            for(int i = 64; i < 68; i++){
-                finalFLDVALUK.add(fldVAL.get(i));
-            }
-            SBOX.setItems(finalFLDVALUK);
-        }
-        if(CBOX.getSelectionModel().getSelectedIndex() == 2){
-            SBOX.setOpacity(100);
-            for(int i = 51; i < 64; i++){
-                finalFLDVALCA.add(fldVAL.get(i));
-            }
-            SBOX.setItems(finalFLDVALCA);
-        }
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        try {
+            ObservableList<FirstLevelDivisions> FLD = FirstLevelDivisionDAO.getFLD();
+            ObservableList<String> fldVAL = FXCollections.observableArrayList();
+            ObservableList<Integer> fldCC = FXCollections.observableArrayList();
+            ObservableList<String> finalFLDVALUS = FXCollections.observableArrayList();
+            ObservableList<String> finalFLDVALCA = FXCollections.observableArrayList();
+            ObservableList<String> finalFLDVALUK = FXCollections.observableArrayList();
 
-        // gathers info on division id
-        System.out.println(SBOX.getSelectionModel().getSelectedItem());
-        // query db based off division
+            CBOX.setOnAction( e ->{
+                FLD.forEach((firstLevelDivisions -> fldCC.add(firstLevelDivisions.getCountryID())));
+                FLD.forEach(firstLevelDivision -> fldVAL.add(firstLevelDivision.getDivision()));
+                if(CBOX.getSelectionModel().getSelectedIndex() == 0){
+                    SBOX.setOpacity(100);
+                    for(int i = 0; i < 51; i++){
+                        finalFLDVALUS.add(fldVAL.get(i));
+                    }
+                    SBOX.setItems(finalFLDVALUS);
+                }
+                if(CBOX.getSelectionModel().getSelectedIndex() == 1){
+                    SBOX.setOpacity(100);
+                    for(int i = 64; i < 68; i++){
+                        finalFLDVALUK.add(fldVAL.get(i));
+                    }
+                    SBOX.setItems(finalFLDVALUK);
+                }
+                if(CBOX.getSelectionModel().getSelectedIndex() == 2){
+                    SBOX.setOpacity(100);
+                    for(int i = 51; i < 64; i++){
+                        finalFLDVALCA.add(fldVAL.get(i));
+                    }
+                    SBOX.setItems(finalFLDVALCA);
+                }
 
-    }
+            });
+    }catch (SQLException e){
+            Alert cancelAlert = new Alert(Alert.AlertType.ERROR, e.toString(), ButtonType.OK);
+            cancelAlert.showAndWait();
+        }
+        }
 }

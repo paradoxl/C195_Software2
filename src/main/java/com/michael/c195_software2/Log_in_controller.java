@@ -61,7 +61,7 @@ public class Log_in_controller implements Initializable{
         UsernameTextFLD.setPromptText(resourceBundle.getString("username"));
         PasswordTextFLD.setPromptText(resourceBundle.getString("password"));
         exitBTN.setText(resourceBundle.getString("exit"));
-        country.setText(resourceBundle.getString("country"));
+        country.setText(String.valueOf(ZoneId.systemDefault()));
         welcome.setText(resourceBundle.getString("welcome"));
 
         loginError.setContentText(resourceBundle.getString("loginError"));
@@ -93,7 +93,7 @@ public class Log_in_controller implements Initializable{
         if(user.validation(username, password)){
             ObservableList<Appointments> appSoon = AppointmentDAO.getAppointment();
 
-
+            Boolean hadApp = false;
             // checks for upcoming appointments.
            for(Appointments current: appSoon){
                LocalDateTime warnp = current.getStart().plusMinutes(15);
@@ -104,11 +104,17 @@ public class Log_in_controller implements Initializable{
                for(int i = 0; i < 15; i++ ){
                    LocalDateTime warning = LocalDateTime.now().plusMinutes(i).truncatedTo(ChronoUnit.MINUTES);
                    if(current.getStart().isEqual(warning)){
-                       Alert appointmentSoon = new Alert(Alert.AlertType.INFORMATION, "You have an upcoming appointment with ID: " + current.getAppointmentID() + " soon. Please check the appointments panel.", ButtonType.OK);
+                       Alert appointmentSoon = new Alert(Alert.AlertType.INFORMATION, "You have an upcoming appointment with ID: " + current.getAppointmentID() + " at "+ current.getStart() +" . Please check the appointments panel.", ButtonType.OK);
                        appointmentSoon.showAndWait();
+                       hadApp = true;
                    }
+
                }
             }
+           if(!hadApp){
+               Alert noAppointments = new Alert(Alert.AlertType.INFORMATION,"You currently do not have any upcoming appointments.", ButtonType.OK);
+               noAppointments.showAndWait();
+           }
 
            // login
             try {
@@ -125,6 +131,7 @@ public class Log_in_controller implements Initializable{
             stage.setScene(scene);
             stage.show();
         }
+
         //failed login
         else{
             try {
