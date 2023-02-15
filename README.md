@@ -1,7 +1,7 @@
 # C195_Software2 Patient/Client Portal
 - Michael Evans
 - Student ID: 010539989
-- Version: 0.0.1
+- Version: 0.0.2
 - Purpose: Comply with real world constraints to create a high quality and functional program that simulates real world production code. This program simulates a patient portal you might find at a doctors office.
 - Creation date: 2/11/23
 # Technical Details
