@@ -68,6 +68,9 @@ public class updateAppointmentTimeController implements Initializable {
 
 
         if (save.getResult() == ButtonType.YES) {
+
+
+
             LocalTime startTimeVal = (LocalTime) startTime.getSelectionModel().getSelectedItem();
             LocalTime endTimeVal = (LocalTime) endTime.getSelectionModel().getSelectedItem();
             LocalDate startDateVal = (LocalDate) startDate.getValue();
@@ -92,6 +95,16 @@ public class updateAppointmentTimeController implements Initializable {
             System.out.println("start time converted to UTC: " + utcStart);
             System.out.println("Converting UTC back to MST: "+ test);
 
+            if (utcStart.isAfter(utcEnd)){
+                Alert beforeStart = new Alert(Alert.AlertType.ERROR,"Start time is scheduled for after the end time",ButtonType.OK);
+                beforeStart.showAndWait();
+                return;
+            }
+            if (utcStart.equals(utcEnd)){
+                Alert same = new Alert(Alert.AlertType.ERROR,"Start time is the same time as the end.",ButtonType.OK);
+                same.showAndWait();
+                return;
+            }
 
 
             String query = "Update appointments SET  Start = ?, End = ? WHERE Appointment_ID = '" + current.getAppointmentID() +"'";

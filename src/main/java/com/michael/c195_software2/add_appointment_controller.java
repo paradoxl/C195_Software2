@@ -75,86 +75,86 @@ public class add_appointment_controller implements Initializable {
      */
     public void saveButton(ActionEvent actionEvent) throws SQLException, IOException {
 
-        // Error checks for individual fields.
-        if(titleTextFLD.getText().isEmpty()){
-            Alert noTitle = new Alert(Alert.AlertType.ERROR,"You have not selected a title",ButtonType.OK);
-            noTitle.showAndWait();
-            return;
-        }
-        if (descriptionTextFLD.getText().isEmpty()){
-            Alert noDescription = new Alert(Alert.AlertType.ERROR,"You have not added a description",ButtonType.OK);
-            noDescription.showAndWait();
-            return;
-        }
-        if (locationTextFLD.getText().isEmpty()){
-            Alert noLocation = new Alert(Alert.AlertType.ERROR,"You have not added a location",ButtonType.OK);
-            noLocation.showAndWait();
-            return;
-        }
-        if (typeTextFLD.getText().isEmpty()){
-            Alert noType = new Alert(Alert.AlertType.ERROR,"You have not added a type",ButtonType.OK);
-            noType.showAndWait();
-            return;
-        }
-        if(userIDTextFLD.getText().isEmpty()){
-            Alert noUser = new Alert(Alert.AlertType.ERROR,"You have not added a user",ButtonType.OK);
-            noUser.showAndWait();
-            return;
-        }
-        if (contactBOX.getSelectionModel().getSelectedItem() == null){
-            Alert noContact = new Alert(Alert.AlertType.ERROR,"You have not added a contact", ButtonType.OK);
-            noContact.showAndWait();
-            return;
-        }
-        if(startTextFLD.getValue() == null){
-            Alert noStart = new Alert(Alert.AlertType.ERROR, "You have not selected a start date",ButtonType.OK);
-            noStart.showAndWait();
-            return;
-        }
-        if(endTextFLD.getValue() == null){
-            Alert noEnd = new Alert(Alert.AlertType.ERROR, "You have not selected an end date",ButtonType.OK);
-            noEnd.showAndWait();
-            return;
-        }
-        if(endTimeBOX.getValue() == null){
-            Alert noEndTime = new Alert(Alert.AlertType.ERROR, "You have not selected an end time",ButtonType.OK);
-            noEndTime.showAndWait();
-            return;
-        }
-        if(startTimeBox.getValue() == null){
-            Alert noStartTime = new Alert(Alert.AlertType.ERROR,"You have not selected a start time",ButtonType.OK);
-            noStartTime.showAndWait();
-            return;
-        }
-        //end error checks
-        
+        Alert save = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you wish to save this appointment?", ButtonType.YES,ButtonType.NO);
+        save.showAndWait();
 
+        if (save.getResult() == ButtonType.YES) {
+
+            // Error checks for individual fields.
+            if (titleTextFLD.getText().isEmpty()) {
+                Alert noTitle = new Alert(Alert.AlertType.ERROR, "You have not selected a title", ButtonType.OK);
+                noTitle.showAndWait();
+                return;
+            }
+            if (descriptionTextFLD.getText().isEmpty()) {
+                Alert noDescription = new Alert(Alert.AlertType.ERROR, "You have not added a description", ButtonType.OK);
+                noDescription.showAndWait();
+                return;
+            }
+            if (locationTextFLD.getText().isEmpty()) {
+                Alert noLocation = new Alert(Alert.AlertType.ERROR, "You have not added a location", ButtonType.OK);
+                noLocation.showAndWait();
+                return;
+            }
+            if (typeTextFLD.getText().isEmpty()) {
+                Alert noType = new Alert(Alert.AlertType.ERROR, "You have not added a type", ButtonType.OK);
+                noType.showAndWait();
+                return;
+            }
+            if (userIDTextFLD.getText().isEmpty()) {
+                Alert noUser = new Alert(Alert.AlertType.ERROR, "You have not added a user", ButtonType.OK);
+                noUser.showAndWait();
+                return;
+            }
+            if (contactBOX.getSelectionModel().getSelectedItem() == null) {
+                Alert noContact = new Alert(Alert.AlertType.ERROR, "You have not added a contact", ButtonType.OK);
+                noContact.showAndWait();
+                return;
+            }
+            if (startTextFLD.getValue() == null) {
+                Alert noStart = new Alert(Alert.AlertType.ERROR, "You have not selected a start date", ButtonType.OK);
+                noStart.showAndWait();
+                return;
+            }
+            if (endTextFLD.getValue() == null) {
+                Alert noEnd = new Alert(Alert.AlertType.ERROR, "You have not selected an end date", ButtonType.OK);
+                noEnd.showAndWait();
+                return;
+            }
+            if (endTimeBOX.getValue() == null) {
+                Alert noEndTime = new Alert(Alert.AlertType.ERROR, "You have not selected an end time", ButtonType.OK);
+                noEndTime.showAndWait();
+                return;
+            }
+            if (startTimeBox.getValue() == null) {
+                Alert noStartTime = new Alert(Alert.AlertType.ERROR, "You have not selected a start time", ButtonType.OK);
+                noStartTime.showAndWait();
+                return;
+            }
+            //end error checks
 
 
             //check that appointments do not overlap
-        ObservableList<Appointments> appointments = AppointmentDAO.getAppointment();
-        ObservableList<Appointments>   vals = FXCollections.observableArrayList();
-        LocalTime checkStart = (LocalTime) startTimeBox.getSelectionModel().getSelectedItem();
-        LocalTime checkStartEnd = (LocalTime) endTimeBOX.getSelectionModel().getSelectedItem();
-
-        int overlapCheck = (int) CustomerIDBOX.getValue();
-        for(Appointments app: appointments){
-            LocalTime first = LocalTime.from(app.getStart());
-            LocalTime second = LocalTime.from(app.getEnd());
-            if(overlapCheck == app.getCustomerID()){
-                if(checkStart.isAfter(first) && checkStart.isBefore(second) || checkStartEnd.isAfter(first) && checkStartEnd.isBefore(second)){
-                    System.out.println("MADE IT HERE");
-                    overlap.showAndWait();
-                    return;
-                }
-            }
-        }
-
-
+//        ObservableList<Appointments> appointments = AppointmentDAO.getAppointment();
+//        ObservableList<Appointments>   vals = FXCollections.observableArrayList();
+//        LocalTime checkStart = (LocalTime) startTimeBox.getSelectionModel().getSelectedItem();
+//        LocalTime checkStartEnd = (LocalTime) endTimeBOX.getSelectionModel().getSelectedItem();
+//
+//        int overlapCheck = (int) CustomerIDBOX.getValue();
+//        for(Appointments app: appointments){
+//            LocalTime first = LocalTime.from(app.getStart());
+//            LocalTime second = LocalTime.from(app.getEnd());
+//            if(overlapCheck == app.getCustomerID()){
+//                if(checkStart.isAfter(first) && checkStart.isBefore(second) || checkStartEnd.isAfter(first) && checkStartEnd.isBefore(second)){
+//                    System.out.println("MADE IT HERE");
+//                    overlap.showAndWait();
+//                    return;
+//                }
+//            }
+//        }
 
 
-
-        //This will pull in the appointment ids and generate a new one randomly. This will only be done if the random is not already listed.
+            //This will pull in the appointment ids and generate a new one randomly. This will only be done if the random is not already listed.
             ObservableList<Integer> list = FXCollections.observableArrayList();
             Appointments newAppointment = new Appointments();
             String query = "SELECT Appointment_ID FROM appointments";
@@ -183,82 +183,135 @@ public class add_appointment_controller implements Initializable {
             ZonedDateTime utcEnd = endConv.withZoneSameInstant(ZoneOffset.UTC);
 
 
+            LocalDateTime DTStartforSchedule = LocalDateTime.of(startDate, startTime);
+            LocalDateTime DTEndforSchedule = LocalDateTime.of(endDate, endTime);
+
+            ZonedDateTime zoneStartforSchedule = ZonedDateTime.of(DTStartforSchedule, ZoneId.systemDefault());
+            ZonedDateTime zoneEndforSchedule = ZonedDateTime.of(DTEndforSchedule, ZoneId.systemDefault());
+
+            ZonedDateTime convertStartESTforSchedule = zoneStartforSchedule.withZoneSameInstant(ZoneId.of("US/Eastern"));
+            ZonedDateTime convertEndforSchedule = zoneEndforSchedule.withZoneSameInstant(ZoneId.of("US/Eastern"));
 
 
+            // open and close in est
+            LocalTime open = LocalTime.of(8, 0);
+            LocalTime close = LocalTime.of(22, 0);
+            LocalDateTime DTStart = LocalDateTime.of(startDate, open);
+            LocalDateTime DTEnd = LocalDateTime.of(endDate, close);
 
-        LocalDateTime DTStartforSchedule = LocalDateTime.of(startDate, startTime);
-        LocalDateTime DTEndforSchedule = LocalDateTime.of(endDate, endTime);
+            ZonedDateTime zoneStart = ZonedDateTime.of(DTStart, ZoneId.systemDefault());
+            ZonedDateTime zoneEnd = ZonedDateTime.of(DTEnd, ZoneId.systemDefault());
 
-        ZonedDateTime zoneStartforSchedule = ZonedDateTime.of(DTStartforSchedule, ZoneId.systemDefault());
-        ZonedDateTime zoneEndforSchedule = ZonedDateTime.of(DTEndforSchedule, ZoneId.systemDefault());
-
-        ZonedDateTime convertStartESTforSchedule = zoneStartforSchedule.withZoneSameInstant(ZoneId.of("US/Eastern"));
-        ZonedDateTime convertEndforSchedule = zoneEndforSchedule.withZoneSameInstant(ZoneId.of("US/Eastern"));
-
-
-
-        // open and close in est
-        LocalTime open = LocalTime.of(8,0);
-        LocalTime close = LocalTime.of(22,0);
-        LocalDateTime DTStart = LocalDateTime.of(startDate, open);
-        LocalDateTime DTEnd = LocalDateTime.of(endDate, close);
-
-        ZonedDateTime zoneStart = ZonedDateTime.of(DTStart, ZoneId.systemDefault());
-        ZonedDateTime zoneEnd = ZonedDateTime.of(DTEnd, ZoneId.systemDefault());
-
-        ZonedDateTime convertStartEST = zoneStart.withZoneSameInstant(ZoneId.of("US/Eastern"));
-        ZonedDateTime convertEndEST = zoneEnd.withZoneSameInstant(ZoneId.of("US/Eastern"));
+            ZonedDateTime convertStartEST = zoneStart.withZoneSameInstant(ZoneId.of("US/Eastern"));
+            ZonedDateTime convertEndEST = zoneEnd.withZoneSameInstant(ZoneId.of("US/Eastern"));
 
 
-        if(convertStartESTforSchedule.isBefore(convertStartEST) || convertStartEST.isAfter(convertEndEST)||convertEndforSchedule.isAfter(convertEndEST) || convertEndforSchedule.isBefore(convertStartEST)){
-            zoned.showAndWait();
-            return;
-        }
-
-
-        //gather customer ID
-            int customerID = (int) CustomerIDBOX.getSelectionModel().getSelectedItem();
-
-            //gather Contact ID
-            int contactID = 0;
-            String contactQuery = "SELECT Contact_ID FROM contacts WHERE Contact_Name = '" + contactBOX.getSelectionModel().getSelectedItem() + "'";
-            PreparedStatement contactPS = InitCon.connection.prepareStatement(contactQuery);
-            ResultSet contactRS = contactPS.executeQuery();
-            while (contactRS.next()){
-                contactID = contactRS.getInt("Contact_ID");
+            if (convertStartESTforSchedule.isBefore(convertStartEST) || convertStartEST.isAfter(convertEndEST) || convertEndforSchedule.isAfter(convertEndEST) || convertEndforSchedule.isBefore(convertStartEST)) {
+                zoned.showAndWait();
+                return;
             }
-        System.out.println(utcStart);
-            //insert times
-
-        //TODO: li lee issue here with out of order insert
-            String insertQuery = "INSERT INTO appointments (Appointment_ID,Customer_ID,User_ID,Contact_ID,Location,Title,Description,Type,Create_Date,Created_By,Last_Update,Last_Updated_By,Start,End) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-            PreparedStatement insertPS = InitCon.connection.prepareStatement(insertQuery);
-            insertPS.setInt(1, appID);
-            insertPS.setInt(2, customerID);
-            insertPS.setInt(3, contactID);
-            insertPS.setInt(4, Integer.parseInt(userIDTextFLD.getText()));
-            insertPS.setString(5, locationTextFLD.getText());
-            insertPS.setString(6, titleTextFLD.getText());
-            insertPS.setString(7, descriptionTextFLD.getText());
-            insertPS.setString(8, typeTextFLD.getText());
-            insertPS.setTimestamp(9, Timestamp.valueOf(LocalDateTime.now()));
-            insertPS.setString(10, "Help im trapped");
-            insertPS.setTimestamp(11, Timestamp.valueOf(LocalDateTime.now()));
-            insertPS.setString(12, "Call john connor!");
-            insertPS.setTimestamp(13, Timestamp.valueOf(utcStart.toLocalDateTime()));
-            insertPS.setTimestamp(14, Timestamp.valueOf(utcEnd.toLocalDateTime()));
-            //TODO: customer id user id contact id
-            //TODO: check that times do not conflict
-
-            insertPS.executeUpdate();
 
 
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("appointments-view.fxml"));
-        Scene scene = new Scene(loader.load());
-        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-        stage.setTitle("Appointments");
-        stage.setScene(scene);
-        stage.show();
+            if (utcStart.isAfter(utcEnd)) {
+                Alert beforeStart = new Alert(Alert.AlertType.ERROR, "Start time is scheduled for after the end time", ButtonType.OK);
+                beforeStart.showAndWait();
+                return;
+            }
+
+            if (utcStart.equals(utcEnd)) {
+                Alert same = new Alert(Alert.AlertType.ERROR, "Start time is the same time as the end.", ButtonType.OK);
+                same.showAndWait();
+                return;
+            }
+
+            //Check overlap.
+            int customerID = (int) CustomerIDBOX.getSelectionModel().getSelectedItem();
+            ObservableList<Appointments> appVAL = AppointmentDAO.getAppointment();
+            for (Appointments appointment : appVAL) {
+
+
+                LocalDateTime checkStart = appointment.getStart();
+                LocalDateTime checkEnd = appointment.getEnd();
+                System.out.println("Check start: " + checkStart);
+                System.out.println("start: " + start);
+
+                if ((customerID == appointment.getCustomerID()) && (appID != appointment.getAppointmentID()) && (start.isBefore(checkStart)) && (end.isAfter(checkEnd))) {
+                    Alert overlap = new Alert(Alert.AlertType.ERROR, "Appointment overlaps with an existing appointment.", ButtonType.OK);
+                    overlap.showAndWait();
+                    System.out.println("Overlap");
+                    return;
+                }
+                if ((customerID == appointment.getCustomerID()) && (appID != appointment.getAppointmentID()) && (start.isAfter(checkStart)) && (start.isBefore(checkEnd))) {
+                    Alert sT = new Alert(Alert.AlertType.ERROR, "Start time overlaps with an existing appointment.", ButtonType.OK);
+                    sT.showAndWait();
+                    System.out.println("Overlap");
+                    return;
+                }
+                // 10 - 11
+                if (customerID == appointment.getCustomerID() && (appID != appointment.getAppointmentID()) && (end.isAfter(checkStart)) && (end.isBefore(checkEnd))) {
+                    Alert endAlert = new Alert(Alert.AlertType.ERROR, "End time overlaps with an existing appointment.", ButtonType.OK);
+                    endAlert.showAndWait();
+                    System.out.println("Overlap");
+                    return;
+                }
+                if (customerID == appointment.getCustomerID() && (appID != appointment.getAppointmentID()) && start.equals(checkStart)) {
+                    Alert sameStart = new Alert(Alert.AlertType.ERROR, "Start time is the same as another appointment for this customer", ButtonType.OK);
+                    sameStart.showAndWait();
+                    return;
+                }
+                if (customerID == appointment.getCustomerID() && (appID != appointment.getAppointmentID()) && end.equals(checkEnd)) {
+                    Alert sameEnd = new Alert(Alert.AlertType.ERROR, "End time conflicts with another appointment for this customer.", ButtonType.OK);
+                    sameEnd.showAndWait();
+                    return;
+                }
+            }
+
+                //gather customer ID
+
+                //gather Contact ID
+                int contactID = 0;
+                String contactQuery = "SELECT Contact_ID FROM contacts WHERE Contact_Name = '" + contactBOX.getSelectionModel().getSelectedItem() + "'";
+                PreparedStatement contactPS = InitCon.connection.prepareStatement(contactQuery);
+                ResultSet contactRS = contactPS.executeQuery();
+                while (contactRS.next()) {
+                    contactID = contactRS.getInt("Contact_ID");
+                }
+
+                //insert times
+
+                String insertQuery = "INSERT INTO appointments (Appointment_ID,Customer_ID,Contact_ID,User_ID,Location,Title,Description,Type,Create_Date,Created_By,Last_Update,Last_Updated_By,Start,End) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                PreparedStatement insertPS = InitCon.connection.prepareStatement(insertQuery);
+                insertPS.setInt(1, appID);
+                insertPS.setInt(2, customerID);
+                insertPS.setInt(3, contactID);
+                insertPS.setInt(4, Integer.parseInt(userIDTextFLD.getText()));
+                insertPS.setString(5, locationTextFLD.getText());
+                insertPS.setString(6, titleTextFLD.getText());
+                insertPS.setString(7, descriptionTextFLD.getText());
+                insertPS.setString(8, typeTextFLD.getText());
+                insertPS.setTimestamp(9, Timestamp.valueOf(LocalDateTime.now()));
+                insertPS.setString(10, "Help im trapped");
+                insertPS.setTimestamp(11, Timestamp.valueOf(LocalDateTime.now()));
+                insertPS.setString(12, "Call john connor!");
+                insertPS.setTimestamp(13, Timestamp.valueOf(utcStart.toLocalDateTime()));
+                insertPS.setTimestamp(14, Timestamp.valueOf(utcEnd.toLocalDateTime()));
+                //TODO: customer id user id contact id
+                //TODO: check that times do not conflict
+
+                insertPS.executeUpdate();
+
+
+                FXMLLoader loader = new FXMLLoader(Main.class.getResource("appointments-view.fxml"));
+                Scene scene = new Scene(loader.load());
+                Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+                stage.setTitle("Appointments");
+                stage.setScene(scene);
+                stage.show();
+
+        }
+        else {
+            System.out.println("y");
+        }
 
 
 
