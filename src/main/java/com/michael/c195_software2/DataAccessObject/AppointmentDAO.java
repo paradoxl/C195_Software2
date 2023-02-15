@@ -63,7 +63,6 @@ public class AppointmentDAO {
             System.out.println("Start time from DB converted to UTC: "+ startConv);
             System.out.println("Start time with conversion: " + startFinal);
 
-
             //Converting end times to UTC then to LDT
             ZonedDateTime endConv = end.atZone(ZoneId.of("UTC"));
             ZonedDateTime endLDT = endConv.withZoneSameInstant(ZoneId.systemDefault());
