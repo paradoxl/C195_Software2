@@ -1,5 +1,6 @@
 package com.michael.c195_software2;
 
+import com.michael.c195_software2.DataAccessObject.AppointmentDAO;
 import com.michael.c195_software2.dataBaseConnection.InitCon;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,6 +35,7 @@ public class updateAppointmentTimeController implements Initializable {
 
     public void populate(Appointments current) throws SQLException{
         this.current = current;
+
         LocalDateTime start = current.getStart();
         LocalDateTime end = current.getEnd();
 
@@ -68,10 +70,100 @@ public class updateAppointmentTimeController implements Initializable {
 
 
         if (save.getResult() == ButtonType.YES) {
+
+            LocalTime startVal = (LocalTime) startTime.getSelectionModel().getSelectedItem();
+            LocalTime endVal = (LocalTime) endTime.getSelectionModel().getSelectedItem();
+
+            LocalDate startDateVal =  startDate.getValue();
+            LocalDate endDateVal = endDate.getValue();
+
+            LocalTime open = LocalTime.of(8, 0);
+            LocalTime close = LocalTime.of(22, 0);
+            LocalDateTime DTStart = LocalDateTime.of(startDateVal, open);
+            LocalDateTime DTEnd = LocalDateTime.of(endDateVal, close);
+
+            ZonedDateTime zoneStart = ZonedDateTime.of(DTStart, ZoneId.systemDefault());
+            ZonedDateTime zoneEnd = ZonedDateTime.of(DTEnd, ZoneId.systemDefault());
+
+            ZonedDateTime convertStartEST = zoneStart.withZoneSameInstant(ZoneId.of("US/Eastern"));
+            ZonedDateTime convertEndEST = zoneEnd.withZoneSameInstant(ZoneId.of("US/Eastern"));
+
+            LocalDateTime DTStartforSchedule = LocalDateTime.of(startDateVal, startVal);
+            LocalDateTime DTEndforSchedule = LocalDateTime.of(endDateVal, endVal);
+
+            ZonedDateTime zoneStartforSchedule = ZonedDateTime.of(DTStartforSchedule, ZoneId.systemDefault());
+            ZonedDateTime zoneEndforSchedule = ZonedDateTime.of(DTEndforSchedule, ZoneId.systemDefault());
+
+            ZonedDateTime convertStartESTforSchedule = zoneStartforSchedule.withZoneSameInstant(ZoneId.of("US/Eastern"));
+            ZonedDateTime convertEndforSchedule = zoneEndforSchedule.withZoneSameInstant(ZoneId.of("US/Eastern"));
+
+            if (convertStartESTforSchedule.isBefore(convertStartEST) || convertStartEST.isAfter(convertEndEST) || convertEndforSchedule.isAfter(convertEndEST) || convertEndforSchedule.isBefore(convertStartEST)) {
+                Alert zoned = new Alert(Alert.AlertType.ERROR,"You have chosen a time that is outside of our business hours. Note: our office is in Eastern Standard Time",ButtonType.OK );
+                zoned.showAndWait();
+                return;
+            }
+
+
+            ObservableList<Appointments> appVAL = AppointmentDAO.getAppointment();
+            for (Appointments appointment : appVAL) {
+
+
+                LocalDateTime checkStart = appointment.getStart();
+                LocalDateTime checkEnd = appointment.getEnd();
+
+
+                LocalDateTime currentStart = LocalDateTime.of(startDateVal,startVal);
+                LocalDateTime currentEnd = LocalDateTime.of(endDateVal,endVal);
+
+
+                if ((current.getCustomerID() == appointment.getCustomerID()) && (current.getAppointmentID() != appointment.getAppointmentID()) && (currentStart.isBefore(checkStart)) && (currentEnd.isAfter(checkEnd))) {
+                    Alert overlap = new Alert(Alert.AlertType.ERROR, "Appointment overlaps with an existing appointment.", ButtonType.OK);
+                    overlap.showAndWait();
+                    System.out.println("Overlap");
+                    return;
+                }
+                if ((current.getCustomerID() == appointment.getCustomerID()) && (current.getAppointmentID() != appointment.getAppointmentID()) && (currentStart.isAfter(checkStart)) && (currentStart.isBefore(checkEnd))) {
+                    Alert sT = new Alert(Alert.AlertType.ERROR, "Start time overlaps with an existing appointment.", ButtonType.OK);
+                    sT.showAndWait();
+                    System.out.println("Overlap");
+                    return;
+                }
+                // 10 - 11
+                if (current.getCustomerID() == appointment.getCustomerID() && (current.getAppointmentID() != appointment.getAppointmentID()) && (currentEnd.isAfter(checkStart)) && (currentEnd.isBefore(checkEnd))) {
+                    Alert endAlert = new Alert(Alert.AlertType.ERROR, "End time overlaps with an existing appointment.", ButtonType.OK);
+                    endAlert.showAndWait();
+                    System.out.println("Overlap");
+                    return;
+                }
+                if (current.getCustomerID() == appointment.getCustomerID() && (current.getAppointmentID() != appointment.getAppointmentID()) && currentStart.equals(checkStart)) {
+                    Alert sameStart = new Alert(Alert.AlertType.ERROR, "Start time is the same as another appointment for this customer", ButtonType.OK);
+                    sameStart.showAndWait();
+                    return;
+                }
+                if (current.getCustomerID() == appointment.getCustomerID() && (current.getAppointmentID() != appointment.getAppointmentID()) && currentEnd.equals(checkEnd)) {
+                    Alert sameEnd = new Alert(Alert.AlertType.ERROR, "End time conflicts with another appointment for this customer.", ButtonType.OK);
+                    sameEnd.showAndWait();
+                    return;
+                }
+
+                if (currentStart.getDayOfWeek().equals(DayOfWeek.SATURDAY) || currentStart.getDayOfWeek().equals(DayOfWeek.SUNDAY)){
+                    Alert weekendStart = new Alert(Alert.AlertType.ERROR,"You have scheduled this appointment to start on a weekend. Our offices will be closed.",ButtonType.OK);
+                    weekendStart.showAndWait();
+                    return;
+                }
+                else if (currentEnd.getDayOfWeek().equals(DayOfWeek.SATURDAY) || currentEnd.getDayOfWeek().equals(DayOfWeek.SUNDAY)){
+                    Alert weekendEnd = new Alert(Alert.AlertType.ERROR, "You have scheduled this appointment to end on a weekend. Our offices will be closed.",ButtonType.OK);
+                    weekendEnd.showAndWait();
+                    return;
+                }
+
+
+            }
+
             LocalTime startTimeVal = (LocalTime) startTime.getSelectionModel().getSelectedItem();
             LocalTime endTimeVal = (LocalTime) endTime.getSelectionModel().getSelectedItem();
-            LocalDate startDateVal = (LocalDate) startDate.getValue();
-            LocalDate endDateVal = (LocalDate) endDate.getValue();
+//            LocalDate startDateVal = (LocalDate) startDate.getValue();
+//            LocalDate endDateVal = (LocalDate) endDate.getValue();
 
             //Local time
             LocalDateTime start = LocalDateTime.of(startDateVal, startTimeVal);
@@ -92,6 +184,16 @@ public class updateAppointmentTimeController implements Initializable {
             System.out.println("start time converted to UTC: " + utcStart);
             System.out.println("Converting UTC back to MST: "+ test);
 
+            if (utcStart.isAfter(utcEnd)){
+                Alert beforeStart = new Alert(Alert.AlertType.ERROR,"Start time is scheduled for after the end time",ButtonType.OK);
+                beforeStart.showAndWait();
+                return;
+            }
+            if (utcStart.equals(utcEnd)){
+                Alert same = new Alert(Alert.AlertType.ERROR,"Start time is the same time as the end.",ButtonType.OK);
+                same.showAndWait();
+                return;
+            }
 
 
             String query = "Update appointments SET  Start = ?, End = ? WHERE Appointment_ID = '" + current.getAppointmentID() +"'";

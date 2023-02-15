@@ -148,6 +148,7 @@ public class appointment_view_controller implements Initializable {
 
     /**
      * This method is used to change existing appointments.
+     * This method does not allow the change of times or dates (this is a project constraint and not my design choice)
      * @param actionEvent
      * @throws IOException
      * @throws SQLException
@@ -261,6 +262,12 @@ public class appointment_view_controller implements Initializable {
         }
     }
 
+    /**
+     * This method is used to update appointments. This screen will only allow the change of appointment times.
+     * @param actionEvent
+     * @throws IOException
+     * @throws SQLException
+     */
     public void updateAppointmentTime(ActionEvent actionEvent) throws IOException, SQLException {
     try {
         Appointments selected = appointmentTABLE.getSelectionModel().getSelectedItem();
