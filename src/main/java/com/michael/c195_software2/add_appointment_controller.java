@@ -80,6 +80,7 @@ public class add_appointment_controller implements Initializable {
 
         if (save.getResult() == ButtonType.YES) {
 
+
             // Error checks for individual fields.
             if (titleTextFLD.getText().isEmpty()) {
                 Alert noTitle = new Alert(Alert.AlertType.ERROR, "You have not selected a title", ButtonType.OK);
@@ -208,6 +209,16 @@ public class add_appointment_controller implements Initializable {
 
             if (convertStartESTforSchedule.isBefore(convertStartEST) || convertStartEST.isAfter(convertEndEST) || convertEndforSchedule.isAfter(convertEndEST) || convertEndforSchedule.isBefore(convertStartEST)) {
                 zoned.showAndWait();
+                return;
+            }
+            if (utcStart.getDayOfWeek().equals(DayOfWeek.SATURDAY) || utcStart.getDayOfWeek().equals(DayOfWeek.SUNDAY)){
+                Alert weekendStart = new Alert(Alert.AlertType.ERROR,"You have scheduled this appointment to start on a weekend. Our offices will be closed.",ButtonType.OK);
+                weekendStart.showAndWait();
+                return;
+            }
+            else if (utcEnd.getDayOfWeek().equals(DayOfWeek.SATURDAY) || utcEnd.getDayOfWeek().equals(DayOfWeek.SUNDAY)){
+                Alert weekendEnd = new Alert(Alert.AlertType.ERROR, "You have scheduled this appointment to end on a weekend. Our offices will be closed.",ButtonType.OK);
+                weekendEnd.showAndWait();
                 return;
             }
 

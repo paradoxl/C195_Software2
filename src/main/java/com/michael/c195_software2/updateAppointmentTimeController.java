@@ -70,6 +70,40 @@ public class updateAppointmentTimeController implements Initializable {
 
 
         if (save.getResult() == ButtonType.YES) {
+
+            LocalTime startVal = (LocalTime) startTime.getSelectionModel().getSelectedItem();
+            LocalTime endVal = (LocalTime) endTime.getSelectionModel().getSelectedItem();
+
+            LocalDate startDateVal =  startDate.getValue();
+            LocalDate endDateVal = endDate.getValue();
+
+            LocalTime open = LocalTime.of(8, 0);
+            LocalTime close = LocalTime.of(22, 0);
+            LocalDateTime DTStart = LocalDateTime.of(startDateVal, open);
+            LocalDateTime DTEnd = LocalDateTime.of(endDateVal, close);
+
+            ZonedDateTime zoneStart = ZonedDateTime.of(DTStart, ZoneId.systemDefault());
+            ZonedDateTime zoneEnd = ZonedDateTime.of(DTEnd, ZoneId.systemDefault());
+
+            ZonedDateTime convertStartEST = zoneStart.withZoneSameInstant(ZoneId.of("US/Eastern"));
+            ZonedDateTime convertEndEST = zoneEnd.withZoneSameInstant(ZoneId.of("US/Eastern"));
+
+            LocalDateTime DTStartforSchedule = LocalDateTime.of(startDateVal, startVal);
+            LocalDateTime DTEndforSchedule = LocalDateTime.of(endDateVal, endVal);
+
+            ZonedDateTime zoneStartforSchedule = ZonedDateTime.of(DTStartforSchedule, ZoneId.systemDefault());
+            ZonedDateTime zoneEndforSchedule = ZonedDateTime.of(DTEndforSchedule, ZoneId.systemDefault());
+
+            ZonedDateTime convertStartESTforSchedule = zoneStartforSchedule.withZoneSameInstant(ZoneId.of("US/Eastern"));
+            ZonedDateTime convertEndforSchedule = zoneEndforSchedule.withZoneSameInstant(ZoneId.of("US/Eastern"));
+
+            if (convertStartESTforSchedule.isBefore(convertStartEST) || convertStartEST.isAfter(convertEndEST) || convertEndforSchedule.isAfter(convertEndEST) || convertEndforSchedule.isBefore(convertStartEST)) {
+                Alert zoned = new Alert(Alert.AlertType.ERROR,"You have chosen a time that is outside of our business hours. Note: our office is in Eastern Standard Time",ButtonType.OK );
+                zoned.showAndWait();
+                return;
+            }
+
+
             ObservableList<Appointments> appVAL = AppointmentDAO.getAppointment();
             for (Appointments appointment : appVAL) {
 
@@ -77,14 +111,9 @@ public class updateAppointmentTimeController implements Initializable {
                 LocalDateTime checkStart = appointment.getStart();
                 LocalDateTime checkEnd = appointment.getEnd();
 
-                LocalTime start = (LocalTime) startTime.getSelectionModel().getSelectedItem();
-                LocalTime end = (LocalTime) endTime.getSelectionModel().getSelectedItem();
 
-                LocalDate startDateVal =  startDate.getValue();
-                LocalDate endDateVal = endDate.getValue();
-
-                LocalDateTime currentStart = LocalDateTime.of(startDateVal,start);
-                LocalDateTime currentEnd = LocalDateTime.of(endDateVal,end);
+                LocalDateTime currentStart = LocalDateTime.of(startDateVal,startVal);
+                LocalDateTime currentEnd = LocalDateTime.of(endDateVal,endVal);
 
 
                 if ((current.getCustomerID() == appointment.getCustomerID()) && (current.getAppointmentID() != appointment.getAppointmentID()) && (currentStart.isBefore(checkStart)) && (currentEnd.isAfter(checkEnd))) {
@@ -116,12 +145,25 @@ public class updateAppointmentTimeController implements Initializable {
                     sameEnd.showAndWait();
                     return;
                 }
+
+                if (currentStart.getDayOfWeek().equals(DayOfWeek.SATURDAY) || currentStart.getDayOfWeek().equals(DayOfWeek.SUNDAY)){
+                    Alert weekendStart = new Alert(Alert.AlertType.ERROR,"You have scheduled this appointment to start on a weekend. Our offices will be closed.",ButtonType.OK);
+                    weekendStart.showAndWait();
+                    return;
+                }
+                else if (currentEnd.getDayOfWeek().equals(DayOfWeek.SATURDAY) || currentEnd.getDayOfWeek().equals(DayOfWeek.SUNDAY)){
+                    Alert weekendEnd = new Alert(Alert.AlertType.ERROR, "You have scheduled this appointment to end on a weekend. Our offices will be closed.",ButtonType.OK);
+                    weekendEnd.showAndWait();
+                    return;
+                }
+
+
             }
 
             LocalTime startTimeVal = (LocalTime) startTime.getSelectionModel().getSelectedItem();
             LocalTime endTimeVal = (LocalTime) endTime.getSelectionModel().getSelectedItem();
-            LocalDate startDateVal = (LocalDate) startDate.getValue();
-            LocalDate endDateVal = (LocalDate) endDate.getValue();
+//            LocalDate startDateVal = (LocalDate) startDate.getValue();
+//            LocalDate endDateVal = (LocalDate) endDate.getValue();
 
             //Local time
             LocalDateTime start = LocalDateTime.of(startDateVal, startTimeVal);
