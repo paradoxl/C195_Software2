@@ -1,5 +1,6 @@
 package com.michael.c195_software2;
 
+import com.michael.c195_software2.DataAccessObject.AppointmentDAO;
 import com.michael.c195_software2.dataBaseConnection.InitCon;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,6 +35,7 @@ public class updateAppointmentTimeController implements Initializable {
 
     public void populate(Appointments current) throws SQLException{
         this.current = current;
+
         LocalDateTime start = current.getStart();
         LocalDateTime end = current.getEnd();
 
@@ -68,8 +70,53 @@ public class updateAppointmentTimeController implements Initializable {
 
 
         if (save.getResult() == ButtonType.YES) {
+            ObservableList<Appointments> appVAL = AppointmentDAO.getAppointment();
+            for (Appointments appointment : appVAL) {
 
 
+                LocalDateTime checkStart = appointment.getStart();
+                LocalDateTime checkEnd = appointment.getEnd();
+
+                LocalTime start = (LocalTime) startTime.getSelectionModel().getSelectedItem();
+                LocalTime end = (LocalTime) endTime.getSelectionModel().getSelectedItem();
+
+                LocalDate startDateVal =  startDate.getValue();
+                LocalDate endDateVal = endDate.getValue();
+
+                LocalDateTime currentStart = LocalDateTime.of(startDateVal,start);
+                LocalDateTime currentEnd = LocalDateTime.of(endDateVal,end);
+
+
+                if ((current.getCustomerID() == appointment.getCustomerID()) && (current.getAppointmentID() != appointment.getAppointmentID()) && (currentStart.isBefore(checkStart)) && (currentEnd.isAfter(checkEnd))) {
+                    Alert overlap = new Alert(Alert.AlertType.ERROR, "Appointment overlaps with an existing appointment.", ButtonType.OK);
+                    overlap.showAndWait();
+                    System.out.println("Overlap");
+                    return;
+                }
+                if ((current.getCustomerID() == appointment.getCustomerID()) && (current.getAppointmentID() != appointment.getAppointmentID()) && (currentStart.isAfter(checkStart)) && (currentStart.isBefore(checkEnd))) {
+                    Alert sT = new Alert(Alert.AlertType.ERROR, "Start time overlaps with an existing appointment.", ButtonType.OK);
+                    sT.showAndWait();
+                    System.out.println("Overlap");
+                    return;
+                }
+                // 10 - 11
+                if (current.getCustomerID() == appointment.getCustomerID() && (current.getAppointmentID() != appointment.getAppointmentID()) && (currentEnd.isAfter(checkStart)) && (currentEnd.isBefore(checkEnd))) {
+                    Alert endAlert = new Alert(Alert.AlertType.ERROR, "End time overlaps with an existing appointment.", ButtonType.OK);
+                    endAlert.showAndWait();
+                    System.out.println("Overlap");
+                    return;
+                }
+                if (current.getCustomerID() == appointment.getCustomerID() && (current.getAppointmentID() != appointment.getAppointmentID()) && currentStart.equals(checkStart)) {
+                    Alert sameStart = new Alert(Alert.AlertType.ERROR, "Start time is the same as another appointment for this customer", ButtonType.OK);
+                    sameStart.showAndWait();
+                    return;
+                }
+                if (current.getCustomerID() == appointment.getCustomerID() && (current.getAppointmentID() != appointment.getAppointmentID()) && currentEnd.equals(checkEnd)) {
+                    Alert sameEnd = new Alert(Alert.AlertType.ERROR, "End time conflicts with another appointment for this customer.", ButtonType.OK);
+                    sameEnd.showAndWait();
+                    return;
+                }
+            }
 
             LocalTime startTimeVal = (LocalTime) startTime.getSelectionModel().getSelectedItem();
             LocalTime endTimeVal = (LocalTime) endTime.getSelectionModel().getSelectedItem();
